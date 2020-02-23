@@ -1,0 +1,19 @@
+rm -rf synthesis
+mkdir synthesis
+mkdir synthesis/mpsoc_msi
+mkdir synthesis/mpsoc_msi/source
+mkdir synthesis/mpsoc_msi/synthesis
+mkdir synthesis/mpsoc_msi/layout
+
+#cp rtl/verilog/ahb3/mpsoc_ahb3_uart.sv      synthesis/mpsoc_msi/source
+#cp rtl/verilog/wb/mpsoc_wb_uart.sv          synthesis/mpsoc_msi/source
+#cp rtl/verilog/core/mpsoc_uart_fifo.sv      synthesis/mpsoc_msi/source
+#cp rtl/verilog/core/mpsoc_uart_interrupt.sv synthesis/mpsoc_msi/source
+#cp rtl/verilog/core/mpsoc_uart_rx.sv        synthesis/mpsoc_msi/source
+#cp rtl/verilog/core/mpsoc_uart_tx.sv        synthesis/mpsoc_msi/source
+
+#cp bench/verilog/regression/mpsoc_msi_testbench.sv synthesis/mpsoc_msi/source
+
+cd synthesis/mpsoc_msi
+
+qflow -T osu018 synthesize place route mpsoc_msi_testbench

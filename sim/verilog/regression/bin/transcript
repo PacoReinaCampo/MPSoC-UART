@@ -1,0 +1,15 @@
+# vsim -c -do "run.do" work.mpsoc_msi_testbench 
+# Start time: 20:01:21 on Feb 23,2020
+# Loading sv_std.std
+# Loading work.mpsoc_msi_testbench
+# Loading work.mpsoc_ahb3_peripheral_bridge
+# Loading work.mpsoc_ahb3_uart
+# Loading work.mpsoc_uart_rx
+# Loading work.mpsoc_uart_tx
+# Loading work.mpsoc_uart_fifo
+# Loading work.mpsoc_uart_interrupt
+# Loading work.mpsoc_wb_peripheral_bridge
+# Loading work.mpsoc_wb_uart
+# do run.do
+# End time: 20:01:22 on Feb 23,2020, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
