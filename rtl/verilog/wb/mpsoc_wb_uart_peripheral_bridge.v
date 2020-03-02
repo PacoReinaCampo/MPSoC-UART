@@ -40,42 +40,122 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-//Following is the Verilog code for a dual-port RAM with asynchronous read. 
-module raminfr #(
-  parameter ADDR_WIDTH = 4,
-  parameter DATA_WIDTH = 8,
-  parameter DEPTH      = 16
-)
-  (
-    input                   clk,
-    input                   we,
-    input  [ADDR_WIDTH-1:0] a,
-    input  [ADDR_WIDTH-1:0] dpra,
-    input  [DATA_WIDTH-1:0] di,
-    output [DATA_WIDTH-1:0] dpo
-    //output [DATA_WIDTH-1:0] spo,
-  );
+`include "mpsoc_uart_pkg.v"
+
+module mpsoc_wb_uart_peripheral_bridge (
+  input          clk,
+
+  // WISHBONE interface  
+  input          wb_rst_i,
+  input          wb_we_i,
+  input          wb_stb_i,
+  input          wb_cyc_i,
+  input  [3:0]   wb_sel_i,
+  input  [2:0]   wb_adr_i,  //WISHBONE address line
+
+  input  [7:0]  wb_dat_i,   //input WISHBONE bus 
+  output [7:0]  wb_dat_o,
+  output [2:0]  wb_adr_int, // internal signal for address bus
+  input  [7:0]  wb_dat8_o,  // internal 8 bit output to be put into wb_dat_o
+  output [7:0]  wb_dat8_i,
+  input  [31:0] wb_dat32_o, // 32 bit data output (for debug interface)
+  output        wb_ack_o,
+  output        we_o,
+  output        re_o
+);
 
   //////////////////////////////////////////////////////////////////
   //
   // Variables
   //
-  reg   [DATA_WIDTH-1:0] ram [DEPTH-1:0]; 
+  reg  [7:0] wb_dat_o;
+  wire [7:0] wb_dat_i;
+  reg  [7:0] wb_dat_is;
 
-  wire  [DATA_WIDTH-1:0] dpo;
-  wire  [DATA_WIDTH-1:0] di;   
-  wire  [ADDR_WIDTH-1:0] a;   
-  wire  [ADDR_WIDTH-1:0] dpra;
+  wire       we_o;
+  reg        wb_ack_o;
+  reg  [7:0] wb_dat8_i;
+  wire [7:0] wb_dat8_o;
+  wire [2:0] wb_adr_int;  // internal signal for address bus
+  reg  [2:0] wb_adr_is;
+  reg        wb_we_is;
+  reg        wb_cyc_is;
+  reg        wb_stb_is;
+  wire [3:0] wb_sel_i;
+  reg        wre;  // timing control signal for write or read enable
+
+  // wb_ack_o FSM
+  reg [1:0] wbstate;
 
   //////////////////////////////////////////////////////////////////
   //
   // Module Body
   //
-  always @(posedge clk) begin
-    if (we) begin
-      ram[a] <= di;
-    end     
-  end   
-  //  assign spo = ram[a];   
-  assign dpo = ram[dpra];   
+  always  @(posedge clk or posedge wb_rst_i)
+    if (wb_rst_i) begin
+      wb_ack_o <= 1'b0;
+      wbstate  <= 0;
+      wre      <= 1'b1;
+    end else
+      case (wbstate)
+        0: begin
+          if (wb_stb_is & wb_cyc_is) begin
+            wre <= 0;
+            wbstate  <= 1;
+            wb_ack_o <= 1;
+          end else begin
+            wre      <= 1;
+            wb_ack_o <= 0;
+          end
+        end
+        1: begin
+          wb_ack_o <= 0;
+          wbstate  <= 2;
+          wre      <= 0;
+        end
+        2: begin
+          wb_ack_o <= 0;
+          wbstate  <= 3;
+          wre      <= 0;
+        end
+        3: begin
+          wb_ack_o <= 0;
+          wbstate  <= 0;
+          wre      <= 1;
+        end
+      endcase
+
+  assign we_o =  wb_we_is & wb_stb_is & wb_cyc_is & wre ; //WE for registers  
+  assign re_o = ~wb_we_is & wb_stb_is & wb_cyc_is & wre ; //RE for registers  
+
+  // Sample input signals
+  always  @(posedge clk or posedge wb_rst_i) begin
+    if (wb_rst_i) begin
+      wb_adr_is <= 0;
+      wb_we_is  <= 0;
+      wb_cyc_is <= 0;
+      wb_stb_is <= 0;
+      wb_dat_is <= 0;
+    end
+    else begin
+      wb_adr_is <= wb_adr_i;
+      wb_we_is  <= wb_we_i;
+      wb_cyc_is <= wb_cyc_i;
+      wb_stb_is <= wb_stb_i;
+      wb_dat_is <= wb_dat_i;
+    end
+  end
+
+  always @(posedge clk or posedge wb_rst_i) begin
+    if (wb_rst_i)
+      wb_dat_o <= 0;
+    else
+      wb_dat_o <= wb_dat8_o;
+  end
+
+  always @(wb_dat_is) begin
+    wb_dat8_i = wb_dat_is;
+  end
+
+  assign wb_adr_int = wb_adr_is;
 endmodule

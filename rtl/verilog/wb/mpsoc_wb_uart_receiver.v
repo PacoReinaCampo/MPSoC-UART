@@ -42,7 +42,7 @@
 
 `include "mpsoc_uart_pkg.v"
 
-module uart_receiver (
+module mpsoc_wb_uart_receiver (
   input         clk,
   input         wb_rst_i,
   input  [7:0]  lcr,
@@ -124,8 +124,11 @@ module uart_receiver (
   //
 
   // RX FIFO instance
-  uart_rfifo #(
-    `UART_FIFO_REC_WIDTH
+  mpsoc_wb_uart_rfifo #(
+    .FIFO_WIDTH     (`UART_FIFO_REC_WIDTH),
+    .FIFO_DEPTH     (16),
+    .FIFO_POINTER_W (4),
+    .FIFO_COUNTER_W (5)
   ) fifo_rx (
     .clk          (clk), 
     .wb_rst_i     (wb_rst_i),

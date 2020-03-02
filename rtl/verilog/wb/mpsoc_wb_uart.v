@@ -42,9 +42,9 @@
 
 `include "mpsoc_uart_pkg.v"
 
-module uart_top  #(
+module mpsoc_wb_uart  #(
   parameter SIM   = 0,
-  parameter debug = 0
+  parameter DEBUG = 0
 )
   (
     input                  wb_clk_i,
@@ -101,7 +101,7 @@ module uart_top  #(
   //
 
   ////  WISHBONE interface module
-  uart_wb wb_interface (
+  mpsoc_wb_uart_peripheral_bridge wb_interface (
     .clk        ( wb_clk_i   ),
     .wb_rst_i   ( wb_rst_i   ),
     .wb_dat_i   ( wb_dat_i   ),
@@ -121,7 +121,7 @@ module uart_top  #(
   );
 
   // Registers
-  uart_regs #(
+  mpsoc_wb_uart_regs #(
     .SIM (SIM)
   ) regs (
     .clk          ( wb_clk_i   ),
@@ -142,7 +142,7 @@ module uart_top  #(
   );
 
   initial begin
-    if(debug) begin
+    if(DEBUG) begin
       `ifdef UART_HAS_BAUDRATE_OUTPUT
       $display("(%m) UART INFO: Has baudrate output\n");
       `else

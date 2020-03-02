@@ -42,7 +42,7 @@
 
 `include "mpsoc_uart_pkg.v"
 
-module uart_rfifo #(
+module mpsoc_wb_uart_rfifo #(
   parameter FIFO_WIDTH     = 8,
   parameter FIFO_DEPTH     = 16,
   parameter FIFO_POINTER_W = 4,
@@ -104,8 +104,10 @@ module uart_rfifo #(
   //
   // Module Body
   //
-  raminfr #(
-    FIFO_POINTER_W,8,FIFO_DEPTH
+  mpsoc_wb_raminfr #(
+    .ADDR_WIDTH (FIFO_POINTER_W),
+    .DATA_WIDTH (8),
+    .DEPTH      (FIFO_DEPTH)
   ) rfifo (
     .clk  (clk), 
     .we   (push), 
@@ -204,8 +206,8 @@ module uart_rfifo #(
   assign word6 = fifo[6];
   assign word7 = fifo[7];
 
-  assign word8 = fifo[8];
-  assign word9 = fifo[9];
+  assign word8  = fifo[8];
+  assign word9  = fifo[9];
   assign word10 = fifo[10];
   assign word11 = fifo[11];
   assign word12 = fifo[12];

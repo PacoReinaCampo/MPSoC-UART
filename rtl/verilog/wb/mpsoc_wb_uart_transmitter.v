@@ -42,7 +42,7 @@
 
 `include "mpsoc_uart_pkg.v"
 
-module uart_transmitter #(
+module mpsoc_wb_uart_transmitter #(
   parameter SIM = 0
 )
   (
@@ -100,7 +100,12 @@ module uart_transmitter #(
   //
   assign tf_data_in = wb_dat_i;
 
-  uart_tfifo fifo_tx(  // error bit signal is not used in transmitter FIFO
+  mpsoc_wb_uart_tfifo #(
+    .FIFO_WIDTH     (8),
+    .FIFO_DEPTH     (16),
+    .FIFO_POINTER_W (4),
+    .FIFO_COUNTER_W (5)
+  ) fifo_tx (  // error bit signal is not used in transmitter FIFO
     .clk          ( clk         ), 
     .wb_rst_i     ( wb_rst_i    ),
     .data_in      ( tf_data_in  ),

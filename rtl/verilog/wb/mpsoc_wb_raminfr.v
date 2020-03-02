@@ -40,48 +40,42 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-module uart_sync_flops #(
-  parameter WIDTH      = 1,
-  parameter INIT_VALUE = 1'b0
+//Following is the Verilog code for a dual-port RAM with asynchronous read. 
+module mpsoc_wb_raminfr #(
+  parameter ADDR_WIDTH = 4,
+  parameter DATA_WIDTH = 8,
+  parameter DEPTH      = 16
 )
   (
-    input              rst_i,            // reset input
-    input              clk_i,            // clock input
-    input              stage1_rst_i,     // synchronous reset for stage 1 FF
-    input              stage1_clk_en_i,  // synchronous clock enable for stage 1 FF
-    input  [WIDTH-1:0] async_dat_i,      // asynchronous data input
-    output [WIDTH-1:0] sync_dat_o        // synchronous data output
+    input                   clk,
+    input                   we,
+    input  [ADDR_WIDTH-1:0] a,
+    input  [ADDR_WIDTH-1:0] dpra,
+    input  [DATA_WIDTH-1:0] di,
+    output [DATA_WIDTH-1:0] dpo
+    //output [DATA_WIDTH-1:0] spo,
   );
 
   //////////////////////////////////////////////////////////////////
   //
   // Variables
   //
+  reg   [DATA_WIDTH-1:0] ram [DEPTH-1:0]; 
 
-  // Internal signal declarations
-  reg [WIDTH-1:0] sync_dat_o;
-  reg [WIDTH-1:0] flop_0;
+  wire  [DATA_WIDTH-1:0] dpo;
+  wire  [DATA_WIDTH-1:0] di;   
+  wire  [ADDR_WIDTH-1:0] a;   
+  wire  [ADDR_WIDTH-1:0] dpra;
 
   //////////////////////////////////////////////////////////////////
   //
   // Module Body
   //
-
-  // first stage
-  always @ (posedge clk_i or posedge rst_i) begin
-    if (rst_i)
-      flop_0 <= {WIDTH{INIT_VALUE}};
-    else
-      flop_0 <= async_dat_i;    
-  end
-
-  // second stage
-  always @ (posedge clk_i or posedge rst_i) begin
-    if (rst_i)
-      sync_dat_o <= {WIDTH{INIT_VALUE}};
-    else if (stage1_rst_i)
-      sync_dat_o <= {WIDTH{INIT_VALUE}};
-    else if (stage1_clk_en_i)
-      sync_dat_o <= flop_0;       
-  end
+  always @(posedge clk) begin
+    if (we) begin
+      ram[a] <= di;
+    end     
+  end   
+  //  assign spo = ram[a];   
+  assign dpo = ram[dpra];   
 endmodule
