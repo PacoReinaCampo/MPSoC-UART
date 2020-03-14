@@ -85,14 +85,14 @@ module mpsoc_wb_uart_regs #(
   wire [7:0] wb_dat_i;
 
 
-  reg [3:0]                 ier;
-  reg [3:0]                 iir;
-  reg [1:0]                 fcr;  // bits 7 and 6 of fcr. Other bits are ignored
-  reg [4:0]                 mcr;
-  reg [7:0]                 lcr;
-  reg [7:0]                 msr;
+  reg [ 3:0]                ier;
+  reg [ 3:0]                iir;
+  reg [ 1:0]                fcr;  // bits 7 and 6 of fcr. Other bits are ignored
+  reg [ 4:0]                mcr;
+  reg [ 7:0]                lcr;
+  reg [ 7:0]                msr;
   reg [15:0]                dl;  // 32-bit divisor latch
-  reg [7:0]                 scratch;  // UART scratch register
+  reg [ 7:0]                scratch;  // UART scratch register
   reg                       start_dlc;  // activate dlc on writing to UART_DL1
   reg                       lsr_mask_d;  // delay for lsr_mask condition
   reg                       msi_reset;  // reset MSR 4 lower bits indicator
@@ -133,9 +133,9 @@ module mpsoc_wb_uart_regs #(
   wire                            rf_push_pulse;
   wire [`UART_FIFO_COUNTER_W-1:0] rf_count;
   wire [`UART_FIFO_COUNTER_W-1:0] tf_count;
-  wire [2:0]                      tstate;
-  wire [3:0]                      rstate;
-  wire [9:0]                      counter_t;
+  wire [                     2:0] tstate;
+  wire [                     3:0] rstate;
+  wire [                     9:0] counter_t;
 
   wire                      thre_set_en; // THRE status is delayed one character time when a character is written to fifo.
   reg  [7:0]                block_cnt;   // While counter counts, THRE status is blocked (delayed one character cycle)
@@ -166,7 +166,8 @@ module mpsoc_wb_uart_regs #(
 
   mpsoc_wb_uart_transmitter #(
     .SIM (SIM)
-  ) transmitter (
+  )
+  transmitter (
     .clk       (clk),
     .wb_rst_i  (wb_rst_i),
     .lcr       (lcr),
@@ -184,7 +185,8 @@ module mpsoc_wb_uart_regs #(
   mpsoc_wb_uart_sync_flops #(
     .WIDTH      (1),
     .INIT_VALUE (1'b0)
-  ) i_uart_sync_flops (
+  )
+  i_uart_sync_flops (
     .rst_i           (wb_rst_i),
     .clk_i           (clk),
     .stage1_rst_i    (1'b0),

@@ -84,7 +84,8 @@ module mpsoc_wb_uart_tfifo #(
     .ADDR_WIDTH (FIFO_POINTER_W),
     .DATA_WIDTH (FIFO_WIDTH),
     .DEPTH      (FIFO_DEPTH)
-  ) tfifo ( 
+  )
+  tfifo ( 
     .clk(clk), 
     .we(push), 
     .a(top), 

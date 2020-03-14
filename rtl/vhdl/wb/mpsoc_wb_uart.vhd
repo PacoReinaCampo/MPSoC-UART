@@ -1,4 +1,4 @@
--- Converted from mpsoc_wb_uart.sv
+-- Converted from mpsoc_wb_uart.v
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -14,7 +14,7 @@
 --                                                                            //
 --              MPSoC-RISCV CPU                                               //
 --              Universal Asynchronous Receiver-Transmitter                   //
---              AMBA3 APB-Lite Bus Interface                                  //
+--              Wishbone Bus Interface                                        //
 --                                                                            //
 --//////////////////////////////////////////////////////////////////////////////
 
@@ -46,217 +46,104 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use ieee.math_real.all;
+
+use work.mpsoc_uart_pkg.all;
 
 entity mpsoc_wb_uart is
   generic (
-    APB_ADDR_WIDTH : integer := 12;  --APB slaves are 4KB by default
-    APB_DATA_WIDTH : integer := 32   --APB slaves are 4KB by default
+    SIM   : integer := 0;
+    DEBUG : integer := 0
     );
   port (
-    CLK     : in  std_logic;
-    RSTN    : in  std_logic;
-    PADDR   : in  std_logic_vector(APB_ADDR_WIDTH-1 downto 0);
-    PWDATA  : in  std_logic_vector(APB_DATA_WIDTH-1 downto 0);
-    PWRITE  : in  std_logic;
-    PSEL    : in  std_logic;
-    PENABLE : in  std_logic;
-    PRDATA  : out std_logic_vector(APB_DATA_WIDTH-1 downto 0);
-    PREADY  : out std_logic;
-    PSLVERR : out std_logic;
+    wb_clk_i : in std_logic;
+    wb_rst_i : in std_logic;
 
-    rx_i : in  std_logic;  -- Receiver input
-    tx_o : out std_logic;  -- Transmitter output
+    -- WISHBONE interface
+    wb_adr_i : in  std_logic_vector(2 downto 0);
+    wb_dat_i : in  std_logic_vector(7 downto 0);
+    wb_dat_o : out std_logic_vector(7 downto 0);
+    wb_we_i  : in  std_logic;
+    wb_stb_i : in  std_logic;
+    wb_cyc_i : in  std_logic;
+    wb_sel_i : in  std_logic_vector(3 downto 0);
+    wb_ack_o : out std_logic;
+    int_o    : out std_logic;
 
-    event_o : out std_logic  -- interrupt/event output
+    -- UART  signals
+    srx_pad_i : in  std_logic;
+    stx_pad_o : out std_logic;
+    rts_pad_o : out std_logic;
+    cts_pad_i : in  std_logic;
+    dtr_pad_o : out std_logic;
+    dsr_pad_i : in  std_logic;
+    ri_pad_i  : in  std_logic;
+    dcd_pad_i : in  std_logic;
+
+    -- optional baudrate output
+    baud_o : out std_logic
     );
 end mpsoc_wb_uart;
 
 architecture RTL of mpsoc_wb_uart is
-  component mpsoc_uart_rx
+  component mpsoc_wb_uart_peripheral_bridge
     port (
-      clk_i           : in  std_logic;
-      rstn_i          : in  std_logic;
-      rx_i            : in  std_logic;
-      cfg_div_i       : in  std_logic_vector(15 downto 0);
-      cfg_en_i        : in  std_logic;
-      cfg_parity_en_i : in  std_logic;
-      cfg_bits_i      : in  std_logic_vector(1 downto 0);
-      busy_o          : out std_logic;
-      err_o           : out std_logic;
-      err_clr_i       : in  std_logic;
-      rx_data_o       : out std_logic_vector(7 downto 0);
-      rx_valid_o      : out std_logic;
-      rx_ready_i      : in  std_logic
+      clk : in std_logic;
+
+      -- WISHBONE interface  
+      wb_rst_i : in std_logic;
+      wb_we_i  : in std_logic;
+      wb_stb_i : in std_logic;
+      wb_cyc_i : in std_logic;
+      wb_sel_i : in std_logic_vector(3 downto 0);
+      wb_adr_i : in std_logic_vector(2 downto 0);  --WISHBONE address line
+
+      wb_dat_i   : in  std_logic_vector(7 downto 0);  --input WISHBONE bus 
+      wb_dat_o   : out std_logic_vector(7 downto 0);
+      wb_adr_int : out std_logic_vector(2 downto 0);  -- internal signal for address bus
+      wb_dat8_o  : in  std_logic_vector(7 downto 0);  -- internal 8 bit output to be put into wb_dat_o
+      wb_dat8_i  : out std_logic_vector(7 downto 0);
+      wb_dat32_o : in  std_logic_vector(31 downto 0);  -- 32 bit data output (for debug interface)
+      wb_ack_o   : out std_logic;
+      we_o       : out std_logic;
+      re_o       : out std_logic
       );
   end component;
 
-  component mpsoc_uart_tx
-    port (
-      clk_i           : in  std_logic;
-      rstn_i          : in  std_logic;
-      tx_o            : out std_logic;
-      busy_o          : out std_logic;
-      cfg_en_i        : in  std_logic;
-      cfg_div_i       : in  std_logic_vector(15 downto 0);
-      cfg_parity_en_i : in  std_logic;
-      cfg_bits_i      : in  std_logic_vector(1 downto 0);
-      cfg_stop_bits_i : in  std_logic;
-      tx_data_i       : in  std_logic_vector(7 downto 0);
-      tx_valid_i      : in  std_logic;
-      tx_ready_o      : out std_logic
-      );
-  end component;
-
-  component mpsoc_uart_fifo
+  component mpsoc_wb_uart_regs
     generic (
-      DATA_WIDTH       : integer := 32;
-      BUFFER_DEPTH     : integer := 2;
-      LOG_BUFFER_DEPTH : integer := 4
+      SIM : integer := 0
       );
     port (
-      clk_i  : in std_logic;
-      rstn_i : in std_logic;
+      clk       : in  std_logic;
+      wb_rst_i  : in  std_logic;
+      wb_addr_i : in  std_logic_vector(2 downto 0);
+      wb_dat_i  : in  std_logic_vector(7 downto 0);
+      wb_dat_o  : out std_logic_vector(7 downto 0);
+      wb_we_i   : in  std_logic;
+      wb_re_i   : in  std_logic;
 
-      clr_i : in std_logic;
+      stx_pad_o : out std_logic;
+      srx_pad_i : in  std_logic;
 
-      elements_o : out std_logic_vector(LOG_BUFFER_DEPTH downto 0);
-
-      data_o  : out std_logic_vector(DATA_WIDTH-1 downto 0);
-      valid_o : out std_logic;
-      ready_i : in  std_logic;
-
-      valid_i : in  std_logic;
-      data_i  : in  std_logic_vector(DATA_WIDTH-1 downto 0);
-      ready_o : out std_logic
+      modem_inputs : in  std_logic_vector(3 downto 0);
+      rts_pad_o    : out std_logic;
+      dtr_pad_o    : out std_logic;
+      int_o        : out std_logic;
+      baud_o       : out std_logic
       );
   end component;
-
-  component mpsoc_uart_interrupt
-    generic (
-      TX_FIFO_DEPTH : integer := 32;
-      RX_FIFO_DEPTH : integer := 32
-      );
-    port (
-      clk_i  : in std_logic;
-      rstn_i : in std_logic;
-
-      -- registers
-      IER_i : in std_logic_vector(2 downto 0);  -- interrupt enable register
-      RDA_i : in std_logic;                     -- receiver data available
-      CTI_i : in std_logic;                     -- character timeout indication
-
-      -- control logic
-      error_i         : in std_logic;
-      rx_elements_i   : in std_logic_vector(integer(log2(real(RX_FIFO_DEPTH))) downto 0);
-      tx_elements_i   : in std_logic_vector(integer(log2(real(TX_FIFO_DEPTH))) downto 0);
-      trigger_level_i : in std_logic_vector(1 downto 0);
-
-      clr_int_i : in std_logic_vector(3 downto 0);  -- one hot
-
-      interrupt_o : out std_logic;
-      IIR_o       : out std_logic_vector(3 downto 0)
-      );
-  end component;
-
-  --////////////////////////////////////////////////////////////////
-  --
-  -- Constants
-  --
-
-  -- register addresses
-  constant HRBR : std_logic_vector(2 downto 0) := "000";
-  constant HTHR : std_logic_vector(2 downto 0) := "000";
-  constant HDLL : std_logic_vector(2 downto 0) := "000";
-  constant HIER : std_logic_vector(2 downto 0) := "001";
-  constant HDLM : std_logic_vector(2 downto 0) := "001";
-  constant HIIR : std_logic_vector(2 downto 0) := "010";
-  constant HFCR : std_logic_vector(2 downto 0) := "010";
-  constant HLCR : std_logic_vector(2 downto 0) := "011";
-  constant HMCR : std_logic_vector(2 downto 0) := "100";
-  constant HLSR : std_logic_vector(2 downto 0) := "101";
-  constant HMSR : std_logic_vector(2 downto 0) := "110";
-  constant HSCR : std_logic_vector(2 downto 0) := "111";
-
-  constant RBR : integer := 0;
-  constant THR : integer := 0;
-  constant DLL : integer := 0;
-  constant IER : integer := 1;
-  constant DLM : integer := 1;
-  constant IIR : integer := 2;
-  constant FCR : integer := 2;
-  constant LCR : integer := 3;
-  constant MCR : integer := 4;
-  constant LSR : integer := 5;
-  constant MSR : integer := 6;
-  constant SCR : integer := 7;
-
-  constant TX_FIFO_DEPTH : integer := 16;  -- in bytes
-  constant RX_FIFO_DEPTH : integer := 16;  -- in bytes
-
-  --////////////////////////////////////////////////////////////////
-  --
-  -- Functions
-  --
-  function reduce_or (
-    reduce_or_in : std_logic_vector
-  ) return std_logic is
-    variable reduce_or_out : std_logic := '0';
-  begin
-    for i in reduce_or_in'range loop
-      reduce_or_out := reduce_or_out or reduce_or_in(i);
-    end loop;
-    return reduce_or_out;
-  end reduce_or;
-
-  --////////////////////////////////////////////////////////////////
-  --
-  -- Types
-  --
-
-  type M_9_7 is array (9 downto 0) of std_logic_vector(7 downto 0);
 
   --////////////////////////////////////////////////////////////////
   --
   -- Variables
   --
+  signal wb_dat8_i  : std_logic_vector(7 downto 0);  -- 8-bit internal data input
+  signal wb_dat8_o  : std_logic_vector(7 downto 0);  -- 8-bit internal data output output
+  signal wb_adr_int : std_logic_vector(2 downto 0);
+  signal we_o       : std_logic;  -- Write enable for registers
+  signal re_o       : std_logic;  -- Read enable for registers
 
-  signal register_adr                     : std_logic_vector(2 downto 0);
-  signal regs_q, regs_n                   : M_9_7;
-  signal trigger_level_n, trigger_level_q : std_logic_vector(1 downto 0);
-
-  -- receive buffer register, read only
-  signal rx_data      : std_logic_vector(7 downto 0);
-  signal parity_error : std_logic;
-  signal IIR_o        : std_logic_vector(3 downto 0);
-  signal clr_int      : std_logic_vector(3 downto 0);
-
-  -- tx flow control
-  signal tx_ready : std_logic;
-
-  -- rx flow control
-  signal apb_rx_ready : std_logic;
-  signal rx_valid     : std_logic;
-
-  signal tx_fifo_clr_n, tx_fifo_clr_q : std_logic;
-  signal rx_fifo_clr_n, rx_fifo_clr_q : std_logic;
-
-  signal fifo_tx_valid : std_logic;
-  signal tx_valid      : std_logic;
-  signal fifo_rx_valid : std_logic;
-  signal fifo_rx_ready : std_logic;
-  signal rx_ready      : std_logic;
-
-  signal fifo_tx_data : std_logic_vector(7 downto 0);
-  signal fifo_rx_data : std_logic_vector(8 downto 0);
-
-  signal tx_data     : std_logic_vector(7 downto 0);
-  signal tx_elements : std_logic_vector(integer(log2(real(TX_FIFO_DEPTH))) downto 0);
-  signal rx_elements : std_logic_vector(integer(log2(real(RX_FIFO_DEPTH))) downto 0);
-
-  signal cfg_div_i : std_logic_vector(15 downto 0);
-
-  signal data_rx_fifo_i : std_logic_vector(8 downto 0);
+  signal modem_inputs : std_logic_vector(3 downto 0);
 
 begin
   --////////////////////////////////////////////////////////////////
@@ -264,236 +151,50 @@ begin
   -- Module Body
   --
 
-  -- TODO: check that stop bits are really not necessary here
-  mpsoc_uart_rx_i : mpsoc_uart_rx
+  -- WISHBONE interface module
+  wb_interface : mpsoc_wb_uart_peripheral_bridge
     port map (
-      clk_i           => CLK,
-      rstn_i          => RSTN,
-      rx_i            => rx_i,
-      cfg_en_i        => '1',
-      cfg_div_i       => cfg_div_i,
-      cfg_parity_en_i => regs_q(LCR)(3),
-      cfg_bits_i      => regs_q(LCR)(1 downto 0),
-      busy_o          => open,
-      err_o           => parity_error,
-      err_clr_i       => '1',
-      rx_data_o       => rx_data,
-      rx_valid_o      => rx_valid,
-      rx_ready_i      => rx_ready
+      clk        => wb_clk_i,
+      wb_rst_i   => wb_rst_i,
+      wb_dat_i   => wb_dat_i,
+      wb_dat_o   => wb_dat_o,
+      wb_dat8_i  => wb_dat8_i,
+      wb_dat8_o  => wb_dat8_o,
+      wb_dat32_o => (others => '0'),
+      wb_sel_i   => (others => '0'),
+      wb_we_i    => wb_we_i,
+      wb_stb_i   => wb_stb_i,
+      wb_cyc_i   => wb_cyc_i,
+      wb_ack_o   => wb_ack_o,
+      wb_adr_i   => wb_adr_i,
+      wb_adr_int => wb_adr_int,
+      we_o       => we_o,
+      re_o       => re_o
       );
 
-  mpsoc_uart_tx_i : mpsoc_uart_tx
-    port map (
-      clk_i           => CLK,
-      rstn_i          => RSTN,
-      tx_o            => tx_o,
-      busy_o          => open,
-      cfg_en_i        => '1',
-      cfg_div_i       => cfg_div_i,
-      cfg_parity_en_i => regs_q(LCR)(3),
-      cfg_bits_i      => regs_q(LCR)(1 downto 0),
-      cfg_stop_bits_i => regs_q(LCR)(2),
-
-      tx_data_i  => tx_data,
-      tx_valid_i => tx_valid,
-      tx_ready_o => tx_ready
-      );
-
-  cfg_div_i <= regs_q(DLM+8) & regs_q(DLL+8);
-
-  uart_rx_fifo_i : mpsoc_uart_fifo
+  -- Registers
+  regs : mpsoc_wb_uart_regs
     generic map (
-      DATA_WIDTH       => 9,
-      BUFFER_DEPTH     => RX_FIFO_DEPTH,
-      LOG_BUFFER_DEPTH => integer(log2(real(RX_FIFO_DEPTH)))
+      SIM => SIM
       )
     port map (
-      clk_i  => CLK,
-      rstn_i => RSTN,
+      clk          => wb_clk_i,
+      wb_rst_i     => wb_rst_i,
+      wb_addr_i    => wb_adr_int,
+      wb_dat_i     => wb_dat8_i,
+      wb_dat_o     => wb_dat8_o,
+      wb_we_i      => we_o,
+      wb_re_i      => re_o,
 
-      clr_i => rx_fifo_clr_q,
+      stx_pad_o    => stx_pad_o,
+      srx_pad_i    => srx_pad_i,
 
-      elements_o => rx_elements,
-
-      data_o  => fifo_rx_data,
-      valid_o => fifo_rx_valid,
-      ready_i => fifo_rx_ready,
-
-      valid_i => rx_valid,
-      data_i  => data_rx_fifo_i,
-      ready_o => rx_ready
+      modem_inputs => modem_inputs,
+      rts_pad_o    => rts_pad_o,
+      dtr_pad_o    => dtr_pad_o,
+      int_o        => int_o,
+      baud_o       => baud_o
       );
 
-  data_rx_fifo_i <= parity_error & rx_data;
-
-  uart_tx_fifo_i : mpsoc_uart_fifo
-    generic map (
-      DATA_WIDTH       => 8,
-      BUFFER_DEPTH     => TX_FIFO_DEPTH,
-      LOG_BUFFER_DEPTH => integer(log2(real(TX_FIFO_DEPTH)))
-      )
-    port map (
-      clk_i  => CLK,
-      rstn_i => RSTN,
-
-      clr_i => tx_fifo_clr_q,
-
-      elements_o => tx_elements,
-
-      data_o  => tx_data,
-      valid_o => tx_valid,
-      ready_i => tx_ready,
-
-      valid_i => fifo_tx_valid,
-      data_i  => fifo_tx_data,
-      -- not needed since we are getting the status via the fifo population
-      ready_o => open
-      );
-
-  mpsoc_uart_interrupt_i : mpsoc_uart_interrupt
-    generic map (
-      TX_FIFO_DEPTH => TX_FIFO_DEPTH,
-      RX_FIFO_DEPTH => RX_FIFO_DEPTH
-      )
-    port map (
-      clk_i  => CLK,
-      rstn_i => RSTN,
-
-      IER_i => regs_q(IER)(2 downto 0),  -- interrupt enable register
-      RDA_i => regs_n(LSR)(5),           -- receiver data available
-      CTI_i => '0',                      -- character timeout indication
-
-      error_i         => regs_n(LSR)(2),
-      rx_elements_i   => rx_elements,
-      tx_elements_i   => tx_elements,
-      trigger_level_i => trigger_level_q,
-
-      clr_int_i => clr_int,             -- one hot
-
-      interrupt_o => event_o,
-      IIR_o       => IIR_o
-      );
-
-  -- UART Registers
-
-  -- register write and update logic
-  processing_0 : process (register_adr)
-  begin
-    regs_n          <= regs_q;
-    trigger_level_n <= trigger_level_q;
-    fifo_tx_valid   <= '0';
-    tx_fifo_clr_n   <= '0';             -- self clearing
-    rx_fifo_clr_n   <= '0';             -- self clearing
-    -- rx status
-    regs_n(LSR)(0)  <= fifo_rx_valid;   -- fifo is empty
-    -- parity error on receiving part has occured
-    regs_n(LSR)(2)  <= fifo_rx_data(8);  -- parity error is detected when element is retrieved
-    -- tx status register
-    regs_n(LSR)(5)  <= not reduce_or(tx_elements);               -- fifo is empty
-    regs_n(LSR)(6)  <= tx_ready and not reduce_or(tx_elements);  -- shift register and fifo are empty
-    if (PSEL = '1' and PENABLE = '1' and PWRITE = '1') then
-      case ((register_adr)) is
-        when HTHR =>
-          -- either THR or DLL
-          -- Divisor Latch Access Bit (DLAB)
-          if (regs_q(LCR)(7) = '1') then
-            regs_n(DLL+8) <= PWDATA(7 downto 0);
-          else
-            fifo_tx_data  <= PWDATA(7 downto 0);
-            fifo_tx_valid <= '1';
-          end if;
-        when HIER =>
-          -- either IER or DLM
-          -- Divisor Latch Access Bit (DLAB)
-          if (regs_q(LCR)(7) = '1') then
-            regs_n(DLM+8) <= PWDATA(7 downto 0);
-          else
-            regs_n(IER) <= PWDATA(7 downto 0);
-          end if;
-        when HLCR =>
-          regs_n(LCR) <= PWDATA(7 downto 0);
-        when HFCR =>
-          -- write only register, fifo control register
-          rx_fifo_clr_n   <= PWDATA(1);
-          tx_fifo_clr_n   <= PWDATA(2);
-          trigger_level_n <= PWDATA(7 downto 6);
-        when others =>
-          null;
-      end case;
-    end if;
-  end process;
-
-  -- register read logic
-  processing_1 : process (register_adr)
-  begin
-    PRDATA        <= (others => '0');
-    apb_rx_ready  <= '0';
-    fifo_rx_ready <= '0';
-    clr_int       <= (others => '0');
-    if (PSEL = '1' and PENABLE = '1' and PWRITE = '0') then
-      case ((register_adr)) is
-        when HRBR =>
-          -- either RBR or DLL
-          -- Divisor Latch Access Bit (DLAB)
-          if (regs_q(LCR)(7) = '1') then
-            PRDATA <= ('0' & regs_q(DLL+8));
-          else
-            fifo_rx_ready <= '1';
-            PRDATA        <= ('0' & fifo_rx_data(7 downto 0));
-            clr_int       <= "1000";  -- clear Received Data Available interrupt
-          end if;
-        when HLSR =>
-          -- Line Status Register
-          PRDATA  <= ('0' & regs_q(LSR));
-          clr_int <= "1100";            -- clear parrity interrupt error
-        when HLCR =>
-          -- Line Control Register
-          PRDATA <= ('0' & regs_q(LCR));
-        when HIER =>
-          -- either IER or DLM
-          -- Divisor Latch Access Bit (DLAB)
-          if (regs_q(LCR)(7) = '1') then
-            PRDATA <= ('0' & regs_q(DLM+8));
-          else
-            PRDATA <= ('0' & regs_q(IER));
-          end if;
-        when HIIR =>
-          -- interrupt identification register read only
-          PRDATA  <= ('0' & '1' & '1' & '0' & IIR_o);
-          clr_int <= "0100";  -- clear Transmitter Holding Register Empty
-        when others =>
-          null;
-      end case;
-    end if;
-  end process;
-
-  -- synchronouse part
-  processing_2 : process (CLK, RSTN)
-  begin
-    if (RSTN = '0') then
-      regs_q(IER)     <= X"00";
-      regs_q(IIR)     <= X"01";
-      regs_q(LCR)     <= X"00";
-      regs_q(MCR)     <= X"00";
-      regs_q(LSR)     <= X"60";
-      regs_q(MSR)     <= X"00";
-      regs_q(SCR)     <= X"00";
-      regs_q(DLM+8)   <= X"00";
-      regs_q(DLL+8)   <= X"00";
-      trigger_level_q <= "00";
-      tx_fifo_clr_q   <= '0';
-      rx_fifo_clr_q   <= '0';
-    elsif (rising_edge(CLK)) then
-      regs_q          <= regs_n;
-      trigger_level_q <= trigger_level_n;
-      tx_fifo_clr_q   <= tx_fifo_clr_n;
-      rx_fifo_clr_q   <= rx_fifo_clr_n;
-    end if;
-  end process;
-
-  register_adr <= (PADDR(2 downto 0));
-  -- APB logic: we are always ready to capture the data into our regs
-  -- not supporting transfare failure
-  PREADY       <= '1';
-  PSLVERR      <= '0';
+  modem_inputs <= (cts_pad_i & dsr_pad_i & ri_pad_i & dcd_pad_i);
 end RTL;

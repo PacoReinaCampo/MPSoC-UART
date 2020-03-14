@@ -52,6 +52,9 @@ module mpsoc_msi_testbench;
   parameter APB_DATA_WIDTH = 8;
   parameter SYNC_DEPTH     = 3;
 
+  parameter SIM   = 0;
+  parameter DEBUG = 0;
+
   //////////////////////////////////////////////////////////////////
   //
   // Variables
@@ -89,6 +92,32 @@ module mpsoc_msi_testbench;
   logic                       uart_tx_o;  // Transmitter output
 
   logic                       uart_event_o;
+
+  //UART WB
+
+  // WISHBONE interface
+  logic  [2:0]           wb_adr_i;
+  logic  [7:0]           wb_dat_i;
+  logic  [7:0]           wb_dat_o;
+  logic                  wb_we_i;
+  logic                  wb_stb_i;
+  logic                  wb_cyc_i;
+  logic  [3:0]           wb_sel_i;
+  logic                  wb_ack_o;
+  logic                  int_o;
+
+  // UART  signals
+  logic                  srx_pad_i;
+  logic                  stx_pad_o;
+  logic                  rts_pad_o;
+  logic                  cts_pad_i;
+  logic                  dtr_pad_o;
+  logic                  dsr_pad_i;
+  logic                  ri_pad_i;
+  logic                  dcd_pad_i;
+
+  // optional baudrate output
+  logic baud_o;
 
   //////////////////////////////////////////////////////////////////
   //
@@ -162,68 +191,36 @@ module mpsoc_msi_testbench;
   );
 
   //DUT WB
-  mpsoc_wb_peripheral_bridge #(
-    .HADDR_SIZE ( HADDR_SIZE     ),
-    .HDATA_SIZE ( HDATA_SIZE     ),
-    .PADDR_SIZE ( APB_ADDR_WIDTH ),
-    .PDATA_SIZE ( APB_DATA_WIDTH ),
-    .SYNC_DEPTH ( SYNC_DEPTH     )
-  )
-  uart_wb_bridge (
-    //AHB Slave Interface
-    .HRESETn   ( HRESETn ),
-    .HCLK      ( HCLK    ),
-
-    .HSEL      (       ),
-    .HADDR     (      ),
-    .HWDATA    (     ),
-    .HRDATA    (     ),
-    .HWRITE    (     ),
-    .HSIZE     (      ),
-    .HBURST    (     ),
-    .HPROT     (      ),
-    .HTRANS    (     ),
-    .HMASTLOCK (  ),
-    .HREADYOUT (  ),
-    .HREADY    (     ),
-    .HRESP     (      ),
-
-    //APB Master Interface
-    .PRESETn ( HRESETn ),
-    .PCLK    ( HCLK    ),
-
-    .PSEL    (     ),
-    .PENABLE (  ),
-    .PPROT   (              ),
-    .PWRITE  (   ),
-    .PSTRB   (              ),
-    .PADDR   (    ),
-    .PWDATA  (   ),
-    .PRDATA  (   ),
-    .PREADY  (   ),
-    .PSLVERR (  )
-  );
-
   mpsoc_wb_uart #(
-    .APB_ADDR_WIDTH ( APB_ADDR_WIDTH ),
-    .APB_DATA_WIDTH ( APB_DATA_WIDTH )
+    .SIM   (SIM),
+    .DEBUG (DEBUG)
   )
   wb_uart (
-    .RSTN ( HRESETn ),
-    .CLK  ( HCLK    ),
+    .wb_clk_i (HCLK),
+    .wb_rst_i (HRESETn),
 
-    .PADDR   (    ),
-    .PWDATA  (   ),
-    .PWRITE  (   ),
-    .PSEL    (     ),
-    .PENABLE (  ),
-    .PRDATA  (   ),
-    .PREADY  (   ),
-    .PSLVERR (  ),
+    // WISHBONE interface
+    .wb_adr_i (wb_adr_i),
+    .wb_dat_i (wb_dat_i),
+    .wb_dat_o (wb_dat_o),
+    .wb_we_i  (wb_we_i),
+    .wb_stb_i (wb_stb_i),
+    .wb_cyc_i (wb_cyc_i),
+    .wb_sel_i (wb_sel_i),
+    .wb_ack_o (wb_ack_o),
+    .int_o    (int_o),
 
-    .rx_i (  ),
-    .tx_o (  ),
+    // UART  signals
+    .srx_pad_i (srx_pad_i),
+    .stx_pad_o (stx_pad_o),
+    .rts_pad_o (rts_pad_o),
+    .cts_pad_i (cts_pad_i),
+    .dtr_pad_o (dtr_pad_o),
+    .dsr_pad_i (dsr_pad_i),
+    .ri_pad_i  (ri_pad_i),
+    .dcd_pad_i (dcd_pad_i),
 
-    .event_o (  )
+    // optional baudrate output
+    .baud_o (baud_o)
   );
 endmodule

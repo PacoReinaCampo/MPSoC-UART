@@ -53,11 +53,11 @@ module mpsoc_wb_uart_peripheral_bridge (
   input  [3:0]   wb_sel_i,
   input  [2:0]   wb_adr_i,  //WISHBONE address line
 
-  input  [7:0]  wb_dat_i,   //input WISHBONE bus 
-  output [7:0]  wb_dat_o,
-  output [2:0]  wb_adr_int, // internal signal for address bus
-  input  [7:0]  wb_dat8_o,  // internal 8 bit output to be put into wb_dat_o
-  output [7:0]  wb_dat8_i,
+  input  [ 7:0] wb_dat_i,   //input WISHBONE bus 
+  output [ 7:0] wb_dat_o,
+  output [ 2:0] wb_adr_int, // internal signal for address bus
+  input  [ 7:0] wb_dat8_o,  // internal 8 bit output to be put into wb_dat_o
+  output [ 7:0] wb_dat8_i,
   input  [31:0] wb_dat32_o, // 32 bit data output (for debug interface)
   output        wb_ack_o,
   output        we_o,
@@ -103,7 +103,8 @@ module mpsoc_wb_uart_peripheral_bridge (
             wre <= 0;
             wbstate  <= 1;
             wb_ack_o <= 1;
-          end else begin
+          end
+          else begin
             wre      <= 1;
             wb_ack_o <= 0;
           end

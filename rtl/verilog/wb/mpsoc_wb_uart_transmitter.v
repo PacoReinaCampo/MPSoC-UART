@@ -105,7 +105,8 @@ module mpsoc_wb_uart_transmitter #(
     .FIFO_DEPTH     (16),
     .FIFO_POINTER_W (4),
     .FIFO_COUNTER_W (5)
-  ) fifo_tx (  // error bit signal is not used in transmitter FIFO
+  )
+  fifo_tx (  // error bit signal is not used in transmitter FIFO
     .clk          ( clk         ), 
     .wb_rst_i     ( wb_rst_i    ),
     .data_in      ( tf_data_in  ),

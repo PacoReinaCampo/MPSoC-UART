@@ -52,12 +52,12 @@ module mpsoc_wb_uart_receiver (
   input         rx_reset,
   input         lsr_mask,
 
-  output [9:0]                      counter_t,
+  output [                     9:0] counter_t,
   output [`UART_FIFO_COUNTER_W-1:0] rf_count,
   output [`UART_FIFO_REC_WIDTH-1:0] rf_data_out,
   output                            rf_overrun,
   output                            rf_error_bit,
-  output [3:0]                      rstate,
+  output [                     3:0] rstate,
   output                            rf_push_pulse
 );
 
@@ -129,7 +129,8 @@ module mpsoc_wb_uart_receiver (
     .FIFO_DEPTH     (16),
     .FIFO_POINTER_W (4),
     .FIFO_COUNTER_W (5)
-  ) fifo_rx (
+  )
+  fifo_rx (
     .clk          (clk), 
     .wb_rst_i     (wb_rst_i),
     .data_in      (rf_data_in),

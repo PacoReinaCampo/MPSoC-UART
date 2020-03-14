@@ -87,11 +87,11 @@ module mpsoc_wb_uart  #(
   wire [7:0] wb_dat_i;
   wire [7:0] wb_dat_o;
 
-  wire [7:0]  wb_dat8_i;  // 8-bit internal data input
-  wire [7:0]  wb_dat8_o;  // 8-bit internal data output
+  wire [ 7:0] wb_dat8_i;  // 8-bit internal data input
+  wire [ 7:0] wb_dat8_o;  // 8-bit internal data output
   wire [31:0] wb_dat32_o; // debug interface 32-bit output
-  wire [3:0]  wb_sel_i;   // WISHBONE select signal
-  wire [2:0]  wb_adr_int;
+  wire [ 3:0] wb_sel_i;   // WISHBONE select signal
+  wire [ 2:0] wb_adr_int;
   wire        we_o;  // Write enable for registers
   wire        re_o;  // Read enable for registers
 
@@ -138,7 +138,6 @@ module mpsoc_wb_uart  #(
     .dtr_pad_o    ( dtr_pad_o ),
     .int_o        ( int_o     ),
     .baud_o       ( baud_o    )
-
   );
 
   initial begin
