@@ -1,12 +1,12 @@
-# MSI-MPSoC WIKI
+# UART-MPSoC WIKI
 
-A Master Slave Interface (MSI) is a model of communication where one device has unidirectional control over other devices. A master is selected from a group of eligible devices, with the other devices acting in the role of slaves. The ARM Advanced Microcontroller Bus Architecture (AMBA) and Wishbone Bus are an open-standard, on-chip interconnect specification for the connection and management of functional blocks.
+A Universal Asynchronous Receiver Transmitter (UART) is a computer hardware device for asynchronous serial communication in which the data format and transmission speeds are configurable. The electric signaling levels and methods are handled by a driver circuit external to the UART. A UART is used for serial communications over a computer or peripheral device serial port.
 
 
 ## Instruction INPUTS/OUTPUTS AMBA3 AHB-Lite Bus
 
 | Port         |  Size  | Direction | Description                                           |
-| -------------| ------ | --------- | ----------------------------------------------------- |
+| ------------ | ------ | --------- | ----------------------------------------------------- |
 | `HRESETn`    |    1   |   Input   | Asynchronous active low reset                         |
 | `HCLK`       |    1   |   Input   | System clock input                                    |
 |              |        |           |                                                       |
@@ -27,7 +27,7 @@ A Master Slave Interface (MSI) is a model of communication where one device has 
 ## Instruction INPUTS/OUTPUTS Wishbone Bus
 
 | Port    |  Size  | Direction | Description                     |
-| --------| ------ | --------- | ------------------------------- |
+| ------- | ------ | --------- | ------------------------------- |
 | `rst`   |    1   |   Input   | Synchronous, active high        |
 | `clk`   |    1   |   Input   | Master clock                    |
 |         |        |           |                                 |
@@ -46,7 +46,7 @@ A Master Slave Interface (MSI) is a model of communication where one device has 
 ## Data INPUTS/OUTPUTS AMBA3 AHB-Lite Bus
 
 | Port         |  Size  | Direction | Description                                           |
-| -------------| ------ | --------- | ----------------------------------------------------- |
+| ------------ | ------ | --------- | ----------------------------------------------------- |
 | `HRESETn`    |    1   |   Input   | Asynchronous active low reset                         |
 | `HCLK`       |    1   |   Input   | System clock input                                    |
 |              |        |           |                                                       |
@@ -67,7 +67,7 @@ A Master Slave Interface (MSI) is a model of communication where one device has 
 ## Data INPUTS/OUTPUTS Wishbone Bus
 
 | Port    |  Size  | Direction | Description                     |
-| --------| ------ | --------- | ------------------------------- |
+| ------- | ------ | --------- | ------------------------------- |
 | `rst`   |    1   |   Input   | Synchronous, active high        |
 | `clk`   |    1   |   Input   | Master clock                    |
 |         |        |           |                                 |
@@ -81,106 +81,3 @@ A Master Slave Interface (MSI) is a model of communication where one device has 
 | `dack`  |    1   |   Output  | Bus cycle acknowledge output    |
 | `derr`  |    1   |   Output  | Bus cycle error output          |
 | `dint`  |    1   |   Output  | Interrupt signal output         |
-
-
-## Data INPUTS/OUTPUTS Wishbone Bus
-
-|Language              | files | blank | comment | code |
-| ---------------------| ----- | ----- | ------- | ---- |
-|VHDL                  |    19 |   804 |    1606 | 4953 |
-|Verilog-SystemVerilog |    11 |   398 |     917 | 1869 |
-
-
-## Hardware Description Language
-
-msi
-├── bench
-│   ├── verilog
-│   │   └── regression
-│   │       └── mpsoc_msi_testbench.sv
-│   └── vhdl
-│       └── regression
-│           └── mpsoc_msi_testbench.vhd
-├── doc
-│   └── MPSoC-MSI.txt
-├── rtl
-│   ├── verilog
-│   │   ├── core
-│   │   │   ├── mpsoc_msi_interface.sv
-│   │   │   ├── mpsoc_msi_master_port.sv
-│   │   │   └── mpsoc_msi_slave_port.sv
-│   │   ├── gpio
-│   │   │   ├── mpsoc_peripheral_bridge.sv
-│   │   │   └── mpsoc_gpio.sv
-│   │   ├── pkg
-│   │   │   └── mpsoc_pkg.sv
-│   │   └── ram
-│   │       ├── mpsoc_mpram.sv
-│   │       ├── mpsoc_ram_1r1w_generic.sv
-│   │       ├── mpsoc_ram_1r1w.sv
-│   │       └── mpsoc_spram.sv
-│   └── vhdl
-│       ├── core
-│       │   ├── generic
-│       │   │   ├── mpsoc_msi_interface.vhd
-│       │   │   ├── mpsoc_msi_master_port.vhd
-│       │   │   └── mpsoc_msi_slave_port.vhd
-│       │   ├── misd
-│       │   │   ├── mpsoc_misd_memory_interface.vhd
-│       │   │   ├── mpsoc_misd_memory_master_port.vhd
-│       │   │   └── mpsoc_misd_memory_slave_port.vhd
-│       │   └── simd
-│       │       ├── mpsoc_simd_memory_interface.vhd
-│       │       ├── mpsoc_simd_memory_master_port.vhd
-│       │       └── mpsoc_simd_memory_slave_port.vhd
-│       ├── gpio
-│       │   ├── mpsoc_peripheral_bridge.vhd
-│       │   └── mpsoc_gpio.vhd
-│       ├── pkg
-│       │   ├── mpsoc_pkg.vhd
-│       │   └── mpsoc_msi_pkg.vhd
-│       └── ram
-│           ├── mpsoc_misd_mpram.vhd
-│           ├── mpsoc_ram_1r1w_generic.vhd
-│           ├── mpsoc_ram_1r1w.vhd
-│           ├── mpsoc_simd_mpram.vhd
-│           └── mpsoc_spram.vhd
-├── sim
-│   ├── mixed
-│   │   └── regression
-│   │       └── bin
-│   │           ├── Makefile
-│   │           ├── mpsoc_msi_verilog.vc
-│   │           ├── mpsoc_msi_vhdl.vc
-│   │           ├── run.do
-│   │           └── transcript
-│   ├── verilog
-│   │   └── regression
-│   │       └── bin
-│   │           ├── Makefile
-│   │           ├── mpsoc_msi.vc
-│   │           ├── run.do
-│   │           └── transcript
-│   └── vhdl
-│       └── regression
-│           └── bin
-│               ├── Makefile
-│               ├── mpsoc_msi.vc
-│               ├── run.do
-│               └── transcript
-├── system.vtor
-├── system.qf
-├── system.ys
-├── README.md
-├── CLEAN-IT
-├── DELETE-IT
-├── EXECUTE-IT
-├── SIMULATE-MIXED-MS-IT
-├── SIMULATE-VHDL-GHDL-IT
-├── SIMULATE-VHDL-MS-IT
-├── SIMULATE-VLOG-IV-IT
-├── SIMULATE-VLOG-MS-IT
-├── SIMULATE-VLOG-VTOR-MSI-IT
-├── SYNTHESIZE-VLOG-YS-IT
-├── TRANSLATE-IT
-└── UPLOAD-IT

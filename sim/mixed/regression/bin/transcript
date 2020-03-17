@@ -1,5 +1,5 @@
 # vsim -c -do "run.do" work.mpsoc_msi_testbench 
-# Start time: 02:21:48 on Mar 14,2020
+# Start time: 02:54:08 on Mar 14,2020
 # Loading sv_std.std
 # Loading work.mpsoc_msi_testbench
 # Loading std.standard
@@ -25,5 +25,5 @@
 # Loading work.mpsoc_wb_uart_receiver(rtl)
 # Loading work.mpsoc_wb_uart_rfifo(rtl)
 # do run.do
-# End time: 02:21:48 on Mar 14,2020, Elapsed time: 0:00:00
+# End time: 02:54:08 on Mar 14,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
