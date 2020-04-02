@@ -1,0 +1,8 @@
+mpsoc_uart_testbench [entity]
+`-rtl [arch]
+  +-uart_ahb3_bridge [instance]
+  +-ahb3_uart [instance]
+  `-wb_uart [instance]
+std.standard [package]
+ieee.std_logic_1164 [package]
+ieee.numeric_std [package]

@@ -45,12 +45,12 @@ module mpsoc_wb_uart_sync_flops #(
   parameter INIT_VALUE = 1'b0
 )
   (
-    input              rst_i,            // reset input
-    input              clk_i,            // clock input
-    input              stage1_rst_i,     // synchronous reset for stage 1 FF
-    input              stage1_clk_en_i,  // synchronous clock enable for stage 1 FF
-    input  [WIDTH-1:0] async_dat_i,      // asynchronous data input
-    output [WIDTH-1:0] sync_dat_o        // synchronous data output
+    input                  rst_i,            // reset input
+    input                  clk_i,            // clock input
+    input                  stage1_rst_i,     // synchronous reset for stage 1 FF
+    input                  stage1_clk_en_i,  // synchronous clock enable for stage 1 FF
+    input      [WIDTH-1:0] async_dat_i,      // asynchronous data input
+    output reg [WIDTH-1:0] sync_dat_o        // synchronous data output
   );
 
   //////////////////////////////////////////////////////////////////
@@ -59,7 +59,6 @@ module mpsoc_wb_uart_sync_flops #(
   //
 
   // Internal signal declarations
-  reg [WIDTH-1:0] sync_dat_o;
   reg [WIDTH-1:0] flop_0;
 
   //////////////////////////////////////////////////////////////////

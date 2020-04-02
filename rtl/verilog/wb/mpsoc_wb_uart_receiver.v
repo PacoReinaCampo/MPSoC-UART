@@ -40,7 +40,7 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-`include "mpsoc_uart_pkg.v"
+`include "mpsoc_uart_wb_pkg.v"
 
 module mpsoc_wb_uart_receiver (
   input         clk,
@@ -52,13 +52,13 @@ module mpsoc_wb_uart_receiver (
   input         rx_reset,
   input         lsr_mask,
 
-  output [                     9:0] counter_t,
-  output [`UART_FIFO_COUNTER_W-1:0] rf_count,
-  output [`UART_FIFO_REC_WIDTH-1:0] rf_data_out,
-  output                            rf_overrun,
-  output                            rf_error_bit,
-  output [                     3:0] rstate,
-  output                            rf_push_pulse
+  output reg [                     9:0] counter_t,
+  output     [`UART_FIFO_COUNTER_W-1:0] rf_count,
+  output     [`UART_FIFO_REC_WIDTH-1:0] rf_data_out,
+  output                                rf_overrun,
+  output                                rf_error_bit,
+  output reg [                     3:0] rstate,
+  output                                rf_push_pulse
 );
 
   //////////////////////////////////////////////////////////////////
@@ -81,7 +81,6 @@ module mpsoc_wb_uart_receiver (
   //
   // Variables
   //
-  reg  [3:0]  rstate;
   reg  [3:0]  rcounter16;
   reg  [2:0]  rbit_counter;
   reg  [7:0]  rshift;  // receiver shift register
@@ -94,13 +93,7 @@ module mpsoc_wb_uart_receiver (
 
   // RX FIFO signals
   reg   [`UART_FIFO_REC_WIDTH-1:0] rf_data_in;
-  wire  [`UART_FIFO_REC_WIDTH-1:0] rf_data_out;
-  wire                             rf_push_pulse;
   reg                              rf_push;
-  wire                             rf_pop;
-  wire                             rf_overrun;
-  wire  [`UART_FIFO_COUNTER_W-1:0] rf_count;
-  wire                             rf_error_bit; // an error (parity or framing) is inside the fifo
 
   wire break_error = (counter_b == 0);
 
@@ -114,9 +107,6 @@ module mpsoc_wb_uart_receiver (
 
   // value to be set to break counter
   wire [7:0]   brc_value;
-
-  // counts the timeout condition clocks
-  reg  [9:0]  counter_t;
 
   //////////////////////////////////////////////////////////////////
   //

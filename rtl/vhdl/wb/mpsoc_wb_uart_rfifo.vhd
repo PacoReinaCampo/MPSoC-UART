@@ -47,7 +47,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.mpsoc_uart_pkg.all;
+use work.mpsoc_uart_wb_pkg.all;
 
 entity mpsoc_wb_uart_rfifo is
   generic (
@@ -91,18 +91,12 @@ architecture RTL of mpsoc_wb_uart_rfifo is
 
   --////////////////////////////////////////////////////////////////
   --
-  -- Types
-  --
-  type M_FIFO_DEPTH_2 is array (FIFO_DEPTH-1 downto 0) of std_logic_vector(2 downto 0);
-
-  --////////////////////////////////////////////////////////////////
-  --
   -- Variables
   --
   signal data8_out : std_logic_vector(7 downto 0);
 
   -- flags FIFO
-  signal fifo : M_FIFO_DEPTH_2;
+  signal fifo : std_logic_matrix(FIFO_DEPTH-1 downto 0)(2 downto 0);
 
   -- FIFO pointers
   signal top    : std_logic_vector(FIFO_POINTER_W-1 downto 0);
@@ -129,21 +123,6 @@ architecture RTL of mpsoc_wb_uart_rfifo is
   signal word13 : std_logic_vector(2 downto 0);
   signal word14 : std_logic_vector(2 downto 0);
   signal word15 : std_logic_vector(2 downto 0);
-
-  --//////////////////////////////////////////////////////////////
-  --
-  -- Functions
-  --
-  function reduce_or (
-    reduce_or_in : std_logic_vector
-    ) return std_logic is
-    variable reduce_or_out : std_logic := '0';
-  begin
-    for i in reduce_or_in'range loop
-      reduce_or_out := reduce_or_out or reduce_or_in(i);
-    end loop;
-    return reduce_or_out;
-  end reduce_or;
 
 begin
   --////////////////////////////////////////////////////////////////

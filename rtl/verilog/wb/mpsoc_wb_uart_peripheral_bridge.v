@@ -40,48 +40,40 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-`include "mpsoc_uart_pkg.v"
+`include "mpsoc_uart_wb_pkg.v"
 
 module mpsoc_wb_uart_peripheral_bridge (
-  input          clk,
+  input              clk,
 
   // WISHBONE interface  
-  input          wb_rst_i,
-  input          wb_we_i,
-  input          wb_stb_i,
-  input          wb_cyc_i,
-  input  [3:0]   wb_sel_i,
-  input  [2:0]   wb_adr_i,  //WISHBONE address line
+  input              wb_rst_i,
+  input              wb_we_i,
+  input              wb_stb_i,
+  input              wb_cyc_i,
+  input      [ 3:0]  wb_sel_i,
+  input      [ 2:0]  wb_adr_i,  //WISHBONE address line
 
-  input  [ 7:0] wb_dat_i,   //input WISHBONE bus 
-  output [ 7:0] wb_dat_o,
-  output [ 2:0] wb_adr_int, // internal signal for address bus
-  input  [ 7:0] wb_dat8_o,  // internal 8 bit output to be put into wb_dat_o
-  output [ 7:0] wb_dat8_i,
-  input  [31:0] wb_dat32_o, // 32 bit data output (for debug interface)
-  output        wb_ack_o,
-  output        we_o,
-  output        re_o
+  input      [ 7:0] wb_dat_i,   //input WISHBONE bus 
+  output reg [ 7:0] wb_dat_o,
+  output     [ 2:0] wb_adr_int, // internal signal for address bus
+  input      [ 7:0] wb_dat8_o,  // internal 8 bit output to be put into wb_dat_o
+  output reg [ 7:0] wb_dat8_i,
+  input      [31:0] wb_dat32_o, // 32 bit data output (for debug interface)
+  output reg        wb_ack_o,
+  output            we_o,
+  output            re_o
 );
 
   //////////////////////////////////////////////////////////////////
   //
   // Variables
   //
-  reg  [7:0] wb_dat_o;
-  wire [7:0] wb_dat_i;
   reg  [7:0] wb_dat_is;
-
-  wire       we_o;
-  reg        wb_ack_o;
-  reg  [7:0] wb_dat8_i;
-  wire [7:0] wb_dat8_o;
-  wire [2:0] wb_adr_int;  // internal signal for address bus
   reg  [2:0] wb_adr_is;
   reg        wb_we_is;
   reg        wb_cyc_is;
   reg        wb_stb_is;
-  wire [3:0] wb_sel_i;
+
   reg        wre;  // timing control signal for write or read enable
 
   // wb_ack_o FSM

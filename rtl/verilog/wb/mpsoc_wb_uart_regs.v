@@ -40,7 +40,7 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-`include "mpsoc_uart_pkg.v"
+`include "mpsoc_uart_wb_pkg.v"
 
 `define UART_DL1 7:0
 `define UART_DL2 15:8
@@ -49,41 +49,31 @@ module mpsoc_wb_uart_regs #(
   parameter SIM = 0
 )
   (
-    input        clk,
-    input        wb_rst_i,
-    input  [2:0] wb_addr_i,
-    input  [7:0] wb_dat_i,
-    output [7:0] wb_dat_o,
-    input        wb_we_i,
-    input        wb_re_i,
+    input            clk,
+    input            wb_rst_i,
+    input      [2:0] wb_addr_i,
+    input      [7:0] wb_dat_i,
+    output reg [7:0] wb_dat_o,
+    input            wb_we_i,
+    input            wb_re_i,
 
     output       stx_pad_o,
     input        srx_pad_i,
 
-    input  [3:0] modem_inputs,
-    output       rts_pad_o,
-    output       dtr_pad_o,
-    output       int_o,
-    output       baud_o
+    input     [3:0] modem_inputs,
+    output          rts_pad_o,
+    output          dtr_pad_o,
+    output reg      int_o,
+    output          baud_o
   );
 
   //////////////////////////////////////////////////////////////////
   //
   // Variables
   //
-  wire [3:0] modem_inputs;
   reg        enable;
 
-
-  wire                     stx_pad_o;    // received from transmitter module
-  wire                     srx_pad_i;
   wire                     srx_pad;
-
-  reg [7:0] wb_dat_o;
-
-  wire [2:0] wb_addr_i;
-  wire [7:0] wb_dat_i;
-
 
   reg [ 3:0]                ier;
   reg [ 3:0]                iir;
@@ -98,7 +88,6 @@ module mpsoc_wb_uart_regs #(
   reg                       msi_reset;  // reset MSR 4 lower bits indicator
   //reg                     three_clear; // THRE interrupt clear flag
   reg [15:0]                dlc;  // 32-bit divisor latch counter
-  reg                       int_o;
 
   reg [3:0]               trigger_level; // trigger level of the receiver FIFO
   reg                     rx_reset;
@@ -109,7 +98,6 @@ module mpsoc_wb_uart_regs #(
   wire                     loopback;  // loopback bit (MCR bit 4)
   wire                     cts, dsr, ri, dcd;  // effective signals
   wire                     cts_c, dsr_c, ri_c, dcd_c;  // Complement effective signals (considering loopback)
-  wire                     rts_pad_o, dtr_pad_o;  // modem control outputs
 
   // LSR bits wires and regs
   wire [7:0]             lsr;

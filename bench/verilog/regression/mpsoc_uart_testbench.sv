@@ -40,7 +40,7 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-module mpsoc_msi_testbench;
+module mpsoc_uart_testbench;
 
   //////////////////////////////////////////////////////////////////
   //

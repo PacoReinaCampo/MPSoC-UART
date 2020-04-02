@@ -60,12 +60,7 @@ module mpsoc_wb_raminfr #(
   //
   // Variables
   //
-  reg   [DATA_WIDTH-1:0] ram [DEPTH-1:0]; 
-
-  wire  [DATA_WIDTH-1:0] dpo;
-  wire  [DATA_WIDTH-1:0] di;   
-  wire  [ADDR_WIDTH-1:0] a;   
-  wire  [ADDR_WIDTH-1:0] dpra;
+  reg   [DATA_WIDTH-1:0] ram [DEPTH-1:0];
 
   //////////////////////////////////////////////////////////////////
   //

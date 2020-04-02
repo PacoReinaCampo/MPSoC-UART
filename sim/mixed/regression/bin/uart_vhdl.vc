@@ -40,4 +40,22 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-../../../../bench/verilog/regression/mpsoc_msi_testbench.sv
+../../../../rtl/vhdl/pkg/mpsoc_uart_ahb3_pkg.vhd
+../../../../rtl/vhdl/pkg/mpsoc_uart_wb_pkg.vhd
+
+../../../../rtl/vhdl/ahb3/mpsoc_ahb3_peripheral_bridge.vhd
+../../../../rtl/vhdl/ahb3/mpsoc_ahb3_uart.vhd
+../../../../rtl/vhdl/ahb3/mpsoc_uart_fifo.vhd
+../../../../rtl/vhdl/ahb3/mpsoc_uart_interrupt.vhd
+../../../../rtl/vhdl/ahb3/mpsoc_uart_rx.vhd
+../../../../rtl/vhdl/ahb3/mpsoc_uart_tx.vhd
+
+../../../../rtl/vhdl/wb/mpsoc_wb_raminfr.vhd
+../../../../rtl/vhdl/wb/mpsoc_wb_uart.vhd
+../../../../rtl/vhdl/wb/mpsoc_wb_uart_peripheral_bridge.vhd
+../../../../rtl/vhdl/wb/mpsoc_wb_uart_receiver.vhd
+../../../../rtl/vhdl/wb/mpsoc_wb_uart_regs.vhd
+../../../../rtl/vhdl/wb/mpsoc_wb_uart_rfifo.vhd
+../../../../rtl/vhdl/wb/mpsoc_wb_uart_sync_flops.vhd
+../../../../rtl/vhdl/wb/mpsoc_wb_uart_tfifo.vhd
+../../../../rtl/vhdl/wb/mpsoc_wb_uart_transmitter.vhd

@@ -48,6 +48,8 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
 
+use work.mpsoc_uart_ahb3_pkg.all;
+
 entity mpsoc_uart_fifo is
   generic (
     DATA_WIDTH       : integer := 32;
@@ -75,28 +77,6 @@ end mpsoc_uart_fifo;
 architecture RTL of mpsoc_uart_fifo is
   --////////////////////////////////////////////////////////////////
   --
-  -- Functions
-  --
-  function to_stdlogic (
-    input : boolean
-  ) return std_logic is
-  begin
-    if input then
-      return('1');
-    else
-      return('0');
-    end if;
-  end function to_stdlogic;
-
-  --////////////////////////////////////////////////////////////////
-  --
-  -- Types
-  --
-
-  type M_BUFFER_DEPTH_DATA_WIDTH is array (BUFFER_DEPTH-1 downto 0) of std_logic_vector(DATA_WIDTH-1 downto 0);
-
-  --////////////////////////////////////////////////////////////////
-  --
   -- Variables
   --
 
@@ -104,7 +84,7 @@ architecture RTL of mpsoc_uart_fifo is
   signal pointer_in  : std_logic_vector(LOG_BUFFER_DEPTH-1 downto 0);  -- location to which we last wrote
   signal pointer_out : std_logic_vector(LOG_BUFFER_DEPTH-1 downto 0);  -- location from which we last sent
   signal elements    : std_logic_vector(LOG_BUFFER_DEPTH downto 0);  -- number of elements in the buffer
-  signal buffered    : M_BUFFER_DEPTH_DATA_WIDTH;
+  signal buffered    : std_logic_matrix(BUFFER_DEPTH-1 downto 0)(DATA_WIDTH-1 downto 0);
 
   signal full : std_logic;
 

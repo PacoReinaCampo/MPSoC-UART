@@ -47,7 +47,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.mpsoc_uart_pkg.all;
+use work.mpsoc_uart_wb_pkg.all;
 
 entity mpsoc_wb_uart_tfifo is
   generic (

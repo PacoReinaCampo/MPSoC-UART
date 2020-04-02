@@ -1,19 +1,19 @@
-# vsim -c -do "run.do" work.mpsoc_msi_testbench 
-# Start time: 02:19:20 on Mar 14,2020
+# vsim -c -do "run.do" work.mpsoc_uart_testbench 
+# Start time: 06:19:25 on Apr 02,2020
 # Loading std.standard
 # Loading std.textio(body)
 # Loading ieee.std_logic_1164(body)
 # Loading ieee.numeric_std(body)
-# Loading work.mpsoc_msi_testbench(rtl)
+# Loading work.mpsoc_uart_testbench(rtl)
 # Loading ieee.math_real(body)
-# Loading work.mpsoc_pkg
+# Loading work.mpsoc_uart_ahb3_pkg(body)
 # Loading work.mpsoc_ahb3_peripheral_bridge(rtl)
 # Loading work.mpsoc_ahb3_uart(rtl)
 # Loading work.mpsoc_uart_rx(rtl)
 # Loading work.mpsoc_uart_tx(rtl)
 # Loading work.mpsoc_uart_fifo(rtl)
 # Loading work.mpsoc_uart_interrupt(rtl)
-# Loading work.mpsoc_uart_pkg
+# Loading work.mpsoc_uart_wb_pkg(body)
 # Loading work.mpsoc_wb_uart(rtl)
 # Loading work.mpsoc_wb_uart_peripheral_bridge(rtl)
 # Loading work.mpsoc_wb_uart_regs(rtl)
@@ -24,5 +24,5 @@
 # Loading work.mpsoc_wb_uart_receiver(rtl)
 # Loading work.mpsoc_wb_uart_rfifo(rtl)
 # do run.do
-# End time: 02:19:20 on Mar 14,2020, Elapsed time: 0:00:00
+# End time: 06:19:26 on Apr 02,2020, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 0

@@ -40,7 +40,7 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-`include "mpsoc_uart_pkg.v"
+`include "mpsoc_uart_wb_pkg.v"
 
 module mpsoc_wb_uart_rfifo #(
   parameter FIFO_WIDTH     = 8,
@@ -57,17 +57,16 @@ module mpsoc_wb_uart_rfifo #(
     input                       fifo_reset,
     input                       reset_status,
 
-    output [FIFO_WIDTH-1:0]     data_out,
-    output                      overrun,
-    output [FIFO_COUNTER_W-1:0] count,
-    output                      error_bit
+    output     [FIFO_WIDTH    -1:0] data_out,
+    output reg                      overrun,
+    output reg [FIFO_COUNTER_W-1:0] count,
+    output                          error_bit
   );
 
   //////////////////////////////////////////////////////////////////
   //
   // Variables
   //
-  wire [FIFO_WIDTH-1:0] data_out;
   wire [7:0]            data8_out;
 
   // flags FIFO
@@ -76,9 +75,6 @@ module mpsoc_wb_uart_rfifo #(
   // FIFO pointers
   reg [FIFO_POINTER_W-1:0] top;
   reg [FIFO_POINTER_W-1:0] bottom;
-
-  reg [FIFO_COUNTER_W-1:0] count;
-  reg                      overrun;
 
   wire [FIFO_POINTER_W-1:0] top_plus_1 = top + 4'h1;
 

@@ -40,7 +40,7 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-`include "mpsoc_uart_pkg.v"
+`include "mpsoc_uart_wb_pkg.v"
 
 module mpsoc_wb_uart_tfifo #(
   parameter FIFO_WIDTH     = 8,
@@ -49,31 +49,28 @@ module mpsoc_wb_uart_tfifo #(
   parameter FIFO_COUNTER_W = 5
 )
   (
-    input                       clk,
-    input                       wb_rst_i,
-    input                       push,
-    input                       pop,
-    input  [FIFO_WIDTH-1:0]     data_in,
-    input                       fifo_reset,
-    input                       reset_status,
+    input                           clk,
+    input                           wb_rst_i,
+    input                           push,
+    input                           pop,
+    input      [FIFO_WIDTH-1:0]     data_in,
+    input                           fifo_reset,
+    input                           reset_status,
 
-    output [FIFO_WIDTH-1:0]     data_out,
-    output                      overrun,
-    output [FIFO_COUNTER_W-1:0] count
+    output     [FIFO_WIDTH-1:0]     data_out,
+    output reg                      overrun,
+    output reg [FIFO_COUNTER_W-1:0] count
   );
 
   //////////////////////////////////////////////////////////////////
   //
   // Variables
   //
-  wire  [FIFO_WIDTH-1:0]  data_out;
 
   // FIFO pointers
   reg  [FIFO_POINTER_W-1:0] top;
   reg  [FIFO_POINTER_W-1:0] bottom;
 
-  reg  [FIFO_COUNTER_W-1:0] count;
-  reg                       overrun;
   wire [FIFO_POINTER_W-1:0] top_plus_1 = top + 4'd1;
 
   //////////////////////////////////////////////////////////////////

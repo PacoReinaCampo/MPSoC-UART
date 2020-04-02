@@ -40,7 +40,7 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-`include "mpsoc_pkg.sv"
+`include "mpsoc_uart_ahb3_pkg.sv"
 
 module mpsoc_ahb3_peripheral_bridge #(
   parameter HADDR_SIZE = 32,

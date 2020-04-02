@@ -47,6 +47,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+use work.mpsoc_uart_wb_pkg.all;
+
 entity mpsoc_wb_raminfr is
   generic (
     ADDR_WIDTH : integer := 4;
@@ -66,15 +68,9 @@ end mpsoc_wb_raminfr;
 architecture RTL of mpsoc_wb_raminfr is
   --////////////////////////////////////////////////////////////////
   --
-  -- Types
-  --
-  type M_DEPTH_DATA_WIDTH is array (DEPTH-1 downto 0) of std_logic_vector(DATA_WIDTH-1 downto 0);
-
-  --////////////////////////////////////////////////////////////////
-  --
   -- Variables
   --
-  signal ram : M_DEPTH_DATA_WIDTH;
+  signal ram : std_logic_matrix(DEPTH-1 downto 0)(DATA_WIDTH-1 downto 0);
 
 begin
   --////////////////////////////////////////////////////////////////

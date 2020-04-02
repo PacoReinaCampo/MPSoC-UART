@@ -47,7 +47,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.mpsoc_uart_pkg.all;
+use work.mpsoc_uart_wb_pkg.all;
 
 entity mpsoc_wb_uart_transmitter is
   generic (
@@ -124,32 +124,6 @@ architecture RTL of mpsoc_wb_uart_transmitter is
   signal tf_data_out : std_logic_vector(UART_FIFO_WIDTH-1 downto 0);
   signal tf_overrun  : std_logic;
   signal tf_count_o  : std_logic_vector(UART_FIFO_COUNTER_W-1 downto 0);
-
-  --//////////////////////////////////////////////////////////////
-  --
-  -- Functions
-  --
-  function reduce_xor (
-    reduce_xor_in : std_logic_vector
-    ) return std_logic is
-    variable reduce_xor_out : std_logic := '0';
-  begin
-    for i in reduce_xor_in'range loop
-      reduce_xor_out := reduce_xor_out xor reduce_xor_in(i);
-    end loop;
-    return reduce_xor_out;
-  end reduce_xor;
-
-  function reduce_nor (
-    reduce_nor_in : std_logic_vector
-    ) return std_logic is
-    variable reduce_nor_out : std_logic := '0';
-  begin
-    for i in reduce_nor_in'range loop
-      reduce_nor_out := reduce_nor_out nor reduce_nor_in(i);
-    end loop;
-    return reduce_nor_out;
-  end reduce_nor;
 
 begin
   --////////////////////////////////////////////////////////////////

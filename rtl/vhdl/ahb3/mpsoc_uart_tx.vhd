@@ -47,6 +47,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+use work.mpsoc_uart_ahb3_pkg.all;
+
 entity mpsoc_uart_tx is
   port (
     clk_i           : in  std_logic;
@@ -79,25 +81,11 @@ architecture RTL of mpsoc_uart_tx is
 
   --////////////////////////////////////////////////////////////////
   --
-  -- Functions
-  --
-  function to_stdlogic (
-    input : boolean
-  ) return std_logic is
-  begin
-    if input then
-      return('1');
-    else
-      return('0');
-    end if;
-  end function to_stdlogic;
-
-  --////////////////////////////////////////////////////////////////
-  --
   -- Variables
   --
 
-  signal CS, ns : std_logic_vector(2 downto 0);
+  signal CS : std_logic_vector(2 downto 0);
+  signal ns : std_logic_vector(2 downto 0);
 
   signal reg_data      : std_logic_vector(7 downto 0);
   signal reg_data_next : std_logic_vector(7 downto 0);

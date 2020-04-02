@@ -47,7 +47,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.mpsoc_uart_pkg.all;
+use work.mpsoc_uart_wb_pkg.all;
 
 entity mpsoc_wb_uart_regs is
   generic (
@@ -164,8 +164,8 @@ architecture RTL of mpsoc_wb_uart_regs is
   signal rx_reset      : std_logic;
   signal tx_reset      : std_logic;
 
-  signal dlab     : std_logic;          -- divisor latch access bit
-  signal loopback : std_logic;          -- loopback bit (MCR bit 4)
+  signal dlab     : std_logic;  -- divisor latch access bit
+  signal loopback : std_logic;  -- loopback bit (MCR bit 4)
 
   signal cts_pad_i, dsr_pad_i, ri_pad_i, dcd_pad_i : std_logic;  -- modem status bits
 
@@ -174,17 +174,18 @@ architecture RTL of mpsoc_wb_uart_regs is
 
   -- LSR bits wires and regs
   signal lsr      : std_logic_vector(7 downto 0);
-  signal lsr_mask : std_logic;          -- lsr_mask
+  signal lsr_mask : std_logic;  -- lsr_mask
 
-  signal lsr0, lsr1, lsr2, lsr3, lsr4, lsr5, lsr6, lsr7         : std_logic;
+  signal lsr0, lsr1, lsr2, lsr3, lsr4, lsr5, lsr6, lsr7 : std_logic;
+
   signal lsr0r, lsr1r, lsr2r, lsr3r, lsr4r, lsr5r, lsr6r, lsr7r : std_logic;
 
   -- Interrupt signals
-  signal rls_int  : std_logic;          -- receiver line status interrupt
-  signal rda_int  : std_logic;          -- receiver data available interrupt
-  signal ti_int   : std_logic;          -- timeout indicator interrupt
+  signal rls_int  : std_logic;  -- receiver line status interrupt
+  signal rda_int  : std_logic;  -- receiver data available interrupt
+  signal ti_int   : std_logic;  -- timeout indicator interrupt
   signal thre_int : std_logic;  -- transmitter holding register empty interrupt
-  signal ms_int   : std_logic;          -- modem status interrupt
+  signal ms_int   : std_logic;  -- modem status interrupt
 
   -- FIFO signals
   signal tf_push       : std_logic;
@@ -262,32 +263,6 @@ architecture RTL of mpsoc_wb_uart_regs is
   signal thre_int_pnd : std_logic;
   signal ms_int_pnd   : std_logic;
   signal ti_int_pnd   : std_logic;
-
-  --//////////////////////////////////////////////////////////////
-  --
-  -- Functions
-  --
-  function reduce_or (
-    reduce_or_in : std_logic_vector
-    ) return std_logic is
-    variable reduce_or_out : std_logic := '0';
-  begin
-    for i in reduce_or_in'range loop
-      reduce_or_out := reduce_or_out or reduce_or_in(i);
-    end loop;
-    return reduce_or_out;
-  end reduce_or;
-
-  function to_stdlogic (
-    input : boolean
-    ) return std_logic is
-  begin
-    if input then
-      return('1');
-    else
-      return('0');
-    end if;
-  end function to_stdlogic;
 
 begin
   --////////////////////////////////////////////////////////////////

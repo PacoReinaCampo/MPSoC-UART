@@ -1,4 +1,4 @@
--- Converted from bench/verilog/regression/mpsoc_msi_testbench.sv
+-- Converted from bench/verilog/regression/mpsoc_uart_testbench.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -47,10 +47,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity mpsoc_msi_testbench is
-end mpsoc_msi_testbench;
+entity mpsoc_uart_testbench is
+end mpsoc_uart_testbench;
 
-architecture RTL of mpsoc_msi_testbench is
+architecture RTL of mpsoc_uart_testbench is
   component mpsoc_ahb3_peripheral_bridge
     generic (
       HADDR_SIZE : integer := 32;

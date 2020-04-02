@@ -15,4 +15,4 @@ rtl/verilog/wb/mpsoc_wb_uart_sync_flops.v
 rtl/verilog/wb/mpsoc_wb_uart_tfifo.v
 rtl/verilog/wb/mpsoc_wb_uart_transmitter.v
 
-bench/verilog/regression/mpsoc_msi_testbench.sv
+bench/verilog/regression/mpsoc_uart_testbench.sv

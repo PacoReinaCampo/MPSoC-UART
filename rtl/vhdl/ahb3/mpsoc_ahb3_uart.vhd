@@ -48,6 +48,8 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
 
+use work.mpsoc_uart_ahb3_pkg.all;
+
 entity mpsoc_ahb3_uart is
   generic (
     APB_ADDR_WIDTH : integer := 12;  --APB slaves are 4KB by default
@@ -196,34 +198,14 @@ architecture RTL of mpsoc_ahb3_uart is
 
   --////////////////////////////////////////////////////////////////
   --
-  -- Functions
-  --
-  function reduce_or (
-    reduce_or_in : std_logic_vector
-  ) return std_logic is
-    variable reduce_or_out : std_logic := '0';
-  begin
-    for i in reduce_or_in'range loop
-      reduce_or_out := reduce_or_out or reduce_or_in(i);
-    end loop;
-    return reduce_or_out;
-  end reduce_or;
-
-  --////////////////////////////////////////////////////////////////
-  --
-  -- Types
-  --
-
-  type M_9_7 is array (9 downto 0) of std_logic_vector(7 downto 0);
-
-  --////////////////////////////////////////////////////////////////
-  --
   -- Variables
   --
 
-  signal register_adr                     : std_logic_vector(2 downto 0);
-  signal regs_q, regs_n                   : M_9_7;
-  signal trigger_level_n, trigger_level_q : std_logic_vector(1 downto 0);
+  signal register_adr    : std_logic_vector(2 downto 0);
+  signal regs_n          : std_logic_matrix(9 downto 0)(7 downto 0);
+  signal regs_q          : std_logic_matrix(9 downto 0)(7 downto 0);
+  signal trigger_level_n : std_logic_vector(1 downto 0);
+  signal trigger_level_q : std_logic_vector(1 downto 0);
 
   -- receive buffer register, read only
   signal rx_data      : std_logic_vector(7 downto 0);

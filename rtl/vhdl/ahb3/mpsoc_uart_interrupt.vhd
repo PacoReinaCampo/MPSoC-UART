@@ -81,7 +81,9 @@ architecture RTL of mpsoc_uart_interrupt is
   -- Variables
   --
 
-  signal iir_n, iir_q          : std_logic_vector(3 downto 0);
+  signal iir_n : std_logic_vector(3 downto 0);
+  signal iir_q : std_logic_vector(3 downto 0);
+
   signal trigger_level_reached : std_logic;
 
 begin
@@ -95,19 +97,19 @@ begin
     trigger_level_reached <= '0';
     case ((trigger_level_i)) is
       when "00" =>
-        if (unsigned(rx_elements_i) = 1) then
+        if (to_integer(unsigned(rx_elements_i)) = 1) then
           trigger_level_reached <= '1';
         end if;
       when "01" =>
-        if (unsigned(rx_elements_i) = 4) then
+        if (to_integer(unsigned(rx_elements_i)) = 4) then
           trigger_level_reached <= '1';
         end if;
       when "10" =>
-        if (unsigned(rx_elements_i) = 8) then
+        if (to_integer(unsigned(rx_elements_i)) = 8) then
           trigger_level_reached <= '1';
         end if;
       when "11" =>
-        if (unsigned(rx_elements_i) = 14) then
+        if (to_integer(unsigned(rx_elements_i)) = 14) then
           trigger_level_reached <= '1';
         end if;
       when others =>

@@ -47,7 +47,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.mpsoc_uart_pkg.all;
+use work.mpsoc_uart_wb_pkg.all;
 
 entity mpsoc_wb_uart_receiver is
   port (
@@ -146,32 +146,6 @@ architecture RTL of mpsoc_wb_uart_receiver is
 
   -- counts the timeout condition clocks
   signal counter_t_o : std_logic_vector(9 downto 0);
-
-  --//////////////////////////////////////////////////////////////
-  --
-  -- Functions
-  --
-  function reduce_xor (
-    reduce_xor_in : std_logic_vector
-    ) return std_logic is
-    variable reduce_xor_out : std_logic := '0';
-  begin
-    for i in reduce_xor_in'range loop
-      reduce_xor_out := reduce_xor_out xor reduce_xor_in(i);
-    end loop;
-    return reduce_xor_out;
-  end reduce_xor;
-
-  function to_stdlogic (
-    input : boolean
-    ) return std_logic is
-  begin
-    if input then
-      return('1');
-    else
-      return('0');
-    end if;
-  end function to_stdlogic;
 
 begin
   --////////////////////////////////////////////////////////////////

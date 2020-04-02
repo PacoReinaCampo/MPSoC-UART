@@ -40,22 +40,21 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-../../../../rtl/vhdl/pkg/mpsoc_pkg.vhd
-../../../../rtl/vhdl/pkg/mpsoc_uart_pkg.vhd
+../../../../rtl/verilog/ahb3/mpsoc_ahb3_peripheral_bridge.sv
+../../../../rtl/verilog/ahb3/mpsoc_ahb3_uart.sv
+../../../../rtl/verilog/ahb3/mpsoc_uart_fifo.sv
+../../../../rtl/verilog/ahb3/mpsoc_uart_interrupt.sv
+../../../../rtl/verilog/ahb3/mpsoc_uart_rx.sv
+../../../../rtl/verilog/ahb3/mpsoc_uart_tx.sv
 
-../../../../rtl/vhdl/ahb3/mpsoc_ahb3_peripheral_bridge.vhd
-../../../../rtl/vhdl/ahb3/mpsoc_ahb3_uart.vhd
-../../../../rtl/vhdl/ahb3/mpsoc_uart_fifo.vhd
-../../../../rtl/vhdl/ahb3/mpsoc_uart_interrupt.vhd
-../../../../rtl/vhdl/ahb3/mpsoc_uart_rx.vhd
-../../../../rtl/vhdl/ahb3/mpsoc_uart_tx.vhd
+../../../../rtl/verilog/wb/mpsoc_wb_raminfr.v
+../../../../rtl/verilog/wb/mpsoc_wb_uart.v
+../../../../rtl/verilog/wb/mpsoc_wb_uart_peripheral_bridge.v
+../../../../rtl/verilog/wb/mpsoc_wb_uart_receiver.v
+../../../../rtl/verilog/wb/mpsoc_wb_uart_regs.v
+../../../../rtl/verilog/wb/mpsoc_wb_uart_rfifo.v
+../../../../rtl/verilog/wb/mpsoc_wb_uart_sync_flops.v
+../../../../rtl/verilog/wb/mpsoc_wb_uart_tfifo.v
+../../../../rtl/verilog/wb/mpsoc_wb_uart_transmitter.v
 
-../../../../rtl/vhdl/wb/mpsoc_wb_raminfr.vhd
-../../../../rtl/vhdl/wb/mpsoc_wb_uart.vhd
-../../../../rtl/vhdl/wb/mpsoc_wb_uart_peripheral_bridge.vhd
-../../../../rtl/vhdl/wb/mpsoc_wb_uart_receiver.vhd
-../../../../rtl/vhdl/wb/mpsoc_wb_uart_regs.vhd
-../../../../rtl/vhdl/wb/mpsoc_wb_uart_rfifo.vhd
-../../../../rtl/vhdl/wb/mpsoc_wb_uart_sync_flops.vhd
-../../../../rtl/vhdl/wb/mpsoc_wb_uart_tfifo.vhd
-../../../../rtl/vhdl/wb/mpsoc_wb_uart_transmitter.vhd
+../../../../bench/verilog/regression/mpsoc_uart_testbench.sv

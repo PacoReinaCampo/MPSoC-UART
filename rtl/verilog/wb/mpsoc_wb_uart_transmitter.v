@@ -40,7 +40,7 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-`include "mpsoc_uart_pkg.v"
+`include "mpsoc_uart_wb_pkg.v"
 
 module mpsoc_wb_uart_transmitter #(
   parameter SIM = 0
@@ -48,14 +48,14 @@ module mpsoc_wb_uart_transmitter #(
   (
     input                             clk,
     input                             wb_rst_i,
-    input  [7:0]                      lcr,
+    input                       [7:0] lcr,
     input                             tf_push,
-    input  [7:0]                      wb_dat_i,
+    input                       [7:0] wb_dat_i,
     input                             enable,
     input                             tx_reset,
     input                             lsr_mask,  //reset of fifo
     output                            stx_pad_o,
-    output [2:0]                      tstate,
+    output reg                  [2:0] tstate,
     output [`UART_FIFO_COUNTER_W-1:0] tf_count
   );
 
@@ -76,7 +76,6 @@ module mpsoc_wb_uart_transmitter #(
   //
   // Variables
   //
-  reg [2:0] tstate;
   reg [4:0] counter;
   reg [2:0] bit_counter;  // counts the bits to be sent
   reg [6:0] shift_out;  // output shift register
@@ -90,9 +89,7 @@ module mpsoc_wb_uart_transmitter #(
   // Transmitter FIFO signals
   wire [`UART_FIFO_WIDTH-1:0]     tf_data_in;
   wire [`UART_FIFO_WIDTH-1:0]     tf_data_out;
-  wire                            tf_push;
   wire                            tf_overrun;
-  wire [`UART_FIFO_COUNTER_W-1:0] tf_count;
 
   //////////////////////////////////////////////////////////////////
   //
