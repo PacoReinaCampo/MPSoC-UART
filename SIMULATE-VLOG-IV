@@ -1,0 +1,4 @@
+rm -rf uart.vvp
+iverilog -g2012 -o uart.vvp -c uart.vtor -s wb_uart_tb \
+-I rtl/verilog/pkg
+vvp uart.vvp
