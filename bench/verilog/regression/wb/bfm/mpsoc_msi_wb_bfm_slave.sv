@@ -67,7 +67,7 @@ module mpsoc_msi_wb_bfm_slave #(
   // Constants
   //
 
-  `include "mpsoc_bfm_wb_pkg.v"
+  `include "mpsoc_bfm_wb_pkg.sv"
 
   localparam TP = 1;
 

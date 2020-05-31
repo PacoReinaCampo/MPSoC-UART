@@ -40,105 +40,115 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-`include "mpsoc_uart_wb_pkg.v"
+`include "mpsoc_uart_wb_pkg.sv"
 
-module mpsoc_wb_uart  #(
-  parameter SIM   = 0,
-  parameter DEBUG = 0
-)
-  (
-    input                  wb_clk_i,
+module mpsoc_wb_uart_peripheral_bridge (
+  input              clk,
 
-    // WISHBONE interface
-    input                  wb_rst_i,
-    input  [2:0]           wb_adr_i,
-    input  [7:0]           wb_dat_i,
-    output [7:0]           wb_dat_o,
-    input                  wb_we_i,
-    input                  wb_stb_i,
-    input                  wb_cyc_i,
-    input  [3:0]           wb_sel_i,
-    output                 wb_ack_o,
-    output                 int_o,
+  // WISHBONE interface  
+  input              wb_rst_i,
+  input              wb_we_i,
+  input              wb_stb_i,
+  input              wb_cyc_i,
+  input      [ 3:0]  wb_sel_i,
+  input      [ 2:0]  wb_adr_i,  //WISHBONE address line
 
-    // UART  signals
-    input                  srx_pad_i,
-    output                 stx_pad_o,
-    output                 rts_pad_o,
-    input                  cts_pad_i,
-    output                 dtr_pad_o,
-    input                  dsr_pad_i,
-    input                  ri_pad_i,
-    input                  dcd_pad_i,
-
-    // optional baudrate output
-    output baud_o
-  );
+  input      [ 7:0] wb_dat_i,   //input WISHBONE bus 
+  output reg [ 7:0] wb_dat_o,
+  output     [ 2:0] wb_adr_int, // internal signal for address bus
+  input      [ 7:0] wb_dat8_o,  // internal 8 bit output to be put into wb_dat_o
+  output reg [ 7:0] wb_dat8_i,
+  input      [31:0] wb_dat32_o, // 32 bit data output (for debug interface)
+  output reg        wb_ack_o,
+  output            we_o,
+  output            re_o
+);
 
   //////////////////////////////////////////////////////////////////
   //
   // Variables
   //
+  reg  [7:0] wb_dat_is;
+  reg  [2:0] wb_adr_is;
+  reg        wb_we_is;
+  reg        wb_cyc_is;
+  reg        wb_stb_is;
 
-  wire [ 7:0] wb_dat8_i;  // 8-bit internal data input
-  wire [ 7:0] wb_dat8_o;  // 8-bit internal data output
-  wire [31:0] wb_dat32_o; // debug interface 32-bit output
-  wire [ 2:0] wb_adr_int;
-  wire        we_o;  // Write enable for registers
-  wire        re_o;  // Read enable for registers
+  reg        wre;  // timing control signal for write or read enable
+
+  // wb_ack_o FSM
+  reg [1:0] wbstate;
 
   //////////////////////////////////////////////////////////////////
   //
   // Module Body
   //
+  always  @(posedge clk or posedge wb_rst_i)
+    if (wb_rst_i) begin
+      wb_ack_o <= 1'b0;
+      wbstate  <= 0;
+      wre      <= 1'b1;
+    end else
+      case (wbstate)
+        0: begin
+          if (wb_stb_is & wb_cyc_is) begin
+            wre <= 0;
+            wbstate  <= 1;
+            wb_ack_o <= 1;
+          end
+          else begin
+            wre      <= 1;
+            wb_ack_o <= 0;
+          end
+        end
+        1: begin
+          wb_ack_o <= 0;
+          wbstate  <= 2;
+          wre      <= 0;
+        end
+        2: begin
+          wb_ack_o <= 0;
+          wbstate  <= 3;
+          wre      <= 0;
+        end
+        3: begin
+          wb_ack_o <= 0;
+          wbstate  <= 0;
+          wre      <= 1;
+        end
+      endcase
 
-  ////  WISHBONE interface module
-  mpsoc_wb_uart_peripheral_bridge wb_interface (
-    .clk        ( wb_clk_i   ),
-    .wb_rst_i   ( wb_rst_i   ),
-    .wb_dat_i   ( wb_dat_i   ),
-    .wb_dat_o   ( wb_dat_o   ),
-    .wb_dat8_i  ( wb_dat8_i  ),
-    .wb_dat8_o  ( wb_dat8_o  ),
-    .wb_dat32_o ( 32'b0      ),                 
-    .wb_sel_i   ( 4'b0       ),
-    .wb_we_i    ( wb_we_i    ),
-    .wb_stb_i   ( wb_stb_i   ),
-    .wb_cyc_i   ( wb_cyc_i   ),
-    .wb_ack_o   ( wb_ack_o   ),
-    .wb_adr_i   ( wb_adr_i   ),
-    .wb_adr_int ( wb_adr_int ),
-    .we_o       ( we_o       ),
-    .re_o       ( re_o       )
-  );
+  assign we_o =  wb_we_is & wb_stb_is & wb_cyc_is & wre ; //WE for registers  
+  assign re_o = ~wb_we_is & wb_stb_is & wb_cyc_is & wre ; //RE for registers  
 
-  // Registers
-  mpsoc_wb_uart_regs #(
-    .SIM (SIM)
-  ) regs (
-    .clk          ( wb_clk_i   ),
-    .wb_rst_i     ( wb_rst_i   ),
-    .wb_addr_i    ( wb_adr_int ),
-    .wb_dat_i     ( wb_dat8_i  ),
-    .wb_dat_o     ( wb_dat8_o  ),
-    .wb_we_i      ( we_o       ),
-    .wb_re_i      ( re_o       ),
-    .modem_inputs ( {cts_pad_i, dsr_pad_i, ri_pad_i, dcd_pad_i} ),
-    .stx_pad_o    ( stx_pad_o ),
-    .srx_pad_i    ( srx_pad_i ),
-    .rts_pad_o    ( rts_pad_o ),
-    .dtr_pad_o    ( dtr_pad_o ),
-    .int_o        ( int_o     ),
-    .baud_o       ( baud_o    )
-  );
-
-  initial begin
-    if(DEBUG) begin
-      `ifdef UART_HAS_BAUDRATE_OUTPUT
-      $display("(%m) UART INFO: Has baudrate output\n");
-      `else
-      $display("(%m) UART INFO: Doesn't have baudrate output\n");
-      `endif
+  // Sample input signals
+  always  @(posedge clk or posedge wb_rst_i) begin
+    if (wb_rst_i) begin
+      wb_adr_is <= 0;
+      wb_we_is  <= 0;
+      wb_cyc_is <= 0;
+      wb_stb_is <= 0;
+      wb_dat_is <= 0;
+    end
+    else begin
+      wb_adr_is <= wb_adr_i;
+      wb_we_is  <= wb_we_i;
+      wb_cyc_is <= wb_cyc_i;
+      wb_stb_is <= wb_stb_i;
+      wb_dat_is <= wb_dat_i;
     end
   end
+
+  always @(posedge clk or posedge wb_rst_i) begin
+    if (wb_rst_i)
+      wb_dat_o <= 0;
+    else
+      wb_dat_o <= wb_dat8_o;
+  end
+
+  always @(wb_dat_is) begin
+    wb_dat8_i = wb_dat_is;
+  end
+
+  assign wb_adr_int = wb_adr_is;
 endmodule

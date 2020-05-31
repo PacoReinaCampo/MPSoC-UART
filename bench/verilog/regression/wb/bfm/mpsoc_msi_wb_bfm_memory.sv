@@ -75,7 +75,7 @@ module mpsoc_msi_wb_bfm_memory #(
   // Constants
   //
 
-  `include "mpsoc_bfm_wb_pkg.v"
+  `include "mpsoc_bfm_wb_pkg.sv"
 
   localparam bytes_per_dw = (DW/8);
   localparam mem_words = (MEM_SIZE_BYTES/bytes_per_dw);

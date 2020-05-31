@@ -40,7 +40,7 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-`include "mpsoc_uart_wb_pkg.v"
+`include "mpsoc_uart_wb_pkg.sv"
 
 module mpsoc_wb_uart_rfifo #(
   parameter FIFO_WIDTH     = 8,

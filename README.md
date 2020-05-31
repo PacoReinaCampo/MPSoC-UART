@@ -1,4 +1,4 @@
-# UART-MPSoC WIKI
+# MPSoC-UART WIKI
 
 ## Definition
 
@@ -83,7 +83,7 @@ sudo make install
 
 ```
 cd synthesis/yosys
-source SIMULATE-IT
+source SYNTHESIZE-IT
 ```
 
 ## Instruction INPUTS/OUTPUTS AMBA3 AHB-Lite Bus

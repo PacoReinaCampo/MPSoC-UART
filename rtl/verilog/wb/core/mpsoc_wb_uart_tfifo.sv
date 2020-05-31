@@ -40,115 +40,93 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-`include "mpsoc_uart_wb_pkg.v"
+`include "mpsoc_uart_wb_pkg.sv"
 
-module mpsoc_wb_uart_peripheral_bridge (
-  input              clk,
+module mpsoc_wb_uart_tfifo #(
+  parameter FIFO_WIDTH     = 8,
+  parameter FIFO_DEPTH     = 16,
+  parameter FIFO_POINTER_W = 4,
+  parameter FIFO_COUNTER_W = 5
+)
+  (
+    input                           clk,
+    input                           wb_rst_i,
+    input                           push,
+    input                           pop,
+    input      [FIFO_WIDTH-1:0]     data_in,
+    input                           fifo_reset,
+    input                           reset_status,
 
-  // WISHBONE interface  
-  input              wb_rst_i,
-  input              wb_we_i,
-  input              wb_stb_i,
-  input              wb_cyc_i,
-  input      [ 3:0]  wb_sel_i,
-  input      [ 2:0]  wb_adr_i,  //WISHBONE address line
-
-  input      [ 7:0] wb_dat_i,   //input WISHBONE bus 
-  output reg [ 7:0] wb_dat_o,
-  output     [ 2:0] wb_adr_int, // internal signal for address bus
-  input      [ 7:0] wb_dat8_o,  // internal 8 bit output to be put into wb_dat_o
-  output reg [ 7:0] wb_dat8_i,
-  input      [31:0] wb_dat32_o, // 32 bit data output (for debug interface)
-  output reg        wb_ack_o,
-  output            we_o,
-  output            re_o
-);
+    output     [FIFO_WIDTH-1:0]     data_out,
+    output reg                      overrun,
+    output reg [FIFO_COUNTER_W-1:0] count
+  );
 
   //////////////////////////////////////////////////////////////////
   //
   // Variables
   //
-  reg  [7:0] wb_dat_is;
-  reg  [2:0] wb_adr_is;
-  reg        wb_we_is;
-  reg        wb_cyc_is;
-  reg        wb_stb_is;
 
-  reg        wre;  // timing control signal for write or read enable
+  // FIFO pointers
+  reg  [FIFO_POINTER_W-1:0] top;
+  reg  [FIFO_POINTER_W-1:0] bottom;
 
-  // wb_ack_o FSM
-  reg [1:0] wbstate;
+  wire [FIFO_POINTER_W-1:0] top_plus_1 = top + 4'd1;
 
   //////////////////////////////////////////////////////////////////
   //
   // Module Body
   //
-  always  @(posedge clk or posedge wb_rst_i)
-    if (wb_rst_i) begin
-      wb_ack_o <= 1'b0;
-      wbstate  <= 0;
-      wre      <= 1'b1;
-    end else
-      case (wbstate)
-        0: begin
-          if (wb_stb_is & wb_cyc_is) begin
-            wre <= 0;
-            wbstate  <= 1;
-            wb_ack_o <= 1;
-          end
-          else begin
-            wre      <= 1;
-            wb_ack_o <= 0;
-          end
-        end
-        1: begin
-          wb_ack_o <= 0;
-          wbstate  <= 2;
-          wre      <= 0;
-        end
-        2: begin
-          wb_ack_o <= 0;
-          wbstate  <= 3;
-          wre      <= 0;
-        end
-        3: begin
-          wb_ack_o <= 0;
-          wbstate  <= 0;
-          wre      <= 1;
-        end
-      endcase
+  mpsoc_wb_raminfr #(
+    .ADDR_WIDTH (FIFO_POINTER_W),
+    .DATA_WIDTH (FIFO_WIDTH),
+    .DEPTH      (FIFO_DEPTH)
+  )
+  tfifo ( 
+    .clk(clk), 
+    .we(push), 
+    .a(top), 
+    .dpra(bottom), 
+    .di(data_in), 
+    .dpo(data_out)
+  ); 
 
-  assign we_o =  wb_we_is & wb_stb_is & wb_cyc_is & wre ; //WE for registers  
-  assign re_o = ~wb_we_is & wb_stb_is & wb_cyc_is & wre ; //RE for registers  
-
-  // Sample input signals
-  always  @(posedge clk or posedge wb_rst_i) begin
+  always @(posedge clk or posedge wb_rst_i) begin  // synchronous FIFO
     if (wb_rst_i) begin
-      wb_adr_is <= 0;
-      wb_we_is  <= 0;
-      wb_cyc_is <= 0;
-      wb_stb_is <= 0;
-      wb_dat_is <= 0;
+      top    <= 0;
+      bottom <= 0;
+      count  <= 0;
+    end
+    else if (fifo_reset) begin
+      top    <= 0;
+      bottom <= 0;
+      count  <= 0;
     end
     else begin
-      wb_adr_is <= wb_adr_i;
-      wb_we_is  <= wb_we_i;
-      wb_cyc_is <= wb_cyc_i;
-      wb_stb_is <= wb_stb_i;
-      wb_dat_is <= wb_dat_i;
+      case ({push, pop})
+        2'b10 : if (count<FIFO_DEPTH) begin  // overrun condition
+          top   <= top_plus_1;
+          count <= count + 5'd1;
+        end
+        2'b01 : if(count>0) begin
+          bottom <= bottom + 4'd1;
+          count  <= count - 5'd1;
+        end
+        2'b11 : begin
+          bottom <= bottom + 4'd1;
+          top    <= top_plus_1;
+        end
+        default: ;
+      endcase
     end
-  end
+  end  // always
 
-  always @(posedge clk or posedge wb_rst_i) begin
+  always @(posedge clk or posedge wb_rst_i) begin  // synchronous FIFO
     if (wb_rst_i)
-      wb_dat_o <= 0;
-    else
-      wb_dat_o <= wb_dat8_o;
-  end
-
-  always @(wb_dat_is) begin
-    wb_dat8_i = wb_dat_is;
-  end
-
-  assign wb_adr_int = wb_adr_is;
+      overrun   <= 1'b0;
+    else if(fifo_reset | reset_status) 
+      overrun   <= 1'b0;
+    else if(push & (count==FIFO_DEPTH))
+      overrun   <= 1'b1;
+  end  // always
 endmodule

@@ -40,7 +40,7 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-`include "mpsoc_uart_wb_pkg.v"
+`include "mpsoc_uart_wb_pkg.sv"
 
 `define UART_DL1 7:0
 `define UART_DL2 15:8

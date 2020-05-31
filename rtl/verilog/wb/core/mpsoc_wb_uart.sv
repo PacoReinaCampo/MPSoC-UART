@@ -40,26 +40,39 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-`include "mpsoc_uart_wb_pkg.v"
+`include "mpsoc_uart_wb_pkg.sv"
 
-module mpsoc_wb_uart_tfifo #(
-  parameter FIFO_WIDTH     = 8,
-  parameter FIFO_DEPTH     = 16,
-  parameter FIFO_POINTER_W = 4,
-  parameter FIFO_COUNTER_W = 5
+module mpsoc_wb_uart  #(
+  parameter SIM   = 0,
+  parameter DEBUG = 0
 )
   (
-    input                           clk,
-    input                           wb_rst_i,
-    input                           push,
-    input                           pop,
-    input      [FIFO_WIDTH-1:0]     data_in,
-    input                           fifo_reset,
-    input                           reset_status,
+    input                  wb_clk_i,
 
-    output     [FIFO_WIDTH-1:0]     data_out,
-    output reg                      overrun,
-    output reg [FIFO_COUNTER_W-1:0] count
+    // WISHBONE interface
+    input                  wb_rst_i,
+    input  [2:0]           wb_adr_i,
+    input  [7:0]           wb_dat_i,
+    output [7:0]           wb_dat_o,
+    input                  wb_we_i,
+    input                  wb_stb_i,
+    input                  wb_cyc_i,
+    input  [3:0]           wb_sel_i,
+    output                 wb_ack_o,
+    output                 int_o,
+
+    // UART  signals
+    input                  srx_pad_i,
+    output                 stx_pad_o,
+    output                 rts_pad_o,
+    input                  cts_pad_i,
+    output                 dtr_pad_o,
+    input                  dsr_pad_i,
+    input                  ri_pad_i,
+    input                  dcd_pad_i,
+
+    // optional baudrate output
+    output baud_o
   );
 
   //////////////////////////////////////////////////////////////////
@@ -67,66 +80,65 @@ module mpsoc_wb_uart_tfifo #(
   // Variables
   //
 
-  // FIFO pointers
-  reg  [FIFO_POINTER_W-1:0] top;
-  reg  [FIFO_POINTER_W-1:0] bottom;
-
-  wire [FIFO_POINTER_W-1:0] top_plus_1 = top + 4'd1;
+  wire [ 7:0] wb_dat8_i;  // 8-bit internal data input
+  wire [ 7:0] wb_dat8_o;  // 8-bit internal data output
+  wire [31:0] wb_dat32_o; // debug interface 32-bit output
+  wire [ 2:0] wb_adr_int;
+  wire        we_o;  // Write enable for registers
+  wire        re_o;  // Read enable for registers
 
   //////////////////////////////////////////////////////////////////
   //
   // Module Body
   //
-  mpsoc_wb_raminfr #(
-    .ADDR_WIDTH (FIFO_POINTER_W),
-    .DATA_WIDTH (FIFO_WIDTH),
-    .DEPTH      (FIFO_DEPTH)
-  )
-  tfifo ( 
-    .clk(clk), 
-    .we(push), 
-    .a(top), 
-    .dpra(bottom), 
-    .di(data_in), 
-    .dpo(data_out)
-  ); 
 
-  always @(posedge clk or posedge wb_rst_i) begin  // synchronous FIFO
-    if (wb_rst_i) begin
-      top    <= 0;
-      bottom <= 0;
-      count  <= 0;
-    end
-    else if (fifo_reset) begin
-      top    <= 0;
-      bottom <= 0;
-      count  <= 0;
-    end
-    else begin
-      case ({push, pop})
-        2'b10 : if (count<FIFO_DEPTH) begin  // overrun condition
-          top   <= top_plus_1;
-          count <= count + 5'd1;
-        end
-        2'b01 : if(count>0) begin
-          bottom <= bottom + 4'd1;
-          count  <= count - 5'd1;
-        end
-        2'b11 : begin
-          bottom <= bottom + 4'd1;
-          top    <= top_plus_1;
-        end
-        default: ;
-      endcase
-    end
-  end  // always
+  ////  WISHBONE interface module
+  mpsoc_wb_uart_peripheral_bridge wb_interface (
+    .clk        ( wb_clk_i   ),
+    .wb_rst_i   ( wb_rst_i   ),
+    .wb_dat_i   ( wb_dat_i   ),
+    .wb_dat_o   ( wb_dat_o   ),
+    .wb_dat8_i  ( wb_dat8_i  ),
+    .wb_dat8_o  ( wb_dat8_o  ),
+    .wb_dat32_o ( 32'b0      ),                 
+    .wb_sel_i   ( 4'b0       ),
+    .wb_we_i    ( wb_we_i    ),
+    .wb_stb_i   ( wb_stb_i   ),
+    .wb_cyc_i   ( wb_cyc_i   ),
+    .wb_ack_o   ( wb_ack_o   ),
+    .wb_adr_i   ( wb_adr_i   ),
+    .wb_adr_int ( wb_adr_int ),
+    .we_o       ( we_o       ),
+    .re_o       ( re_o       )
+  );
 
-  always @(posedge clk or posedge wb_rst_i) begin  // synchronous FIFO
-    if (wb_rst_i)
-      overrun   <= 1'b0;
-    else if(fifo_reset | reset_status) 
-      overrun   <= 1'b0;
-    else if(push & (count==FIFO_DEPTH))
-      overrun   <= 1'b1;
-  end  // always
+  // Registers
+  mpsoc_wb_uart_regs #(
+    .SIM (SIM)
+  ) regs (
+    .clk          ( wb_clk_i   ),
+    .wb_rst_i     ( wb_rst_i   ),
+    .wb_addr_i    ( wb_adr_int ),
+    .wb_dat_i     ( wb_dat8_i  ),
+    .wb_dat_o     ( wb_dat8_o  ),
+    .wb_we_i      ( we_o       ),
+    .wb_re_i      ( re_o       ),
+    .modem_inputs ( {cts_pad_i, dsr_pad_i, ri_pad_i, dcd_pad_i} ),
+    .stx_pad_o    ( stx_pad_o ),
+    .srx_pad_i    ( srx_pad_i ),
+    .rts_pad_o    ( rts_pad_o ),
+    .dtr_pad_o    ( dtr_pad_o ),
+    .int_o        ( int_o     ),
+    .baud_o       ( baud_o    )
+  );
+
+  initial begin
+    if(DEBUG) begin
+      `ifdef UART_HAS_BAUDRATE_OUTPUT
+      $display("(%m) UART INFO: Has baudrate output\n");
+      `else
+      $display("(%m) UART INFO: Doesn't have baudrate output\n");
+      `endif
+    end
+  end
 endmodule
