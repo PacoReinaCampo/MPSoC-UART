@@ -172,7 +172,7 @@ module mpsoc_wb_uart_regs #(
   // Synchronizing and sampling serial RX input
   mpsoc_wb_uart_sync_flops #(
     .WIDTH      (1),
-    .INIT_VALUE (1'b0)
+    .INIT_VALUE (1'b1)
   )
   i_uart_sync_flops (
     .rst_i           (wb_rst_i),
@@ -182,9 +182,6 @@ module mpsoc_wb_uart_regs #(
     .async_dat_i     (srx_pad_i),
     .sync_dat_o      (srx_pad)
   );
-
-  defparam i_uart_sync_flops.WIDTH      = 1;
-  defparam i_uart_sync_flops.INIT_VALUE = 1'b1;
 
   // handle loopback
   wire serial_in = loopback ? serial_out : srx_pad;
