@@ -40,7 +40,9 @@
 -- *
 -- * =============================================================================
 -- * Author(s):
--- *   Francisco Javier Reina Campo <frareicam@gmail.com>
+-- *   Andrej Erzen <andreje@flextronics.si>
+-- *   Tadej Markovic <tadejm@flextronics.si>
+-- *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 -- */
 
 library ieee;

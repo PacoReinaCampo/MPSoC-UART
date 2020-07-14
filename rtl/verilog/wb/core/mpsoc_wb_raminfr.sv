@@ -37,7 +37,8 @@
  *
  * =============================================================================
  * Author(s):
- *   Francisco Javier Reina Campo <frareicam@gmail.com>
+ *   Jacob Gorban <gorban@opencores.org>
+ *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
 //Following is the Verilog code for a dual-port RAM with asynchronous read. 

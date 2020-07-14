@@ -40,7 +40,9 @@
 -- *
 -- * =============================================================================
 -- * Author(s):
--- *   Francisco Javier Reina Campo <frareicam@gmail.com>
+-- *   Jacob Gorban <gorban@opencores.org>
+-- *   Igor Mohor <igorm@opencores.org>
+-- *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 -- */
 
 library ieee;
