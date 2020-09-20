@@ -1,0 +1,13 @@
+../../../../../rtl/vhdl/wb/pkg/mpsoc_uart_wb_pkg.vhd
+
+../../../../../rtl/vhdl/wb/core/mpsoc_wb_raminfr.vhd
+../../../../../rtl/vhdl/wb/core/mpsoc_wb_uart.vhd
+../../../../../rtl/vhdl/wb/core/mpsoc_wb_uart_peripheral_bridge.vhd
+../../../../../rtl/vhdl/wb/core/mpsoc_wb_uart_receiver.vhd
+../../../../../rtl/vhdl/wb/core/mpsoc_wb_uart_regs.vhd
+../../../../../rtl/vhdl/wb/core/mpsoc_wb_uart_rfifo.vhd
+../../../../../rtl/vhdl/wb/core/mpsoc_wb_uart_sync_flops.vhd
+../../../../../rtl/vhdl/wb/core/mpsoc_wb_uart_tfifo.vhd
+../../../../../rtl/vhdl/wb/core/mpsoc_wb_uart_transmitter.vhd
+
+../../../../../bench/vhdl/tests/wb/mpsoc_uart_testbench.vhd

@@ -1,8 +1,0 @@
-../../../../../rtl/verilog/ahb3/core/mpsoc_ahb3_peripheral_bridge.sv
-../../../../../rtl/verilog/ahb3/core/mpsoc_ahb3_uart.sv
-../../../../../rtl/verilog/ahb3/core/mpsoc_uart_fifo.sv
-../../../../../rtl/verilog/ahb3/core/mpsoc_uart_interrupt.sv
-../../../../../rtl/verilog/ahb3/core/mpsoc_uart_rx.sv
-../../../../../rtl/verilog/ahb3/core/mpsoc_uart_tx.sv
-
-../../../../../bench/verilog/regression/ahb3/mpsoc_uart_testbench.sv
