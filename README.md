@@ -319,9 +319,9 @@ A Universal Asynchronous Receiver Transmitter (DBG) is a Hardware-Software Syste
 
 ### 2.1.1. Functionality
 
-#### 2.1.1.1. Organization
+#### 2.1.1.1. Structure
 
-#### 2.1.1.2. Pipeline
+#### 2.1.1.2. Behavior
 
 ### 2.1.2. Interface
 
@@ -337,9 +337,9 @@ A Universal Asynchronous Receiver Transmitter (DBG) is a Hardware-Software Syste
 
 ### 2.2.1. Functionality
 
-#### 2.2.1.1. Organization
+#### 2.2.1.1. Structure
 
-#### 2.2.1.2. Pipeline
+#### 2.2.1.2. Behavior
 
 ### 2.2.2. Interface
 
@@ -355,9 +355,9 @@ A Universal Asynchronous Receiver Transmitter (DBG) is a Hardware-Software Syste
 
 ### 2.3.1. Functionality
 
-#### 2.3.1.1. Organization
+#### 2.3.1.1. Structure
 
-#### 2.3.1.2. Pipeline
+#### 2.3.1.2. Behavior
 
 ### 2.3.2. Interface
 
