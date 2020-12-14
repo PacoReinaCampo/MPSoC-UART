@@ -321,6 +321,33 @@ A Universal Asynchronous Receiver Transmitter (DBG) is a Hardware-Software Syste
 
 #### 2.1.1.1. Structure
 
+| Core                           | Module description                          |
+| ------------------------------ | ------------------------------------------- |
+| `mpsoc_ahb3_peripheral_bridge` | Universal Asynchronous Receiver Transmitter |
+| `...mpsoc_ahb3_uart`           | Universal Asynchronous Receiver Transmitter |
+| `.....mpsoc_uart_rx`           | Universal Asynchronous Receiver Transmitter |
+| `.....mpsoc_uart_tx`           | Universal Asynchronous Receiver Transmitter |
+| `.....mpsoc_uart_fifo`         | Universal Asynchronous Receiver Transmitter |
+| `.....mpsoc_uart_interrupt`    | Universal Asynchronous Receiver Transmitter |
+
+| Core                                 | Module description                          |
+| ------------------------------------ | ------------------------------------------- |
+| `mpsoc_wb_uart`                      | Universal Asynchronous Receiver Transmitter |
+| `...mpsoc_wb_uart_peripheral_bridge` | Universal Asynchronous Receiver Transmitter |
+| `...mpsoc_wb_uart_regs`              | Universal Asynchronous Receiver Transmitter |
+| `.....mpsoc_wb_uart_transmitter`     | Universal Asynchronous Receiver Transmitter |
+| `.......mpsoc_wb_uart_tfifo`         | Universal Asynchronous Receiver Transmitter |
+| `.........mpsoc_wb_raminfr`          | Universal Asynchronous Receiver Transmitter |
+| `.....mpsoc_wb_uart_sync_flops`      | Universal Asynchronous Receiver Transmitter |
+| `.....mpsoc_wb_uart_receiver`        | Universal Asynchronous Receiver Transmitter |
+| `.......mpsoc_wb_uart_rfifo`         | Universal Asynchronous Receiver Transmitter |
+| `.........mpsoc_wb_raminfr`          | Universal Asynchronous Receiver Transmitter |
+
+| Core                  | Module description                          |
+| --------------------- | ------------------------------------------- |
+| `msp430_uart`         | Universal Asynchronous Receiver Transmitter |
+| `...msp430_sync_cell` | Universal Asynchronous Receiver Transmitter |
+
 #### 2.1.1.2. Behavior
 
 ### 2.1.2. Interface
