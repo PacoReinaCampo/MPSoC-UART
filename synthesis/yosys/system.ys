@@ -1,8 +1,0 @@
-#read_verilog -I rtl/verilog/ahb3/mpsoc_uart_ahb3.sv
-#read_verilog -I rtl/verilog/wb/mpsoc_uart_ahb3.sv
-#read_verilog -I rtl/verilog/core/mpsoc_uart_fifo.sv
-#read_verilog -I rtl/verilog/core/mpsoc_uart_interrupt.sv
-#read_verilog -I rtl/verilog/core/mpsoc_uart_rx.sv
-#read_verilog -I rtl/verilog/core/mpsoc_uart_tx.sv
-
-#read_verilog -I bench/verilog/regression/mpsoc_msi_testbench.sv
