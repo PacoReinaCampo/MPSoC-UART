@@ -167,11 +167,11 @@ architecture RTL of mpsoc_ahb3_peripheral_bridge is
   -- Functions
   --
   function apb_beats (
-    hsize : std_logic_vector(2 downto 0)
+    hsize_s : std_logic_vector(2 downto 0)
   ) return std_logic_vector is
     variable apb_beats_return : std_logic_vector(6 downto 0);
   begin
-    case (hsize) is
+    case (hsize_s) is
       when HSIZE_B1024 =>
         apb_beats_return := std_logic_vector(to_unsigned(1023/PDATA_SIZE, 7));
       when HSIZE_B512 =>
@@ -220,13 +220,13 @@ architecture RTL of mpsoc_ahb3_peripheral_bridge is
   end address_mask;  --address_mask
 
   function data_offset (
-    haddr : std_logic_vector(HADDR_SIZE-1 downto 0)
+    haddr_s : std_logic_vector(HADDR_SIZE-1 downto 0)
   ) return std_logic_vector is
     variable haddr_masked       : std_logic_vector(6 downto 0);
     variable data_offset_return : std_logic_vector (9 downto 0);
   begin
     --Generate masked address
-    haddr_masked := haddr and address_mask(HDATA_SIZE);
+    haddr_masked := haddr_s and address_mask(HDATA_SIZE);
 
     --calculate bit-offset
     data_offset_return := std_logic_vector(to_unsigned(8, 3)*unsigned(haddr_masked));
@@ -234,15 +234,15 @@ architecture RTL of mpsoc_ahb3_peripheral_bridge is
   end data_offset;  --data_offset
 
   function pstrbf (
-    hsize : std_logic_vector(2 downto 0);
-    paddr : std_logic_vector(PADDR_SIZE-1 downto 0)
+    hsize_s : std_logic_vector(2 downto 0);
+    paddr_s : std_logic_vector(PADDR_SIZE-1 downto 0)
   ) return std_logic is
     variable full_pstrb   : std_logic_vector(127 downto 0);
     variable paddr_masked : std_logic_vector(6 downto 0);
     variable pstrb_return : std_logic_vector (PDATA_SIZE/8-1 downto 0);
   begin
     --get number of active lanes for a 1024bit databus (max width) for this HSIZE
-    case (hsize) is
+    case (hsize_s) is
       when HSIZE_B1024 =>
         full_pstrb := X"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
       when HSIZE_B512 =>
@@ -261,7 +261,7 @@ architecture RTL of mpsoc_ahb3_peripheral_bridge is
         full_pstrb := X"00000000000000000000000000000001";
     end case;
     --generate masked address
-    paddr_masked := paddr and address_mask(PDATA_SIZE);
+    paddr_masked := paddr_s and address_mask(PDATA_SIZE);
 
     --create PSTRB
     pstrb_return := std_logic_vector(unsigned(full_pstrb(PDATA_SIZE/8-1 downto 0)) sll to_integer(unsigned(paddr_masked)));

@@ -1,5 +1,2 @@
-ghdl -i system.vc
-
-ghdl -m mpsoc_uart_testbench
-
-ghdl -r mpsoc_uart_testbench --ieee-asserts=disable-at-0 --disp-tree=inst > mpsoc_uart_testbench.tree
+make clean
+make
