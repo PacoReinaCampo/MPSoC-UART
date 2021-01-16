@@ -6,3 +6,6 @@ build:
 
 simulate:
 	vsim -c -do run.do work.wb_uart_tb
+
+clean:
+	rm -rf work transcript
