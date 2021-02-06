@@ -1,0 +1,8 @@
+# vsim -c -do "run.do" work.mpsoc_uart_testbench 
+# Start time: 18:40:43 on Feb 06,2021
+# ** Error: (vsim-3170) Could not find 'mpsoc_uart_testbench'.
+#         Searched libraries:
+#             C:/Users/Us1/GitHub/MPSoC-UART/sim/mixed/tests/core/wb/msim/work
+# Error loading design
+# End time: 18:40:43 on Feb 06,2021, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0

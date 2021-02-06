@@ -1,6 +1,6 @@
 call ../../../../../../settings64_msim.bat
 
 vlib work
-vlog -sv +incdir+../../../../../../rtl/verilog/ahb3/pkg -f system.verilog.vc
+vlog -sv +incdir+../../../../../../rtl/verilog/wb/pkg -f system.vc
 vcom -2008 -f system.vhdl.vc
-vsim -c -do run.do work.mpsoc_uart_testbench
+vsim -c -do run.do work.wb_uart_tb
