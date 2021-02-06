@@ -1,0 +1,8 @@
+vhdl work ../../../../../../rtl/vhdl/ahb3/pkg/mpsoc_uart_ahb3_pkg.vhd
+
+vhdl work ../../../../../../rtl/vhdl/ahb3/core/mpsoc_ahb3_peripheral_bridge.vhd
+vhdl work ../../../../../../rtl/vhdl/ahb3/core/mpsoc_ahb3_uart.vhd
+vhdl work ../../../../../../rtl/vhdl/ahb3/core/mpsoc_uart_fifo.vhd
+vhdl work ../../../../../../rtl/vhdl/ahb3/core/mpsoc_uart_interrupt.vhd
+vhdl work ../../../../../../rtl/vhdl/ahb3/core/mpsoc_uart_rx.vhd
+vhdl work ../../../../../../rtl/vhdl/ahb3/core/mpsoc_uart_tx.vhd
