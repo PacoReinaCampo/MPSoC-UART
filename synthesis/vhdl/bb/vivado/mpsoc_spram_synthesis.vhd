@@ -60,10 +60,7 @@ entity mpsoc_spram_synthesis is
     MEM_SIZE : integer := 256  -- Memory size in bytes
   );
   port (
-    -- Address bus
-    -- Data bus
-    -- Memory size in bytes
-    ram_clk : in std_logic;             -- RAM clock
+    ram_clk : in std_logic;  -- RAM clock
 
     ram_addr : in  std_logic_vector(AW-1 downto 0);  -- RAM address
     ram_dout : out std_logic_vector(DW-1 downto 0);  -- RAM data output
@@ -98,7 +95,7 @@ begin
   -- Module Body
   --
 
-  --DUT AHB3
+  --DUT BB
   ram : msp430_ram
     generic map (
       AW       => AW,

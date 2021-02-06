@@ -42,7 +42,7 @@
 ##                                                                               ##
 ###################################################################################
 
-read_verilog -sv ../../../../rtl/verilog/axi4/mpsoc_axi4_spram.sv
+read_verilog -sv ../../../../rtl/verilog/axi4/core/mpsoc_axi4_spram.sv
 
 read_verilog -sv mpsoc_spram_synthesis.sv
 
