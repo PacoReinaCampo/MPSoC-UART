@@ -6,3 +6,5 @@ vhdl2008 work ../../../../../../rtl/vhdl/ahb3/core/mpsoc_uart_fifo.vhd
 vhdl2008 work ../../../../../../rtl/vhdl/ahb3/core/mpsoc_uart_interrupt.vhd
 vhdl2008 work ../../../../../../rtl/vhdl/ahb3/core/mpsoc_uart_rx.vhd
 vhdl2008 work ../../../../../../rtl/vhdl/ahb3/core/mpsoc_uart_tx.vhd
+
+vhdl2008 work ../../../../../../bench/vhdl/tests/core/ahb3/mpsoc_uart_testbench.vhd

@@ -1,0 +1,8 @@
+sv work ../../../../../../rtl/verilog/ahb3/core/mpsoc_ahb3_peripheral_bridge.sv
+sv work ../../../../../../rtl/verilog/ahb3/core/mpsoc_ahb3_uart.sv
+sv work ../../../../../../rtl/verilog/ahb3/core/mpsoc_uart_fifo.sv
+sv work ../../../../../../rtl/verilog/ahb3/core/mpsoc_uart_interrupt.sv
+sv work ../../../../../../rtl/verilog/ahb3/core/mpsoc_uart_rx.sv
+sv work ../../../../../../rtl/verilog/ahb3/core/mpsoc_uart_tx.sv
+
+sv work ../../../../../../bench/verilog/tests/core/ahb3/mpsoc_uart_testbench.sv
