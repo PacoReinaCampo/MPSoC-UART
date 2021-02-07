@@ -8,4 +8,4 @@ simulate:
 	vsim -c -do run.do work.wb_bfm_tb
 
 clean:
-	rm -rf work transcript
+	rm -rf work transcript wb_bfm.tap

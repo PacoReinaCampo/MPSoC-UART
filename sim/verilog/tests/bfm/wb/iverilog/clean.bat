@@ -1,1 +1,1 @@
-del system.vvp
+del system.vvp wb_bfm.tap
