@@ -67,4 +67,4 @@ abc -liberty cmos_cells.lib
 clean
 
 # write synthesized design
-write_verilog system.v
+write_edif system.edif

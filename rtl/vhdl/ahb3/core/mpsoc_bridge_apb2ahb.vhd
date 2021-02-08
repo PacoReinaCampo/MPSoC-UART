@@ -1,4 +1,4 @@
--- Converted from verilog/mpsoc_gpio/mpsoc_ahb3_peripheral_bridge.sv
+-- Converted from verilog/mpsoc_gpio/mpsoc_bridge_apb2ahb.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -50,7 +50,7 @@ use ieee.numeric_std.all;
 
 use work.mpsoc_uart_ahb3_pkg.all;
 
-entity mpsoc_ahb3_peripheral_bridge is
+entity mpsoc_bridge_apb2ahb is
   generic (
     HADDR_SIZE : integer := 32;
     HDATA_SIZE : integer := 32;
@@ -90,9 +90,9 @@ entity mpsoc_ahb3_peripheral_bridge is
     PREADY        : in  std_logic;
     PSLVERR       : in  std_logic
   );
-end mpsoc_ahb3_peripheral_bridge;
+end mpsoc_bridge_apb2ahb;
 
-architecture RTL of mpsoc_ahb3_peripheral_bridge is
+architecture RTL of mpsoc_bridge_apb2ahb is
   --////////////////////////////////////////////////////////////////
   --
   -- Constants

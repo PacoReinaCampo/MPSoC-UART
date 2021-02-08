@@ -1,4 +1,4 @@
--- Converted from mpsoc_ahb3_uart.sv
+-- Converted from mpsoc_apb4_uart.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -14,7 +14,7 @@
 --                                                                            //
 --              MPSoC-RISCV CPU                                               //
 --              Universal Asynchronous Receiver-Transmitter                   //
---              AMBA3 APB-Lite Bus Interface                                  //
+--              AMBA4 APB-Lite Bus Interface                                  //
 --                                                                            //
 --//////////////////////////////////////////////////////////////////////////////
 
@@ -50,7 +50,7 @@ use ieee.math_real.all;
 
 use work.mpsoc_uart_ahb3_pkg.all;
 
-entity mpsoc_ahb3_uart is
+entity mpsoc_apb4_uart is
   generic (
     APB_ADDR_WIDTH : integer := 12;  --APB slaves are 4KB by default
     APB_DATA_WIDTH : integer := 32   --APB slaves are 4KB by default
@@ -72,9 +72,9 @@ entity mpsoc_ahb3_uart is
 
     event_o : out std_logic  -- interrupt/event output
     );
-end mpsoc_ahb3_uart;
+end mpsoc_apb4_uart;
 
-architecture RTL of mpsoc_ahb3_uart is
+architecture RTL of mpsoc_apb4_uart is
   component mpsoc_uart_rx
     port (
       clk_i           : in  std_logic;

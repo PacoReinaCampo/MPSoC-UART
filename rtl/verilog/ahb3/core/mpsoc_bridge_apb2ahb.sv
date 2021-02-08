@@ -42,7 +42,7 @@
 
 `include "mpsoc_uart_ahb3_pkg.sv"
 
-module mpsoc_ahb3_peripheral_bridge #(
+module mpsoc_bridge_apb2ahb #(
   parameter HADDR_SIZE = 32,
   parameter HDATA_SIZE = 32,
   parameter PADDR_SIZE = 10,

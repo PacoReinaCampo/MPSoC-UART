@@ -51,7 +51,7 @@ entity mpsoc_uart_testbench is
 end mpsoc_uart_testbench;
 
 architecture RTL of mpsoc_uart_testbench is
-  component mpsoc_ahb3_peripheral_bridge
+  component mpsoc_bridge_apb2ahb
     generic (
       HADDR_SIZE : integer := 32;
       HDATA_SIZE : integer := 32;
@@ -93,7 +93,7 @@ architecture RTL of mpsoc_uart_testbench is
       );
   end component;
 
-  component mpsoc_ahb3_uart
+  component mpsoc_apb4_uart
     generic (
       APB_ADDR_WIDTH : integer := 12;  --APB slaves are 4KB by default
       APB_DATA_WIDTH : integer := 32  --APB slaves are 4KB by default
@@ -172,7 +172,7 @@ begin
   --
 
   --DUT AHB3
-  uart_ahb3_bridge : mpsoc_ahb3_peripheral_bridge
+  bridge_apb2ahb : mpsoc_bridge_apb2ahb
     generic map (
       HADDR_SIZE => HADDR_SIZE,
       HDATA_SIZE => HDATA_SIZE,
@@ -215,7 +215,7 @@ begin
       PSLVERR => uart_PSLVERR
       );
 
-  ahb3_uart : mpsoc_ahb3_uart
+  apb4_uart : mpsoc_apb4_uart
     generic map (
       APB_ADDR_WIDTH => APB_ADDR_WIDTH,
       APB_DATA_WIDTH => APB_DATA_WIDTH

@@ -96,14 +96,14 @@ module mpsoc_uart_testbench;
   //
 
   //DUT AHB3
-  mpsoc_ahb3_peripheral_bridge #(
+  mpsoc_bridge_apb2ahb #(
     .HADDR_SIZE ( HADDR_SIZE     ),
     .HDATA_SIZE ( HDATA_SIZE     ),
     .PADDR_SIZE ( APB_ADDR_WIDTH ),
     .PDATA_SIZE ( APB_DATA_WIDTH ),
     .SYNC_DEPTH ( SYNC_DEPTH     )
   )
-  uart_ahb3_bridge (
+  bridge_apb2ahb (
     //AHB Slave Interface
     .HRESETn   ( HRESETn ),
     .HCLK      ( HCLK    ),
@@ -138,11 +138,11 @@ module mpsoc_uart_testbench;
     .PSLVERR ( uart_PSLVERR )
   );
 
-  mpsoc_ahb3_uart #(
+  mpsoc_apb4_uart #(
     .APB_ADDR_WIDTH ( APB_ADDR_WIDTH ),
     .APB_DATA_WIDTH ( APB_DATA_WIDTH )
   )
-  ahb3_uart (
+  apb4_uart (
     .RSTN ( HRESETn ),
     .CLK  ( HCLK    ),
 

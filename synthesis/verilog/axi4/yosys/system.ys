@@ -42,6 +42,28 @@
 ##                                                                               ##
 ###################################################################################
 
-read_verilog -I rtl/verilog/pkg -sv rtl/verilog/ram/mpsoc_spram.sv
-read_verilog -I rtl/verilog/pkg -sv rtl/verilog/ram/mpsoc_ram_1r1w.sv
-read_verilog -I rtl/verilog/pkg -sv rtl/verilog/ram/mpsoc_ram_1r1w_generic.sv
+# read design
+read_verilog -sv ../../../../rtl/verilog/axi4/core/mpsoc_axi4_spram.sv
+
+read_verilog -sv mpsoc_spram_synthesis.sv
+
+# elaborate design hierarchy
+hierarchy -check -top mpsoc_spram_synthesis
+
+# improve design
+proc; opt; fsm; opt; memory; opt
+
+# map to internal cell library
+techmap; opt
+
+# mapping flip-flops to cmos_cells.lib
+dfflibmap -liberty cmos_cells.lib
+
+# map logic to cmos_cells.lib
+abc -liberty cmos_cells.lib
+
+# clean
+clean
+
+# write synthesized design
+write_edif system.edif

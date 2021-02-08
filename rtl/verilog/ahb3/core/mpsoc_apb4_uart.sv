@@ -11,7 +11,7 @@
 //                                                                            //
 //              MPSoC-RISCV CPU                                               //
 //              Universal Asynchronous Receiver-Transmitter                   //
-//              AMBA3 APB-Lite Bus Interface                                  //
+//              AMBA4 APB-Lite Bus Interface                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module mpsoc_ahb3_uart #(
+module mpsoc_apb4_uart #(
   parameter APB_ADDR_WIDTH = 12,  //APB slaves are 4KB by default
   parameter APB_DATA_WIDTH = 32   //APB slaves are 4KB by default
 )
