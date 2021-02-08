@@ -2,8 +2,8 @@
 call ../../../../../../settings64_ghdl.bat
 
 ghdl -a --std=08 ../../../../../../rtl/vhdl/ahb3/pkg/mpsoc_uart_ahb3_pkg.vhd
-ghdl -a --std=08 ../../../../../../rtl/vhdl/ahb3/core/mpsoc_ahb3_peripheral_bridge.vhd
-ghdl -a --std=08 ../../../../../../rtl/vhdl/ahb3/core/mpsoc_ahb3_uart.vhd
+ghdl -a --std=08 ../../../../../../rtl/vhdl/ahb3/core/mpsoc_bridge_apb2ahb.vhd
+ghdl -a --std=08 ../../../../../../rtl/vhdl/ahb3/core/mpsoc_apb4_uart.vhd
 ghdl -a --std=08 ../../../../../../rtl/vhdl/ahb3/core/mpsoc_uart_fifo.vhd
 ghdl -a --std=08 ../../../../../../rtl/vhdl/ahb3/core/mpsoc_uart_interrupt.vhd
 ghdl -a --std=08 ../../../../../../rtl/vhdl/ahb3/core/mpsoc_uart_rx.vhd

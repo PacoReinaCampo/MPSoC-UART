@@ -226,7 +226,7 @@ architecture RTL of mpsoc_bridge_apb2ahb is
     variable data_offset_return : std_logic_vector (9 downto 0);
   begin
     --Generate masked address
-    haddr_masked := haddr_s and address_mask(HDATA_SIZE);
+    haddr_masked := haddr_s(6 downto 0) and address_mask(HDATA_SIZE);
 
     --calculate bit-offset
     data_offset_return := std_logic_vector(to_unsigned(8, 3)*unsigned(haddr_masked));
@@ -261,7 +261,7 @@ architecture RTL of mpsoc_bridge_apb2ahb is
         full_pstrb := X"00000000000000000000000000000001";
     end case;
     --generate masked address
-    paddr_masked := paddr_s and address_mask(PDATA_SIZE);
+    paddr_masked := paddr_s(6 downto 0) and address_mask(PDATA_SIZE);
 
     --create PSTRB
     pstrb_return := std_logic_vector(unsigned(full_pstrb(PDATA_SIZE/8-1 downto 0)) sll to_integer(unsigned(paddr_masked)));
