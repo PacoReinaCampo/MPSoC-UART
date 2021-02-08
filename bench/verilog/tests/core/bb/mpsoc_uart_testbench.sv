@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module mpsoc_uart_synthesis;
+module mpsoc_uart_testbench;
 
   //////////////////////////////////////////////////////////////////
   //
@@ -82,7 +82,7 @@ module mpsoc_uart_synthesis;
 
     .irq_uart_rx  (irq_uart_rx),  // UART receive interrupt
     .irq_uart_tx  (irq_uart_tx),  // UART transmit interrupt
-    .uart_rxd     (uart_rxd)      // UART Data Receive (RXD)
-    .uart_txd     (uart_txd),     // UART Data Transmit (TXD)
+    .uart_rxd     (uart_rxd),     // UART Data Receive (RXD)
+    .uart_txd     (uart_txd)      // UART Data Transmit (TXD)
   );
 endmodule
