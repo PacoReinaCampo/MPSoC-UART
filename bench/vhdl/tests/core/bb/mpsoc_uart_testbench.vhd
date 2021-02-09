@@ -1,4 +1,4 @@
--- Converted from mpsoc_spram_synthesis.sv
+-- Converted from mpsoc_uart_synthesis.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -53,41 +53,58 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity mpsoc_spram_synthesis is
-  generic (
-    AW       : integer := 6;   -- Address bus
-    DW       : integer := 16;  -- Data bus
-    MEM_SIZE : integer := 256  -- Memory size in bytes
-  );
-  port (
-    ram_clk : in std_logic;  -- RAM clock
+entity mpsoc_uart_synthesis is
+end mpsoc_uart_synthesis;
 
-    ram_addr : in  std_logic_vector(AW-1 downto 0);  -- RAM address
-    ram_dout : out std_logic_vector(DW-1 downto 0);  -- RAM data output
-    ram_din  : in  std_logic_vector(DW-1 downto 0);  -- RAM data input
-    ram_cen  : in  std_logic;                        -- RAM chip enable (low active)
-    ram_wen  : in  std_logic_vector(1 downto 0)      -- RAM write enable (low active)
-  );
-end mpsoc_spram_synthesis;
+architecture RTL of mpsoc_uart_synthesis is
 
-architecture RTL of mpsoc_spram_synthesis is
-  component msp430_ram
-    generic (
-      AW       : integer := 6;   -- Address bus
-      DW       : integer := 16;  -- Data bus
-      MEM_SIZE : integer := 256  -- Memory size in bytes
-    );
+  --////////////////////////////////////////////////////////////////
+  --
+  -- Components
+  --
+
+  component msp430_uart
     port (
-      ram_clk : in std_logic;           -- RAM clock
+      mclk     : in  std_logic;
+      puc_rst  : in  std_logic;
 
-      ram_addr : in  std_logic_vector(AW-1 downto 0);  -- RAM address
-      ram_dout : out std_logic_vector(DW-1 downto 0);  -- RAM data output
-      ram_din  : in  std_logic_vector(DW-1 downto 0);  -- RAM data input
-      ram_cen  : in  std_logic;                        -- RAM chip enable (low active)
-      ram_wen  : in  std_logic_vector(1 downto 0)      -- RAM write enable (low active)    
+      smclk_en : in  std_logic;
+
+      uart_rxd : in  std_logic;
+      uart_txd : out std_logic;
+
+      irq_uart_rx : out std_logic;
+      irq_uart_tx : out std_logic;
+
+      per_dout : out std_logic_vector (15 downto 0);
+      per_en   : in  std_logic;
+      per_we   : in  std_logic_vector (1 downto 0);
+      per_addr : in  std_logic_vector (13 downto 0);
+      per_din  : in  std_logic_vector (15 downto 0)
     );
   end component;
 
+  --////////////////////////////////////////////////////////////////
+  --
+  -- Variables
+  --
+  signal mclk     : std_logic;
+  signal puc_rst  : std_logic;
+
+  signal smclk_en : std_logic;
+
+  signal uart_txd : std_logic;
+  signal uart_rxd : std_logic;
+
+  signal irq_uart_rx : std_logic;
+  signal irq_uart_tx : std_logic;
+
+  signal per_dout : std_logic_vector (15 downto 0);
+  signal per_en   : std_logic;
+  signal per_we   : std_logic_vector (1 downto 0);
+  signal per_addr : std_logic_vector (13 downto 0);
+  signal per_din  : std_logic_vector (15 downto 0);
+	
 begin
 
   --////////////////////////////////////////////////////////////////
@@ -96,19 +113,23 @@ begin
   --
 
   --DUT BB
-  ram : msp430_ram
-    generic map (
-      AW       => AW,
-      DW       => DW,
-      MEM_SIZE => MEM_SIZE
-    )
+  uart : msp430_uart
     port map (
-      ram_clk => ram_clk,
+      mclk     => mclk,
+      puc_rst  => puc_rst,
 
-      ram_addr => ram_addr,
-      ram_dout => ram_dout,
-      ram_din  => ram_din,
-      ram_cen  => ram_cen,
-      ram_wen  => ram_wen
+      smclk_en => smclk_en,
+
+      uart_rxd => uart_rxd,
+      uart_txd => uart_txd,
+
+      irq_uart_rx => irq_uart_rx,
+      irq_uart_tx => irq_uart_tx,
+
+      per_dout => per_dout,
+      per_en   => per_en,
+      per_we   => per_we,
+      per_addr => per_addr,
+      per_din  => per_din
     );
 end RTL;

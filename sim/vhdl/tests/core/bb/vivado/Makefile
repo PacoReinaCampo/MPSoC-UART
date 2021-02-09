@@ -9,8 +9,8 @@
 ##                  |_|                                                          ##
 ##                                                                               ##
 ##                                                                               ##
-##              MPSoC-UART CPU                                                   ##
-##              Synthesis Test Makefile                                          ##
+##              MPSoC-uart CPU                                                  ##
+##              Simulation Test Makefile                                         ##
 ##                                                                               ##
 ###################################################################################
 
@@ -42,23 +42,14 @@
 ##                                                                               ##
 ###################################################################################
 
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/bb/pkg/msp430_pkg.vhd
+all: build simulate
 
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/bb/core/fuse/msp430_sync_cell.vhd
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/bb/core/main/msp430_uart.vhd
+build:
+	xvhdl -prj system.prj
 
-read_vhdl -vhdl2008 mpsoc_uart_synthesis.vhd
+simulate:
+	xelab mpsoc_uart_testbench
+	xsim -R mpsoc_uart_testbench
 
-read_xdc system.xdc
-
-synth_design -part xc7z020-clg484-1 -top mpsoc_uart_synthesis
-
-opt_design
-place_design
-route_design
-
-report_utilization
-report_timing
-
-write_edif -force system.edif
-write_bitstream -force system.bit
+clean:
+	rm -rf *.dir *.jou *.log *.pb .Xil

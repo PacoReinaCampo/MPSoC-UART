@@ -1,0 +1,6 @@
+vhdl2008 work ../../../../../../rtl/vhdl/bb/pkg/msp430_pkg.vhd
+
+vhdl2008 work ../../../../../../rtl/vhdl/bb/core/fuse/msp430_sync_cell.vhd
+vhdl2008 work ../../../../../../rtl/vhdl/bb/core/main/msp430_uart.vhd
+
+vhdl2008 work ../../../../../../bench/vhdl/tests/core/wb/mpsoc_uart_testbench.vhd

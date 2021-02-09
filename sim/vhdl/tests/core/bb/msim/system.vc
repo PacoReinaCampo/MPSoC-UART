@@ -1,0 +1,6 @@
+../../../../../../rtl/vhdl/bb/pkg/msp430_pkg.vhd
+
+../../../../../../rtl/vhdl/bb/core/fuse/msp430_sync_cell.vhd
+../../../../../../rtl/vhdl/bb/core/main/msp430_uart.vhd
+
+../../../../../../bench/vhdl/tests/core/wb/mpsoc_uart_testbench.vhd
