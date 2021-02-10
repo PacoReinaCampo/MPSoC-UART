@@ -44,15 +44,15 @@
 
 `include "mpsoc_uart_wb_pkg.sv"
 
-module mpsoc_wb_uart  #(
+module mpsoc_wb_uart #(
   parameter SIM   = 0,
   parameter DEBUG = 0
 )
   (
     input                  wb_clk_i,
+    input                  wb_rst_i,
 
     // WISHBONE interface
-    input                  wb_rst_i,
     input  [2:0]           wb_adr_i,
     input  [7:0]           wb_dat_i,
     output [7:0]           wb_dat_o,
@@ -63,7 +63,7 @@ module mpsoc_wb_uart  #(
     output                 wb_ack_o,
     output                 int_o,
 
-    // UART  signals
+    // UART signals
     input                  srx_pad_i,
     output                 stx_pad_o,
     output                 rts_pad_o,

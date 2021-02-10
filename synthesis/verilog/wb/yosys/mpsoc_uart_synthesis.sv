@@ -11,7 +11,7 @@
 //                                                                            //
 //              MPSoC-RISCV CPU                                               //
 //              Master Slave Interface Tesbench                               //
-//              AMBA3 AHB-Lite Bus Interface                                  //
+//              Wishbone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -40,31 +40,37 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module mpsoc_spram_synthesis #(
-  //Memory parameters
-  parameter DEPTH   = 256,
-  parameter MEMFILE = "",
-
-  //Wishbone parameters
-  parameter DW = 32,
-  parameter AW = $clog2(DEPTH)
+module mpsoc_uart_synthesis #(
+  parameter SIM   = 0,
+  parameter DEBUG = 0
 )
   (
-    input           wb_clk_i,
-    input           wb_rst_i,
+    input                  clk,
+    input                  rst,
 
-    input  [AW-1:0] wb_adr_i,
-    input  [DW-1:0] wb_dat_i,
-    input  [   3:0] wb_sel_i,
-    input           wb_we_i,
-    input  [   1:0] wb_bte_i,
-    input  [   2:0] wb_cti_i,
-    input           wb_cyc_i,
-    input           wb_stb_i,
+    // WISHBONE interface
+    input  [2:0]           wb_adr_i,
+    input  [7:0]           wb_dat_i,
+    output [7:0]           wb_dat_o,
+    input                  wb_we_i,
+    input                  wb_stb_i,
+    input                  wb_cyc_i,
+    input  [3:0]           wb_sel_i,
+    output                 wb_ack_o,
+    output                 int_o,
 
-    output reg      wb_ack_o,
-    output          wb_err_o,
-    output [DW-1:0] wb_dat_o
+    // UART signals
+    input                  srx_pad_i,
+    output                 stx_pad_o,
+    output                 rts_pad_o,
+    input                  cts_pad_i,
+    output                 dtr_pad_o,
+    input                  dsr_pad_i,
+    input                  ri_pad_i,
+    input                  dcd_pad_i,
+
+    // optional baudrate output
+    output baud_o
   );
 
   //////////////////////////////////////////////////////////////////
@@ -73,29 +79,36 @@ module mpsoc_spram_synthesis #(
   //
 
   //DUT WB
-  mpsoc_wb_spram #(
-    //Memory parameters
-    .DEPTH   ( DEPTH   ),
-    .MEMFILE ( MEMFILE ),
-
-    //Wishbone parameters
-    .AW ( AW ),
-    .DW ( DW )
+  mpsoc_wb_uart #(
+    .SIM   (SIM),
+    .DEBUG (DEBUG)
   )
-  wb_spram (
-    .wb_clk_i ( wb_clk_i ),
-    .wb_rst_i ( wb_rst_i ),
+  wb_uart (
+    .wb_clk_i (clk),
+    .wb_rst_i (rst),
 
-    .wb_adr_i ( wb_adr_i ),
-    .wb_dat_i ( wb_dat_i ),
-    .wb_sel_i ( wb_sel_i ),
-    .wb_we_i  ( wb_we_i  ),
-    .wb_bte_i ( wb_bte_i ),
-    .wb_cti_i ( wb_cti_i ),
-    .wb_cyc_i ( wb_cyc_i ),
-    .wb_stb_i ( wb_stb_i ),
-    .wb_ack_o ( wb_ack_o ),
-    .wb_err_o ( wb_err_o ),
-    .wb_dat_o ( wb_dat_o )
+    // WISHBONE interface
+    .wb_adr_i (wb_adr_i),
+    .wb_dat_i (wb_dat_i),
+    .wb_dat_o (wb_dat_o),
+    .wb_we_i  (wb_we_i ),
+    .wb_stb_i (wb_stb_i),
+    .wb_cyc_i (wb_cyc_i),
+    .wb_sel_i (wb_sel_i),
+    .wb_ack_o (wb_ack_o),
+    .int_o    (int_o),
+
+    // UART  signals
+    .srx_pad_i (srx_pad_i),
+    .stx_pad_o (stx_pad_o),
+    .rts_pad_o (rts_pad_o),
+    .cts_pad_i (cts_pad_i),
+    .dtr_pad_o (dtr_pad_o),
+    .dsr_pad_i (dsr_pad_i),
+    .ri_pad_i  (ri_pad_i ),
+    .dcd_pad_i (dcd_pad_i),
+
+    // optional baudrate output
+    .baud_o (baud_o)
   );
 endmodule
