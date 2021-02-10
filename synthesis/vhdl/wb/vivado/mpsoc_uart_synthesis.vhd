@@ -1,4 +1,4 @@
--- Converted from mpsoc_spram_synthesis.sv
+-- Converted from bench/verilog/regression/mpsoc_uart_synthesis.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -46,97 +46,121 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use ieee.math_real.all;
 
-use work.mpsoc_spram_wb_pkg.all;
-
-entity mpsoc_spram_synthesis is
+entity mpsoc_uart_synthesis is
   generic (
-    --Memory parameters
-    DEPTH   : integer := 256;
-    MEMFILE : string  := "";
-    --Wishbone parameters
-    DW      : integer := 32;
-    AW      : integer := integer(log2(real(DEPTH)))
+    SIM   : integer := 0;
+    DEBUG : integer := 0
   );
   port (
-    wb_clk_i : in std_logic;
-    wb_rst_i : in std_logic;
+    clk : in std_logic;
+    rst : in std_logic;
 
-    wb_adr_i : in std_logic_vector(AW-1 downto 0);
-    wb_dat_i : in std_logic_vector(DW-1 downto 0);
-    wb_sel_i : in std_logic_vector(3 downto 0);
-    wb_we_i  : in std_logic;
-    wb_bte_i : in std_logic_vector(1 downto 0);
-    wb_cti_i : in std_logic_vector(2 downto 0);
-    wb_cyc_i : in std_logic;
-    wb_stb_i : in std_logic;
-
+    -- WISHBONE interface
+    wb_adr_i : in  std_logic_vector(2 downto 0);
+    wb_dat_i : in  std_logic_vector(7 downto 0);
+    wb_dat_o : out std_logic_vector(7 downto 0);
+    wb_we_i  : in  std_logic;
+    wb_stb_i : in  std_logic;
+    wb_cyc_i : in  std_logic;
+    wb_sel_i : in  std_logic_vector(3 downto 0);
     wb_ack_o : out std_logic;
-    wb_err_o : out std_logic;
-    wb_dat_o : out std_logic_vector(DW-1 downto 0)
-    );
-end mpsoc_spram_synthesis;
+    int_o    : out std_logic;
 
-architecture RTL of mpsoc_spram_synthesis is
-  component mpsoc_wb_spram
+    -- UART signals
+    srx_pad_i : in  std_logic;
+    stx_pad_o : out std_logic;
+    rts_pad_o : out std_logic;
+    cts_pad_i : in  std_logic;
+    dtr_pad_o : out std_logic;
+    dsr_pad_i : in  std_logic;
+    ri_pad_i  : in  std_logic;
+    dcd_pad_i : in  std_logic;
+
+    -- optional baudrate output
+    baud_o : out std_logic
+  );
+end mpsoc_uart_synthesis;
+
+architecture RTL of mpsoc_uart_synthesis is
+
+  --////////////////////////////////////////////////////////////////
+  --
+  -- Components
+  --
+  component mpsoc_wb_uart
     generic (
-      --Memory parameters
-      DEPTH   : integer := 256;
-      MEMFILE : string  := "";
-      --Wishbone parameters
-      DW      : integer := 32;
-      AW      : integer := integer(log2(real(DEPTH)))
+      SIM   : integer := 0;
+      DEBUG : integer := 0
     );
     port (
       wb_clk_i : in std_logic;
       wb_rst_i : in std_logic;
 
-      wb_adr_i : in std_logic_vector(AW-1 downto 0);
-      wb_dat_i : in std_logic_vector(DW-1 downto 0);
-      wb_sel_i : in std_logic_vector(3 downto 0);
-      wb_we_i  : in std_logic;
-      wb_bte_i : in std_logic_vector(1 downto 0);
-      wb_cti_i : in std_logic_vector(2 downto 0);
-      wb_cyc_i : in std_logic;
-      wb_stb_i : in std_logic;
-
+      -- WISHBONE interface
+      wb_adr_i : in  std_logic_vector(2 downto 0);
+      wb_dat_i : in  std_logic_vector(7 downto 0);
+      wb_dat_o : out std_logic_vector(7 downto 0);
+      wb_we_i  : in  std_logic;
+      wb_stb_i : in  std_logic;
+      wb_cyc_i : in  std_logic;
+      wb_sel_i : in  std_logic_vector(3 downto 0);
       wb_ack_o : out std_logic;
-      wb_err_o : out std_logic;
-      wb_dat_o : out std_logic_vector(DW-1 downto 0)
+      int_o    : out std_logic;
+
+      -- UART  signals
+      srx_pad_i : in  std_logic;
+      stx_pad_o : out std_logic;
+      rts_pad_o : out std_logic;
+      cts_pad_i : in  std_logic;
+      dtr_pad_o : out std_logic;
+      dsr_pad_i : in  std_logic;
+      ri_pad_i  : in  std_logic;
+      dcd_pad_i : in  std_logic;
+
+      -- optional baudrate output
+      baud_o : out std_logic
     );
   end component;
 
 begin
-
   --////////////////////////////////////////////////////////////////
   --
   -- Module Body
   --
 
   --DUT WB
-  wb_spram : mpsoc_wb_spram
+  wb_uart : mpsoc_wb_uart
     generic map (
-      DEPTH   => DEPTH,
-      MEMFILE => MEMFILE,
-
-      AW => AW,
-      DW => DW
-      )
+      SIM   => SIM,
+      DEBUG => DEBUG
+    )
     port map (
-      wb_clk_i => wb_clk_i,
-      wb_rst_i => wb_rst_i,
+      wb_clk_i => clk,
+      wb_rst_i => rst,
 
+      -- WISHBONE interface
       wb_adr_i => wb_adr_i,
       wb_dat_i => wb_dat_i,
-      wb_sel_i => wb_sel_i,
+      wb_dat_o => wb_dat_o,
       wb_we_i  => wb_we_i,
-      wb_bte_i => wb_bte_i,
-      wb_cti_i => wb_cti_i,
-      wb_cyc_i => wb_cyc_i,
       wb_stb_i => wb_stb_i,
+      wb_cyc_i => wb_cyc_i,
+      wb_sel_i => wb_sel_i,
       wb_ack_o => wb_ack_o,
-      wb_err_o => wb_err_o,
-      wb_dat_o => wb_dat_o
-      );
+      int_o    => int_o,
+
+      -- UART signals
+      srx_pad_i => srx_pad_i,
+      stx_pad_o => stx_pad_o,
+      rts_pad_o => rts_pad_o,
+      cts_pad_i => cts_pad_i,
+      dtr_pad_o => dtr_pad_o,
+      dsr_pad_i => dsr_pad_i,
+      ri_pad_i  => ri_pad_i,
+      dcd_pad_i => dcd_pad_i,
+
+      -- optional baudrate output
+      baud_o => baud_o
+    );
 end RTL;
