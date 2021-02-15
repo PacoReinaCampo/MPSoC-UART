@@ -1,3 +1,5 @@
++incdir+../../../../../../rtl/verilog/ahb3/pkg
+
 ../../../../../../rtl/verilog/ahb3/core/mpsoc_bridge_apb2ahb.sv
 ../../../../../../rtl/verilog/ahb3/core/mpsoc_apb4_uart.sv
 ../../../../../../rtl/verilog/ahb3/core/mpsoc_uart_fifo.sv

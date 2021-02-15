@@ -1,6 +1,6 @@
++incdir+../../../../../../rtl/verilog/ahb3/pkg
+
 ../../../../../../rtl/verilog/bb/core/fuse/msp430_sync_cell.sv
 ../../../../../../rtl/verilog/bb/core/main/msp430_uart.sv
 
 ../../../../../../bench/verilog/tests/core/bb/mpsoc_uart_testbench.sv
-
-

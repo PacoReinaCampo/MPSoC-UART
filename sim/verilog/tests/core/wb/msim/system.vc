@@ -1,3 +1,5 @@
++incdir+../../../../../../rtl/verilog/ahb3/pkg
+
 ../../../../../../rtl/verilog/wb/core/mpsoc_wb_raminfr.sv
 ../../../../../../rtl/verilog/wb/core/mpsoc_wb_uart.sv
 ../../../../../../rtl/verilog/wb/core/mpsoc_wb_uart_peripheral_bridge.sv
