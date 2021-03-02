@@ -12,9 +12,9 @@
 --                  |_|                                                       //
 --                                                                            //
 --                                                                            //
---              MPSoC-RISCV CPU                                               //
---              Master Slave Interface Tesbench                               //
---              AMBA3 AHB-Lite Bus Interface                                  //
+--              Peripheral-UART for MPSoC                                     //
+--              Universal Asynchronous Receiver-Transmitter for MPSoC         //
+--              WishBone Bus Interface                                        //
 --                                                                            //
 --//////////////////////////////////////////////////////////////////////////////
 

@@ -9,9 +9,9 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              MPSoC-RISCV CPU                                               //
-//              Master Slave Interface                                        //
-//              Wishbone Bus Interface                                        //
+//              Peripheral-UART for MPSoC                                     //
+//              Universal Asynchronous Receiver-Transmitter for MPSoC         //
+//              WishBone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 

@@ -9,9 +9,9 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              MPSoC-RISCV CPU                                               //
-//              Universal Asynchronous Receiver-Transmitter                   //
-//              Blackbone Bus Interface                                       //
+//              Peripheral-UART for MPSoC                                     //
+//              Universal Asynchronous Receiver-Transmitter for MPSoC         //
+//              BlackBone Bus Interface                                       //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
