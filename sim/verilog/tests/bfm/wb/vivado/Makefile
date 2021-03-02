@@ -48,8 +48,8 @@ build:
 	xvlog -i ../../../../../../rtl/verilog/wb/pkg -prj system.prj
 
 simulate:
-	xelab wb_bfm_tb
-	xsim -R wb_bfm_tb
+	xelab peripheral_bfm_testbench
+	xsim -R peripheral_bfm_testbench
 
 clean:
 	rm -rf *.dir *.jou *.log *.pb .Xil wb_bfm.tap
