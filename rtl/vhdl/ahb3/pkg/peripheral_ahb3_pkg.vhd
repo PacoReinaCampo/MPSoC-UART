@@ -12,8 +12,8 @@
 --                  |_|                                                       //
 --                                                                            //
 --                                                                            //
---              MPSoC-RISCV CPU                                               //
---              RISC-V Package                                                //
+--              Package                                                       //
+--              Bus Functional Model                                          //
 --              AMBA3 AHB-Lite Bus Interface                                  //
 --                                                                            //
 --//////////////////////////////////////////////////////////////////////////////

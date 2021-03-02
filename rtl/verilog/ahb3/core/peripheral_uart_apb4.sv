@@ -9,8 +9,8 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              MPSoC-RISCV CPU                                               //
-//              Universal Asynchronous Receiver-Transmitter                   //
+//              Peripheral-UART for MPSoC                                     //
+//              Universal Asynchronous Receiver-Transmitter for MPSoC         //
 //              AMBA4 APB-Lite Bus Interface                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////

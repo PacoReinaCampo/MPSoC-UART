@@ -12,8 +12,8 @@
 --                  |_|                                                       //
 --                                                                            //
 --                                                                            //
---              MPSoC-RISCV CPU                                               //
---              General Purpose Input Output Bridge                           //
+--              Peripheral-UART for MPSoC                                     //
+--              Universal Asynchronous Receiver-Transmitter for MPSoC         //
 --              AMBA3 AHB-Lite Bus Interface                                  //
 --                                                                            //
 --//////////////////////////////////////////////////////////////////////////////

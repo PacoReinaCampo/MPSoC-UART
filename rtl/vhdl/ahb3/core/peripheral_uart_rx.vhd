@@ -12,9 +12,9 @@
 --                  |_|                                                       //
 --                                                                            //
 --                                                                            //
---              MPSoC-RISCV CPU                                               //
---              Universal Asynchronous Receiver-Transmitter                   //
---              AMBA3 APB-Lite Bus Interface                                  //
+--              Peripheral-UART for MPSoC                                     //
+--              Universal Asynchronous Receiver-Transmitter for MPSoC         //
+--              AMBA3 AHB-Lite Bus Interface                                  //
 --                                                                            //
 --//////////////////////////////////////////////////////////////////////////////
 

@@ -9,8 +9,9 @@
 --==                |_|                                                     ==--
 --==                                                                        ==--
 --==                                                                        ==--
---==            MSP430 CPU                                                  ==--
---==            Processing Unit                                             ==--
+--==            Peripheral-UART for MPSoC                                   ==--
+--==            Universal Asynchronous Receiver-Transmitter for MPSoC       ==--
+--==            BlackBone Bus Interface                                     ==--
 --==                                                                        ==--
 --============================================================================--
 
