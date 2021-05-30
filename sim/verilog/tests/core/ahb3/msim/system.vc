@@ -1,10 +1,10 @@
 +incdir+../../../../../../rtl/verilog/ahb3/pkg
 
-../../../../../../rtl/verilog/ahb3/core/mpsoc_bridge_apb2ahb.sv
-../../../../../../rtl/verilog/ahb3/core/mpsoc_apb4_uart.sv
-../../../../../../rtl/verilog/ahb3/core/mpsoc_uart_fifo.sv
-../../../../../../rtl/verilog/ahb3/core/mpsoc_uart_interrupt.sv
-../../../../../../rtl/verilog/ahb3/core/mpsoc_uart_rx.sv
-../../../../../../rtl/verilog/ahb3/core/mpsoc_uart_tx.sv
+../../../../../../rtl/verilog/ahb3/core/peripheral_apb2ahb.sv
+../../../../../../rtl/verilog/ahb3/core/peripheral_apb4_uart.sv
+../../../../../../rtl/verilog/ahb3/core/peripheral_uart_fifo.sv
+../../../../../../rtl/verilog/ahb3/core/peripheral_uart_interrupt.sv
+../../../../../../rtl/verilog/ahb3/core/peripheral_uart_rx.sv
+../../../../../../rtl/verilog/ahb3/core/peripheral_uart_tx.sv
 
-../../../../../../bench/verilog/tests/core/ahb3/mpsoc_uart_testbench.sv
+../../../../../../bench/verilog/tests/core/ahb3/peripheral_uart_testbench.sv

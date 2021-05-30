@@ -48,8 +48,8 @@ build:
 	xvlog -i ../../../../../../rtl/verilog/wb/pkg -prj system.prj
 
 simulate:
-	xelab wb_uart_tb
-	xsim -R wb_uart_tb
+	xelab peripheral_uart_testbench
+	xsim -R peripheral_uart_testbench
 
 clean:
 	rm -rf *.dir *.jou *.log *.pb .Xil

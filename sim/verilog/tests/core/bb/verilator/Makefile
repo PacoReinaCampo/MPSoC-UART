@@ -1,7 +1,7 @@
 all: build simulate
 
 build:
-	verilator -Wno-lint --cc -f system.vc --top-module mpsoc_uart_testbench
+	verilator -Wno-lint --cc -f system.vc --top-module peripheral_uart_testbench
 
 simulate:
 

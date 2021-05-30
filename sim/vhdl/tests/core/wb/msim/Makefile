@@ -5,7 +5,7 @@ build:
 	vcom -2008 -f system.vc
 
 simulate:
-	vsim -c -do run.do work.mpsoc_uart_testbench
+	vsim -c -do run.do work.peripheral_uart_testbench
 
 clean:
 	rm -rf work transcript

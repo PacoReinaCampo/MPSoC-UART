@@ -9,7 +9,7 @@
 ##                  |_|                                                          ##
 ##                                                                               ##
 ##                                                                               ##
-##              MPSoC-uart CPU                                                  ##
+##              MPSoC-UART CPU                                                   ##
 ##              Simulation Test Makefile                                         ##
 ##                                                                               ##
 ###################################################################################
@@ -48,8 +48,8 @@ build:
 	xvhdl -prj system.prj
 
 simulate:
-	xelab mpsoc_uart_testbench
-	xsim -R mpsoc_uart_testbench
+	xelab peripheral_uart_testbench
+	xsim -R peripheral_uart_testbench
 
 clean:
 	rm -rf *.dir *.jou *.log *.pb .Xil

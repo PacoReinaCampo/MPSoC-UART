@@ -5,7 +5,7 @@ build:
 	vlog -sv -f system.vc
 
 simulate:
-	vsim -c -do run.do work.wb_uart_tb
+	vsim -c -do run.do work.peripheral_uart_testbench
 
 clean:
 	rm -rf work transcript
