@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module mpsoc_uart_rx (
+module peripheral_uart_rx (
   input  logic            clk_i,
   input  logic            rstn_i,
   input  logic            rx_i,

@@ -40,9 +40,9 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "mpsoc_uart_wb_pkg.sv"
+import peripheral_wb_pkg::*;
 
-module mpsoc_wb_uart_peripheral_bridge (
+module peripheral_uart_bridge_wb (
   input              clk,
 
   // WISHBONE interface  

@@ -40,9 +40,9 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "mpsoc_uart_ahb3_pkg.sv"
+import peripheral_ahb3_pkg::*;
 
-module mpsoc_bridge_apb2ahb #(
+module peripheral_bridge_apb2ahb #(
   parameter HADDR_SIZE = 32,
   parameter HDATA_SIZE = 32,
   parameter PADDR_SIZE = 10,

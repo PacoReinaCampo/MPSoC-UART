@@ -1,4 +1,4 @@
--- Converted from mpsoc_apb4_uart.sv
+-- Converted from peripheral_apb4_uart.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -48,9 +48,9 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
 
-use work.mpsoc_uart_ahb3_pkg.all;
+use work.peripheral_uart_ahb3_pkg.all;
 
-entity mpsoc_apb4_uart is
+entity peripheral_uart_apb4 is
   generic (
     APB_ADDR_WIDTH : integer := 12;  --APB slaves are 4KB by default
     APB_DATA_WIDTH : integer := 32   --APB slaves are 4KB by default
@@ -72,10 +72,10 @@ entity mpsoc_apb4_uart is
 
     event_o : out std_logic  -- interrupt/event output
     );
-end mpsoc_apb4_uart;
+end peripheral_apb4_uart;
 
-architecture RTL of mpsoc_apb4_uart is
-  component mpsoc_uart_rx
+architecture RTL of peripheral_apb4_uart is
+  component peripheral_uart_rx
     port (
       clk_i           : in  std_logic;
       rstn_i          : in  std_logic;
@@ -93,7 +93,7 @@ architecture RTL of mpsoc_apb4_uart is
       );
   end component;
 
-  component mpsoc_uart_tx
+  component peripheral_uart_tx
     port (
       clk_i           : in  std_logic;
       rstn_i          : in  std_logic;
@@ -110,7 +110,7 @@ architecture RTL of mpsoc_apb4_uart is
       );
   end component;
 
-  component mpsoc_uart_fifo
+  component peripheral_uart_fifo
     generic (
       DATA_WIDTH       : integer := 32;
       BUFFER_DEPTH     : integer := 2;
@@ -134,7 +134,7 @@ architecture RTL of mpsoc_apb4_uart is
       );
   end component;
 
-  component mpsoc_uart_interrupt
+  component peripheral_uart_interrupt
     generic (
       TX_FIFO_DEPTH : integer := 32;
       RX_FIFO_DEPTH : integer := 32
@@ -247,7 +247,7 @@ begin
   --
 
   -- TODO: check that stop bits are really not necessary here
-  mpsoc_uart_rx_i : mpsoc_uart_rx
+  peripheral_uart_rx_i : peripheral_uart_rx
     port map (
       clk_i           => CLK,
       rstn_i          => RSTN,
@@ -264,7 +264,7 @@ begin
       rx_ready_i      => rx_ready
       );
 
-  mpsoc_uart_tx_i : mpsoc_uart_tx
+  peripheral_uart_tx_i : peripheral_uart_tx
     port map (
       clk_i           => CLK,
       rstn_i          => RSTN,
@@ -283,7 +283,7 @@ begin
 
   cfg_div_i <= regs_q(DLM+8) & regs_q(DLL+8);
 
-  uart_rx_fifo_i : mpsoc_uart_fifo
+  uart_rx_fifo_i : peripheral_uart_fifo
     generic map (
       DATA_WIDTH       => 9,
       BUFFER_DEPTH     => RX_FIFO_DEPTH,
@@ -308,7 +308,7 @@ begin
 
   data_rx_fifo_i <= parity_error & rx_data;
 
-  uart_tx_fifo_i : mpsoc_uart_fifo
+  uart_tx_fifo_i : peripheral_uart_fifo
     generic map (
       DATA_WIDTH       => 8,
       BUFFER_DEPTH     => TX_FIFO_DEPTH,
@@ -332,7 +332,7 @@ begin
       ready_o => open
       );
 
-  mpsoc_uart_interrupt_i : mpsoc_uart_interrupt
+  peripheral_uart_interrupt_i : peripheral_uart_interrupt
     generic map (
       TX_FIFO_DEPTH => TX_FIFO_DEPTH,
       RX_FIFO_DEPTH => RX_FIFO_DEPTH

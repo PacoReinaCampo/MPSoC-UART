@@ -1,4 +1,4 @@
--- Converted from mpsoc_uart_tx.sv
+-- Converted from peripheral_uart_tx.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -47,9 +47,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.mpsoc_uart_ahb3_pkg.all;
+use work.peripheral_ahb3_pkg.all;
 
-entity mpsoc_uart_tx is
+entity peripheral_uart_tx is
   port (
     clk_i           : in  std_logic;
     rstn_i          : in  std_logic;
@@ -64,9 +64,9 @@ entity mpsoc_uart_tx is
     tx_valid_i      : in  std_logic;
     tx_ready_o      : out std_logic
     );
-end mpsoc_uart_tx;
+end peripheral_uart_tx;
 
-architecture RTL of mpsoc_uart_tx is
+architecture RTL of peripheral_uart_tx is
   --////////////////////////////////////////////////////////////////
   --
   -- Constants

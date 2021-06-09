@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module mpsoc_uart_testbench;
+module peripheral_uart_testbench;
 
   //////////////////////////////////////////////////////////////////
   //
@@ -68,7 +68,7 @@ module mpsoc_uart_testbench;
   //
 
   //DUT BB
-  msp430_uart uart (
+  peripheral_uart_bb uart_bb (
     .mclk         (mclk),         // Main system clock
     .puc_rst      (puc_rst),      // Main system reset
 	

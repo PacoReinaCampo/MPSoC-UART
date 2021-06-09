@@ -44,9 +44,9 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use work.msp430_pkg.all;
+use work.vhdl_pkg.all;
 
-entity msp430_uart is
+entity peripheral_uart_bb is
   port (
     uart_txd : out std_logic;
     uart_rxd : in  std_logic;
@@ -62,9 +62,9 @@ entity msp430_uart is
     per_we   : in  std_logic_vector (1 downto 0);
     per_addr : in  std_logic_vector (13 downto 0);
     per_din  : in  std_logic_vector (15 downto 0));
-end msp430_uart;
+end peripheral_uart_bb;
 
-architecture rtl of msp430_uart is
+architecture rtl of peripheral_uart_bb is
 
   --0.  PARAMETER_DECLARATION
   --0.1.        Register base address (must be aligned to decoder bit width)

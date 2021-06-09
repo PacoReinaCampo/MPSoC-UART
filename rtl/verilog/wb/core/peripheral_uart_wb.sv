@@ -42,9 +42,9 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "mpsoc_uart_wb_pkg.sv"
+import peripheral_wb_pkg::*;
 
-module mpsoc_wb_uart #(
+module peripheral_wb_uart #(
   parameter SIM   = 0,
   parameter DEBUG = 0
 )
@@ -95,7 +95,7 @@ module mpsoc_wb_uart #(
   //
 
   ////  WISHBONE interface module
-  mpsoc_wb_uart_peripheral_bridge wb_interface (
+  peripheral_uart_bridge_wb uart_bridge_wb (
     .clk        ( wb_clk_i   ),
     .wb_rst_i   ( wb_rst_i   ),
     .wb_dat_i   ( wb_dat_i   ),
@@ -115,9 +115,9 @@ module mpsoc_wb_uart #(
   );
 
   // Registers
-  mpsoc_wb_uart_regs #(
+  peripheral_uart_regs_wb #(
     .SIM (SIM)
-  ) regs (
+  ) uart_regs_wb (
     .clk          ( wb_clk_i   ),
     .wb_rst_i     ( wb_rst_i   ),
     .wb_addr_i    ( wb_adr_int ),

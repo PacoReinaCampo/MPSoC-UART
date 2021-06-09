@@ -44,15 +44,15 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity msp430_sync_cell is
+entity peripheral_sync_cell is
   port (
     data_out : out std_logic;
     clk      : in  std_logic;
     data_in  : in  std_logic;
     rst      : in  std_logic);
-end msp430_sync_cell;
+end peripheral_sync_cell;
 
-architecture rtl of msp430_sync_cell is
+architecture rtl of peripheral_sync_cell is
 
   signal data_sync : std_logic_vector (1 downto 0);
 

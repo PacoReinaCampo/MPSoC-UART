@@ -47,7 +47,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module msp430_sync_cell (
+module peripheral_sync_cell (
   // OUTPUTs
   output              data_out,      // Synchronized data output
 
@@ -69,4 +69,4 @@ module msp430_sync_cell (
   end
 
   assign     data_out   =   data_sync[1];
-endmodule // msp430_sync_cell
+endmodule // peripheral_sync_cell

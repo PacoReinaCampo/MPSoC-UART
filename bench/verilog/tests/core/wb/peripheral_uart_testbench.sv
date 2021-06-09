@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module mpsoc_uart_testbench;
+module peripheral_uart_testbench;
 
   //////////////////////////////////////////////////////////////////
   //
@@ -90,11 +90,11 @@ module mpsoc_uart_testbench;
   //
 
   //DUT WB
-  mpsoc_wb_uart #(
+  peripheral_uart_wb #(
     .SIM   (SIM),
     .DEBUG (DEBUG)
   )
-  wb_uart (
+  uart_wb (
     .wb_clk_i (clk),
     .wb_rst_i (rst),
 

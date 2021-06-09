@@ -47,7 +47,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module  msp430_uart (
+module peripheral_uart_bb (
   // OUTPUTs
   output             irq_uart_rx,     // UART receive interrupt
   output             irq_uart_tx,     // UART transmit interrupt
@@ -463,5 +463,4 @@ module  msp430_uart (
   // a byte or when the tranmit buffer is empty (i.e. nothing left to transmit)
   assign  irq_uart_tx    = (status_tx_pnd       & ctrl_ien_tx)        |
                            (status_tx_empty_pnd & ctrl_ien_tx_empty);
-endmodule // msp430_uart
-
+endmodule // peripheral_uart_bb

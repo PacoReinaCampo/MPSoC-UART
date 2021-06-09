@@ -41,7 +41,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module mpsoc_msi_wb_bfm_slave #(
+module peripheral_bfm_slave_wb #(
   parameter DW = 32,
   parameter AW = 32,
   parameter DEBUG = 0
@@ -68,7 +68,7 @@ module mpsoc_msi_wb_bfm_slave #(
   // Constants
   //
 
-  `include "mpsoc_bfm_wb_pkg.sv"
+  import peripheral_wb_pkg::*;
 
   localparam TP = 1;
 
