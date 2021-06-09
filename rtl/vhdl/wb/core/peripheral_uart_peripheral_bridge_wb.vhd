@@ -1,4 +1,4 @@
--- Converted from mpsoc_wb_uart_peripheral_bridge.v
+-- Converted from peripheral_uart_peripheral_bridge_wb.v
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -47,9 +47,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.mpsoc_uart_wb_pkg.all;
+use work.peripheral_uart_wb_pkg.all;
 
-entity mpsoc_wb_uart_peripheral_bridge is
+entity peripheral_uart_peripheral_bridge_wb is
   port (
     clk : in std_logic;
 
@@ -71,9 +71,9 @@ entity mpsoc_wb_uart_peripheral_bridge is
     we_o       : out std_logic;
     re_o       : out std_logic
     );
-end mpsoc_wb_uart_peripheral_bridge;
+end peripheral_uart_peripheral_bridge_wb;
 
-architecture RTL of mpsoc_wb_uart_peripheral_bridge is
+architecture RTL of peripheral_uart_peripheral_bridge_wb is
   --////////////////////////////////////////////////////////////////
   --
   -- Variables

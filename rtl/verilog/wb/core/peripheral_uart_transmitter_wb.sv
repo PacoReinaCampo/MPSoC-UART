@@ -42,9 +42,9 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "mpsoc_uart_wb_pkg.sv"
+import peripheral_wb_pkg::*;
 
-module mpsoc_wb_uart_transmitter #(
+module peripheral_uart_transmitter_wb #(
   parameter SIM = 0
 )
   (
@@ -89,9 +89,9 @@ module mpsoc_wb_uart_transmitter #(
   // TX FIFO instance
 
   // Transmitter FIFO signals
-  wire [`UART_FIFO_WIDTH-1:0]     tf_data_in;
-  wire [`UART_FIFO_WIDTH-1:0]     tf_data_out;
-  wire                            tf_overrun;
+  wire [UART_FIFO_WIDTH-1:0]     tf_data_in;
+  wire [UART_FIFO_WIDTH-1:0]     tf_data_out;
+  wire                           tf_overrun;
 
   //////////////////////////////////////////////////////////////////
   //
@@ -99,13 +99,13 @@ module mpsoc_wb_uart_transmitter #(
   //
   assign tf_data_in = wb_dat_i;
 
-  mpsoc_wb_uart_tfifo #(
+  peripheral_uart_tfifo_wb #(
     .FIFO_WIDTH     (8),
     .FIFO_DEPTH     (16),
     .FIFO_POINTER_W (4),
     .FIFO_COUNTER_W (5)
   )
-  fifo_tx (  // error bit signal is not used in transmitter FIFO
+  uart_tfifo_wb (  // error bit signal is not used in transmitter FIFO
     .clk          ( clk         ), 
     .wb_rst_i     ( wb_rst_i    ),
     .data_in      ( tf_data_in  ),
@@ -142,7 +142,7 @@ module mpsoc_wb_uart_transmitter #(
         end
         s_pop_byte : begin
           tf_pop <= 1'b1;
-          case (lcr[/*`UART_LC_BITS*/1:0])  // number of bits in a word
+          case (lcr[/*UART_LC_BITS*/1:0])  // number of bits in a word
             2'b00 : begin
               bit_counter <= 3'b100;
               parity_xor  <= ^tf_data_out[4:0];
@@ -189,11 +189,11 @@ module mpsoc_wb_uart_transmitter #(
               {shift_out[5:0],bit_out  } <= {shift_out[6:1], shift_out[0]};
               tstate <= s_send_byte;
             end
-            else if (~lcr[`UART_LC_PE]) begin  // end of byte
+            else if (~lcr[UART_LC_PE]) begin  // end of byte
               tstate <= s_send_stop;
             end
             else begin
-              case ({lcr[`UART_LC_EP],lcr[`UART_LC_SP]})
+              case ({lcr[UART_LC_EP],lcr[UART_LC_SP]})
                 2'b00:  bit_out <= ~parity_xor;
                 2'b01:  bit_out <= 1'b1;
                 2'b10:  bit_out <= parity_xor;
@@ -220,7 +220,7 @@ module mpsoc_wb_uart_transmitter #(
         end
         s_send_stop : begin
           if (~|counter) begin
-            casez ({lcr[`UART_LC_SB],lcr[`UART_LC_BITS]})
+            casez ({lcr[UART_LC_SB],lcr[UART_LC_BITS]})
               3'b0??:  counter <= 5'b01101;  // 1 stop bit ok igor
               3'b100:  counter <= 5'b10101;  // 1.5 stop bit
               default: counter <= 5'b11101;  // 2 stop bits
@@ -242,5 +242,5 @@ module mpsoc_wb_uart_transmitter #(
       tf_pop <= 1'b0;  // tf_pop must be 1 cycle width
   end // transmitter logic
 
-  assign stx_pad_o = lcr[`UART_LC_BC] ? 1'b0 : stx_o_tmp;    // Break condition
+  assign stx_pad_o = lcr[UART_LC_BC] ? 1'b0 : stx_o_tmp;    // Break condition
 endmodule

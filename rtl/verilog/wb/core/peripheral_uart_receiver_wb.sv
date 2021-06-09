@@ -42,9 +42,9 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "mpsoc_uart_wb_pkg.sv"
+import peripheral_wb_pkg::*;
 
-module mpsoc_wb_uart_receiver (
+module peripheral_uart_receiver_wb (
   input         clk,
   input         wb_rst_i,
   input  [7:0]  lcr,
@@ -54,13 +54,13 @@ module mpsoc_wb_uart_receiver (
   input         rx_reset,
   input         lsr_mask,
 
-  output reg [                     9:0] counter_t,
-  output     [`UART_FIFO_COUNTER_W-1:0] rf_count,
-  output     [`UART_FIFO_REC_WIDTH-1:0] rf_data_out,
-  output                                rf_overrun,
-  output                                rf_error_bit,
-  output reg [                     3:0] rstate,
-  output                                rf_push_pulse
+  output reg [                    9:0] counter_t,
+  output     [UART_FIFO_COUNTER_W-1:0] rf_count,
+  output     [UART_FIFO_REC_WIDTH-1:0] rf_data_out,
+  output                               rf_overrun,
+  output                               rf_error_bit,
+  output reg [                    3:0] rstate,
+  output                               rf_push_pulse
 );
 
   //////////////////////////////////////////////////////////////////
@@ -94,7 +94,7 @@ module mpsoc_wb_uart_receiver (
   reg         rf_push_q;
 
   // RX FIFO signals
-  reg   [`UART_FIFO_REC_WIDTH-1:0] rf_data_in;
+  reg   [UART_FIFO_REC_WIDTH-1:0] rf_data_in;
   reg                              rf_push;
 
   wire break_error = (counter_b == 0);
@@ -116,13 +116,13 @@ module mpsoc_wb_uart_receiver (
   //
 
   // RX FIFO instance
-  mpsoc_wb_uart_rfifo #(
-    .FIFO_WIDTH     (`UART_FIFO_REC_WIDTH),
+  peripheral_uart_rfifo_wb #(
+    .FIFO_WIDTH     (UART_FIFO_REC_WIDTH),
     .FIFO_DEPTH     (16),
     .FIFO_POINTER_W (4),
     .FIFO_COUNTER_W (5)
   )
-  fifo_rx (
+  uart_rfifo_wb (
     .clk          (clk), 
     .wb_rst_i     (wb_rst_i),
     .data_in      (rf_data_in),
@@ -169,7 +169,7 @@ module mpsoc_wb_uart_receiver (
           rcounter16 <= rcounter16_minus_1;
         end
         sr_rec_prepare: begin
-          case (lcr[/*`UART_LC_BITS*/1:0])  // number of bits in a word
+          case (lcr[/*UART_LC_BITS*/1:0])  // number of bits in a word
             2'b00 : rbit_counter <= 3'b100;
             2'b01 : rbit_counter <= 3'b101;
             2'b10 : rbit_counter <= 3'b110;
@@ -188,7 +188,7 @@ module mpsoc_wb_uart_receiver (
           if (rcounter16_eq_0)
             rstate <= sr_end_bit;
           if (rcounter16_eq_7) // read the bit
-            case (lcr[/*`UART_LC_BITS*/1:0])  // number of bits in a word
+            case (lcr[/*UART_LC_BITS*/1:0])  // number of bits in a word
               2'b00 : rshift[4:0]  <= {srx_pad_i, rshift[4:1]};
               2'b01 : rshift[5:0]  <= {srx_pad_i, rshift[5:1]};
               2'b10 : rshift[6:0]  <= {srx_pad_i, rshift[6:1]};
@@ -198,7 +198,7 @@ module mpsoc_wb_uart_receiver (
         end
         sr_end_bit : begin
           if (rbit_counter==3'b0) // no more bits in word
-            if (lcr[`UART_LC_PE]) // choose state based on parity
+            if (lcr[UART_LC_PE]) // choose state based on parity
               rstate <= sr_rec_parity;
           else begin
             rstate        <= sr_rec_stop;
@@ -223,7 +223,7 @@ module mpsoc_wb_uart_receiver (
           rstate      <= sr_check_parity;
         end
         sr_check_parity : begin  // rcounter equals 5
-          case ({lcr[`UART_LC_EP],lcr[`UART_LC_SP]})
+          case ({lcr[UART_LC_EP],lcr[UART_LC_SP]})
             2'b00: rparity_error <=  rparity_xor == 0;  // no error if parity 1
             2'b01: rparity_error <= ~rparity;  // parity should sticked to 1
             2'b10: rparity_error <=  rparity_xor == 1;  // error if parity is odd

@@ -1,4 +1,4 @@
--- Converted from mpsoc_uart_interrupt.sv
+-- Converted from peripheral_uart_interrupt.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -48,7 +48,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
 
-entity mpsoc_uart_interrupt is
+entity peripheral_uart_interrupt is
   generic (
     TX_FIFO_DEPTH : integer := 32;
     RX_FIFO_DEPTH : integer := 32
@@ -73,9 +73,9 @@ entity mpsoc_uart_interrupt is
     interrupt_o : out std_logic;
     IIR_o       : out std_logic_vector(3 downto 0)
     );
-end mpsoc_uart_interrupt;
+end peripheral_uart_interrupt;
 
-architecture RTL of mpsoc_uart_interrupt is
+architecture RTL of peripheral_uart_interrupt is
   --////////////////////////////////////////////////////////////////
   --
   -- Variables

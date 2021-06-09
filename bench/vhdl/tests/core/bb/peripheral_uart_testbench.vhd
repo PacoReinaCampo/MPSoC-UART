@@ -1,4 +1,4 @@
--- Converted from mpsoc_uart_synthesis.sv
+-- Converted from peripheral_uart_synthesis.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -54,17 +54,17 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity mpsoc_uart_synthesis is
-end mpsoc_uart_synthesis;
+entity peripheral_uart_synthesis is
+end peripheral_uart_synthesis;
 
-architecture RTL of mpsoc_uart_synthesis is
+architecture RTL of peripheral_uart_synthesis is
 
   --////////////////////////////////////////////////////////////////
   --
   -- Components
   --
 
-  component msp430_uart
+  component peripheral_uart_bb
     port (
       mclk     : in  std_logic;
       puc_rst  : in  std_logic;
@@ -114,7 +114,7 @@ begin
   --
 
   --DUT BB
-  uart : msp430_uart
+  uart_bb : peripheral_uart_bb
     port map (
       mclk     => mclk,
       puc_rst  => puc_rst,

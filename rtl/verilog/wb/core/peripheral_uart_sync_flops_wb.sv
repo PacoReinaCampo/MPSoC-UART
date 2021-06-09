@@ -42,7 +42,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module mpsoc_wb_uart_sync_flops #(
+module peripheral_uart_sync_flops_wb #(
   parameter WIDTH      = 1,
   parameter INIT_VALUE = 1'b0
 )

@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module mpsoc_uart_interrupt #(
+module peripheral_uart_interrupt #(
   parameter TX_FIFO_DEPTH = 32,
   parameter RX_FIFO_DEPTH = 32
 )

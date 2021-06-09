@@ -42,7 +42,7 @@
  */
 
 //Following is the Verilog code for a dual-port RAM with asynchronous read. 
-module mpsoc_wb_raminfr #(
+module peripheral_raminfr_wb #(
   parameter ADDR_WIDTH = 4,
   parameter DATA_WIDTH = 8,
   parameter DEPTH      = 16

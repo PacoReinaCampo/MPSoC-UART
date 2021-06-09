@@ -42,9 +42,9 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "mpsoc_uart_wb_pkg.sv"
+import peripheral_wb_pkg::*;
 
-module mpsoc_wb_uart_rfifo #(
+module peripheral_uart_rfifo_wb #(
   parameter FIFO_WIDTH     = 8,
   parameter FIFO_DEPTH     = 16,
   parameter FIFO_POINTER_W = 4,
@@ -102,11 +102,11 @@ module mpsoc_wb_uart_rfifo #(
   //
   // Module Body
   //
-  mpsoc_wb_raminfr #(
+  peripheral_raminfr_wb #(
     .ADDR_WIDTH (FIFO_POINTER_W),
     .DATA_WIDTH (8),
     .DEPTH      (FIFO_DEPTH)
-  ) rfifo (
+  ) raminfr_wb (
     .clk  (clk), 
     .we   (push), 
     .a    (top), 

@@ -1,4 +1,4 @@
--- Converted from mpsoc_wb_raminfr.v
+-- Converted from peripheral_raminfr_wb.v
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -48,9 +48,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.mpsoc_uart_wb_pkg.all;
+use work.peripheral_wb_pkg.all;
 
-entity mpsoc_wb_raminfr is
+entity peripheral_raminfr_wb is
   generic (
     ADDR_WIDTH : integer := 4;
     DATA_WIDTH : integer := 8;
@@ -64,9 +64,9 @@ entity mpsoc_wb_raminfr is
     di   : in  std_logic_vector(DATA_WIDTH-1 downto 0);
     dpo  : out std_logic_vector(DATA_WIDTH-1 downto 0)
     );
-end mpsoc_wb_raminfr;
+end peripheral_raminfr_wb;
 
-architecture RTL of mpsoc_wb_raminfr is
+architecture RTL of peripheral_raminfr_wb is
   --////////////////////////////////////////////////////////////////
   --
   -- Variables
