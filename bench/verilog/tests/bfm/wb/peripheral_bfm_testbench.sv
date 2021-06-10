@@ -41,7 +41,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module wb_bfm_tb;
+module peripheral_bfm_testbench;
   //////////////////////////////////////////////////////////////////
   //
   // Constants
@@ -85,7 +85,7 @@ module wb_bfm_tb;
   always #5 wb_clk <= ~wb_clk;
   initial  #100 wb_rst <= 0;
 
-  mpsoc_msi_wb_bfm_transactor #(
+  peripheral_bfm_transactor_wb #(
     .MEM_HIGH (32'h00007fff),
     .AUTORUN (0),
     .VERBOSE (0)
@@ -108,10 +108,10 @@ module wb_bfm_tb;
     .done     (done)
   );
 
-  mpsoc_msi_wb_bfm_memory #(
+  peripheral_bfm_memory_wb #(
     .DEBUG (0)
   )
-  wb_mem_model (
+  bfm_memory_wb (
     .wb_clk_i (wb_clk),
     .wb_rst_i (wb_rst),
     .wb_adr_i (wb_m2s_adr),

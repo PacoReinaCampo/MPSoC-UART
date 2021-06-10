@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module testbench_top;
+module peripheral_bfm_testbench;
   parameter PDATA_SIZE = 8;
 
   /////////////////////////////////////////////////////////

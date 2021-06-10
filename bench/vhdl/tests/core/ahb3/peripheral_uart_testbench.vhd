@@ -1,4 +1,4 @@
--- Converted from bench/verilog/regression/mpsoc_uart_testbench.sv
+-- Converted from bench/verilog/regression/peripheral_uart_testbench.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -47,11 +47,11 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity mpsoc_uart_testbench is
-end mpsoc_uart_testbench;
+entity peripheral_uart_testbench is
+end peripheral_uart_testbench;
 
-architecture RTL of mpsoc_uart_testbench is
-  component mpsoc_bridge_apb2ahb
+architecture RTL of peripheral_uart_testbench is
+  component peripheral_apb2ahb
     generic (
       HADDR_SIZE : integer := 32;
       HDATA_SIZE : integer := 32;
@@ -93,7 +93,7 @@ architecture RTL of mpsoc_uart_testbench is
       );
   end component;
 
-  component mpsoc_apb4_uart
+  component peripheral_uart_apb4
     generic (
       APB_ADDR_WIDTH : integer := 12;  --APB slaves are 4KB by default
       APB_DATA_WIDTH : integer := 32  --APB slaves are 4KB by default
@@ -172,7 +172,7 @@ begin
   --
 
   --DUT AHB3
-  bridge_apb2ahb : mpsoc_bridge_apb2ahb
+  apb2ahb : peripheral_apb2ahb
     generic map (
       HADDR_SIZE => HADDR_SIZE,
       HDATA_SIZE => HDATA_SIZE,
@@ -215,7 +215,7 @@ begin
       PSLVERR => uart_PSLVERR
       );
 
-  apb4_uart : mpsoc_apb4_uart
+  apb4_uart : peripheral_apb4_uart
     generic map (
       APB_ADDR_WIDTH => APB_ADDR_WIDTH,
       APB_DATA_WIDTH => APB_DATA_WIDTH

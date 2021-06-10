@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module test #(
+module peripheral_bfm_apb4 #(
   parameter PDATA_SIZE = 32
 )
   (

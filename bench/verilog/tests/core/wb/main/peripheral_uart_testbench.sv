@@ -41,7 +41,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module wb_uart_tb;
+module peripheral_uart_testbench;
   //////////////////////////////////////////////////////////////////
   //
   // Constants
@@ -80,7 +80,7 @@ module wb_uart_tb;
   initial #200 wb_rst <= 1'b0;
   always #100 wb_clk <= !wb_clk;
 
-  mpsoc_msi_wb_bfm_transactor #(
+  peripheral_bfm_transactor_wb #(
     .MEM_HIGH (MEMORY_SIZE-1),
     .VERBOSE  (0)
   )
@@ -110,7 +110,7 @@ module wb_uart_tb;
     end
   end
 
-  mpsoc_wb_uart #(
+  peripheral_uart_wb #(
     .SIM   (1),
     .DEBUG (0)
   )

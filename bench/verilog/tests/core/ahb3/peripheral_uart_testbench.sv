@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module mpsoc_uart_testbench;
+module peripheral_uart_testbench;
 
   //////////////////////////////////////////////////////////////////
   //
@@ -96,14 +96,14 @@ module mpsoc_uart_testbench;
   //
 
   //DUT AHB3
-  mpsoc_bridge_apb2ahb #(
+  peripheral_apb2ahb #(
     .HADDR_SIZE ( HADDR_SIZE     ),
     .HDATA_SIZE ( HDATA_SIZE     ),
     .PADDR_SIZE ( APB_ADDR_WIDTH ),
     .PDATA_SIZE ( APB_DATA_WIDTH ),
     .SYNC_DEPTH ( SYNC_DEPTH     )
   )
-  bridge_apb2ahb (
+  apb2ahb (
     //AHB Slave Interface
     .HRESETn   ( HRESETn ),
     .HCLK      ( HCLK    ),
@@ -138,11 +138,11 @@ module mpsoc_uart_testbench;
     .PSLVERR ( uart_PSLVERR )
   );
 
-  mpsoc_apb4_uart #(
+  peripheral_uart_apb4 #(
     .APB_ADDR_WIDTH ( APB_ADDR_WIDTH ),
     .APB_DATA_WIDTH ( APB_DATA_WIDTH )
   )
-  apb4_uart (
+  uart_apb4 (
     .RSTN ( HRESETn ),
     .CLK  ( HCLK    ),
 

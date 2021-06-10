@@ -1,4 +1,4 @@
--- Converted from bench/verilog/regression/mpsoc_uart_testbench.sv
+-- Converted from bench/verilog/regression/peripheral_uart_testbench.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -47,11 +47,11 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity mpsoc_uart_testbench is
-end mpsoc_uart_testbench;
+entity peripheral_uart_testbench is
+end peripheral_uart_testbench;
 
-architecture RTL of mpsoc_uart_testbench is
-  component mpsoc_wb_uart
+architecture RTL of peripheral_uart_testbench is
+  component peripheral_uart_wb
     generic (
       SIM   : integer := 0;
       DEBUG : integer := 0
@@ -135,7 +135,7 @@ begin
   --
 
   --DUT WB
-  wb_uart : mpsoc_wb_uart
+  uart_wb : peripheral_uart_wb
     generic map (
       SIM   => SIM,
       DEBUG => DEBUG

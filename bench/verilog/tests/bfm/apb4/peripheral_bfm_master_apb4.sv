@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module apb_master_bfm #(
+module peripheral_bfm_master_apb4 #(
   parameter PADDR_SIZE = 16,
   parameter PDATA_SIZE = 32
 )
