@@ -41,12 +41,12 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "mpsoc_uart_wb_pkg.sv"
+import peripheral_uart_wb_pkg::*;
 
 `define UART_DL1 7:0
 `define UART_DL2 15:8
 
-module mpsoc_wb_uart_regs #(
+module peripheral_wb_uart_regs #(
   parameter SIM = 0
 )
   (
@@ -58,14 +58,14 @@ module mpsoc_wb_uart_regs #(
     input            wb_we_i,
     input            wb_re_i,
 
-    output       stx_pad_o,
-    input        srx_pad_i,
+    output           stx_pad_o,
+    input            srx_pad_i,
 
-    input     [3:0] modem_inputs,
-    output          rts_pad_o,
-    output          dtr_pad_o,
-    output reg      int_o,
-    output          baud_o
+    input      [3:0] modem_inputs,
+    output           rts_pad_o,
+    output           dtr_pad_o,
+    output reg       int_o,
+    output           baud_o
   );
 
   //////////////////////////////////////////////////////////////////
@@ -116,12 +116,12 @@ module mpsoc_wb_uart_regs #(
   // FIFO signals
   reg                             tf_push;
   reg                             rf_pop;
-  wire [`UART_FIFO_REC_WIDTH-1:0] rf_data_out;
+  wire [UART_FIFO_REC_WIDTH-1:0] rf_data_out;
   wire                            rf_error_bit; // an error (parity or framing) is inside the fifo
   wire                            rf_overrun;
   wire                            rf_push_pulse;
-  wire [`UART_FIFO_COUNTER_W-1:0] rf_count;
-  wire [`UART_FIFO_COUNTER_W-1:0] tf_count;
+  wire [UART_FIFO_COUNTER_W-1:0] rf_count;
+  wire [UART_FIFO_COUNTER_W-1:0] tf_count;
   wire [                     2:0] tstate;
   wire [                     3:0] rstate;
   wire [                     9:0] counter_t;
@@ -140,20 +140,20 @@ module mpsoc_wb_uart_regs #(
   assign                   {cts_pad_i, dsr_pad_i, ri_pad_i, dcd_pad_i} = modem_inputs;
   assign                   {cts, dsr, ri, dcd} = ~{cts_pad_i,dsr_pad_i,ri_pad_i,dcd_pad_i};
 
-  assign                  {cts_c, dsr_c, ri_c, dcd_c} = loopback ? {mcr[`UART_MC_RTS],mcr[`UART_MC_DTR],mcr[`UART_MC_OUT1],mcr[`UART_MC_OUT2]}
+  assign                  {cts_c, dsr_c, ri_c, dcd_c} = loopback ? {mcr[UART_MC_RTS],mcr[UART_MC_DTR],mcr[UART_MC_OUT1],mcr[UART_MC_OUT2]}
                           : {cts_pad_i,dsr_pad_i,ri_pad_i,dcd_pad_i};
 
-  assign                   dlab = lcr[`UART_LC_DL];
+  assign                   dlab = lcr[UART_LC_DL];
   assign                   loopback = mcr[4];
 
   // assign modem outputs
-  assign                   rts_pad_o = mcr[`UART_MC_RTS];
-  assign                   dtr_pad_o = mcr[`UART_MC_DTR];
+  assign                   rts_pad_o = mcr[UART_MC_RTS];
+  assign                   dtr_pad_o = mcr[UART_MC_DTR];
 
   // Transmitter Instance
   wire serial_out;
 
-  mpsoc_wb_uart_transmitter #(
+  peripheral_uart_transmitter_wb #(
     .SIM (SIM)
   )
   transmitter (
@@ -171,7 +171,7 @@ module mpsoc_wb_uart_regs #(
   );
 
   // Synchronizing and sampling serial RX input
-  mpsoc_wb_uart_sync_flops #(
+  peripheral_uart_sync_flops_wb #(
     .WIDTH      (1),
     .INIT_VALUE (1'b1)
   )
@@ -189,7 +189,7 @@ module mpsoc_wb_uart_regs #(
   assign stx_pad_o = loopback ? 1'b1 : serial_out;
 
   // Receiver Instance
-  mpsoc_wb_uart_receiver receiver (
+  peripheral_uart_receiver_wb receiver (
     .clk           (clk),
     .wb_rst_i      (wb_rst_i),
     .lcr           (lcr),
@@ -211,13 +211,13 @@ module mpsoc_wb_uart_regs #(
   always @(dl or dlab or ier or iir or scratch
            or lcr or lsr or msr or rf_data_out or wb_addr_i or wb_re_i) begin  // asynchrounous reading
     case (wb_addr_i)
-      `UART_REG_RB  : wb_dat_o = dlab ? dl[`UART_DL1] : rf_data_out[10:3];
-      `UART_REG_IE  : wb_dat_o = dlab ? dl[`UART_DL2] : {4'd0,ier};
-      `UART_REG_II  : wb_dat_o = {4'b1100,iir};
-      `UART_REG_LC  : wb_dat_o = lcr;
-      `UART_REG_LS  : wb_dat_o = lsr;
-      `UART_REG_MS  : wb_dat_o = msr;
-      `UART_REG_SR  : wb_dat_o = scratch;
+      UART_REG_RB  : wb_dat_o = dlab ? dl[UART_DL1] : rf_data_out[10:3];
+      UART_REG_IE  : wb_dat_o = dlab ? dl[UART_DL2] : {4'd0,ier};
+      UART_REG_II  : wb_dat_o = {4'b1100,iir};
+      UART_REG_LC  : wb_dat_o = lcr;
+      UART_REG_LS  : wb_dat_o = lsr;
+      UART_REG_MS  : wb_dat_o = msr;
+      UART_REG_SR  : wb_dat_o = scratch;
       default       : wb_dat_o = 8'b0; // ??
     endcase // case(wb_addr_i)
   end  // always @ (dl or dlab or ier or iir or scratch...
@@ -228,7 +228,7 @@ module mpsoc_wb_uart_regs #(
       rf_pop <= 0;
     else if (rf_pop)  // restore the signal to 0 after one clock cycle
       rf_pop <= 0;
-    else if (wb_re_i && wb_addr_i == `UART_REG_RB && !dlab)
+    else if (wb_re_i && wb_addr_i == UART_REG_RB && !dlab)
       rf_pop <= 1; // advance read pointer
   end
 
@@ -238,11 +238,11 @@ module mpsoc_wb_uart_regs #(
   wire  fifo_read;
   wire  fifo_write;
 
-  assign lsr_mask_condition = (wb_re_i && wb_addr_i == `UART_REG_LS && !dlab);
-  assign iir_read = (wb_re_i && wb_addr_i == `UART_REG_II && !dlab);
-  assign msr_read = (wb_re_i && wb_addr_i == `UART_REG_MS && !dlab);
-  assign fifo_read = (wb_re_i && wb_addr_i == `UART_REG_RB && !dlab);
-  assign fifo_write = (wb_we_i && wb_addr_i == `UART_REG_TR && !dlab);
+  assign lsr_mask_condition = (wb_re_i && wb_addr_i == UART_REG_LS && !dlab);
+  assign iir_read = (wb_re_i && wb_addr_i == UART_REG_II && !dlab);
+  assign msr_read = (wb_re_i && wb_addr_i == UART_REG_MS && !dlab);
+  assign fifo_read = (wb_re_i && wb_addr_i == UART_REG_RB && !dlab);
+  assign fifo_write = (wb_we_i && wb_addr_i == UART_REG_TR && !dlab);
 
   // lsr_mask_d delayed signal handling
   always @(posedge clk or posedge wb_rst_i) begin
@@ -271,7 +271,7 @@ module mpsoc_wb_uart_regs #(
   always @(posedge clk or posedge wb_rst_i) begin
     if (wb_rst_i)
       lcr <= 8'b00000011; // 8n1 setting
-    else if (wb_we_i && wb_addr_i==`UART_REG_LC)
+    else if (wb_we_i && wb_addr_i==UART_REG_LC)
       lcr <= wb_dat_i;
   end
 
@@ -279,20 +279,20 @@ module mpsoc_wb_uart_regs #(
   always @(posedge clk or posedge wb_rst_i) begin
     if (wb_rst_i) begin
       ier <= 4'b0000; // no interrupts after reset
-      `ifdef PRESCALER_PRESET_HARD
-      dl[`UART_DL2] <= `PRESCALER_HIGH_PRESET;
-      `else
-      dl[`UART_DL2] <= 8'b0;
-      `endif
+      ifdef PRESCALER_PRESET_HARD
+      dl[UART_DL2] <= PRESCALER_HIGH_PRESET;
+      else
+      dl[UART_DL2] <= 8'b0;
+      endif
     end
-    else if (wb_we_i && wb_addr_i==`UART_REG_IE)
+    else if (wb_we_i && wb_addr_i==UART_REG_IE)
       if (dlab) begin
-        dl[`UART_DL2] <=
-        `ifdef PRESCALER_PRESET_HARD
-        dl[`UART_DL2];
-        `else
+        dl[UART_DL2] <=
+        ifdef PRESCALER_PRESET_HARD
+        dl[UART_DL2];
+        else
         wb_dat_i;
-        `endif
+        endif
       end
     else
       ier <= wb_dat_i[3:0]; // ier uses only 4 lsb
@@ -305,7 +305,7 @@ module mpsoc_wb_uart_regs #(
       rx_reset <= 0;
       tx_reset <= 0;
     end else
-      if (wb_we_i && wb_addr_i==`UART_REG_FC) begin
+      if (wb_we_i && wb_addr_i==UART_REG_FC) begin
         fcr <= wb_dat_i[7:6];
         rx_reset <= wb_dat_i[1];
         tx_reset <= wb_dat_i[2];
@@ -320,7 +320,7 @@ module mpsoc_wb_uart_regs #(
   always @(posedge clk or posedge wb_rst_i) begin
     if (wb_rst_i)
       mcr <= 5'b0;
-    else if (wb_we_i && wb_addr_i==`UART_REG_MC)
+    else if (wb_we_i && wb_addr_i==UART_REG_MC)
       mcr <= wb_dat_i[4:0];
   end
 
@@ -329,28 +329,28 @@ module mpsoc_wb_uart_regs #(
   always @(posedge clk or posedge wb_rst_i) begin
     if (wb_rst_i)
       scratch <= 0; // 8n1 setting
-    else if (wb_we_i && wb_addr_i==`UART_REG_SR)
+    else if (wb_we_i && wb_addr_i==UART_REG_SR)
       scratch <= wb_dat_i;
   end
 
   // TX_FIFO or UART_DL1
   always @(posedge clk or posedge wb_rst_i) begin
     if (wb_rst_i) begin
-      `ifdef PRESCALER_PRESET_HARD
-      dl[`UART_DL1]  <= `PRESCALER_LOW_PRESET;
-      `else
-      dl[`UART_DL1]  <= 8'b0;
-      `endif
+      ifdef PRESCALER_PRESET_HARD
+      dl[UART_DL1]  <= PRESCALER_LOW_PRESET;
+      else
+      dl[UART_DL1]  <= 8'b0;
+      endif
       tf_push   <= 1'b0;
       start_dlc <= 1'b0;
     end
-    else if (wb_we_i && wb_addr_i==`UART_REG_TR)
+    else if (wb_we_i && wb_addr_i==UART_REG_TR)
       if (dlab) begin
-        `ifdef PRESCALER_PRESET_HARD
-        dl[`UART_DL1] <= dl[`UART_DL1];
-        `else
-        dl[`UART_DL1] <= wb_dat_i;
-        `endif
+        ifdef PRESCALER_PRESET_HARD
+        dl[UART_DL1] <= dl[UART_DL1];
+        else
+        dl[UART_DL1] <= wb_dat_i;
+        endif
         start_dlc <= 1'b1; // enable DL counter
         tf_push <= 1'b0;
       end
@@ -366,12 +366,12 @@ module mpsoc_wb_uart_regs #(
 
   // Receiver FIFO trigger level selection logic (asynchronous mux)
   always @(fcr)
-    case (fcr[`UART_FC_TL])
+    case (fcr[UART_FC_TL])
       2'b00 : trigger_level = 1;
       2'b01 : trigger_level = 4;
       2'b10 : trigger_level = 8;
       2'b11 : trigger_level = 14;
-    endcase // case(fcr[`UART_FC_TL])
+    endcase // case(fcr[UART_FC_TL])
 
   //  STATUS REGISTERS
 
@@ -383,9 +383,9 @@ module mpsoc_wb_uart_regs #(
       delayed_modem_signals[3:0] <= 0;
     end
     else begin
-      msr[`UART_MS_DDCD:`UART_MS_DCTS] <= msi_reset ? 4'b0 :
-      msr[`UART_MS_DDCD:`UART_MS_DCTS] | ({dcd, ri, dsr, cts} ^ delayed_modem_signals[3:0]);
-      msr[`UART_MS_CDCD:`UART_MS_CCTS] <= {dcd_c, ri_c, dsr_c, cts_c};
+      msr[UART_MS_DDCD:UART_MS_DCTS] <= msi_reset ? 4'b0 :
+      msr[UART_MS_DDCD:UART_MS_DCTS] | ({dcd, ri, dsr, cts} ^ delayed_modem_signals[3:0]);
+      msr[UART_MS_CDCD:UART_MS_CCTS] <= {dcd_c, ri_c, dsr_c, cts_c};
       delayed_modem_signals[3:0] <= {dcd, ri, dsr, cts};
     end
   end
@@ -399,7 +399,7 @@ module mpsoc_wb_uart_regs #(
   assign lsr3 = rf_data_out[0]; // framing error bit
   assign lsr4 = rf_data_out[2]; // break error in the character
   assign lsr5 = (tf_count==5'b0 && thre_set_en);  // transmitter fifo is empty
-  assign lsr6 = (tf_count==5'b0 && thre_set_en && (tstate == /*`S_IDLE */ 0)); // transmitter empty
+  assign lsr6 = (tf_count==5'b0 && thre_set_en && (tstate == /*S_IDLE */ 0)); // transmitter empty
   assign lsr7 = rf_error_bit | rf_overrun;
 
   // lsr bit0 (receiver data available)
@@ -554,11 +554,11 @@ module mpsoc_wb_uart_regs #(
   assign thre_set_en = ~(|block_cnt);
 
   //  INTERRUPT LOGIC
-  assign rls_int  = ier[`UART_IE_RLS] && (lsr[`UART_LS_OE] || lsr[`UART_LS_PE] || lsr[`UART_LS_FE] || lsr[`UART_LS_BI]);
-  assign rda_int  = ier[`UART_IE_RDA] && (rf_count >= {1'b0,trigger_level});
-  assign thre_int = ier[`UART_IE_THRE] && lsr[`UART_LS_TFE];
-  assign ms_int   = ier[`UART_IE_MS] && (| msr[3:0]);
-  assign ti_int   = ier[`UART_IE_RDA] && (counter_t == 10'b0) && (|rf_count);
+  assign rls_int  = ier[UART_IE_RLS] && (lsr[UART_LS_OE] || lsr[UART_LS_PE] || lsr[UART_LS_FE] || lsr[UART_LS_BI]);
+  assign rda_int  = ier[UART_IE_RDA] && (rf_count >= {1'b0,trigger_level});
+  assign thre_int = ier[UART_IE_THRE] && lsr[UART_LS_TFE];
+  assign ms_int   = ier[UART_IE_MS] && (| msr[3:0]);
+  assign ti_int   = ier[UART_IE_RDA] && (counter_t == 10'b0) && (|rf_count);
 
   reg    rls_int_d;
   reg    thre_int_d;
@@ -618,7 +618,7 @@ module mpsoc_wb_uart_regs #(
     else 
       rls_int_pnd <= lsr_mask ? 1'b0 :                  // reset condition
                      rls_int_rise ? 1'b1 :              // latch condition
-                     rls_int_pnd && ier[`UART_IE_RLS];  // default operation: remove if masked
+                     rls_int_pnd && ier[UART_IE_RLS];  // default operation: remove if masked
   end
 
   always  @(posedge clk or posedge wb_rst_i) begin
@@ -626,15 +626,15 @@ module mpsoc_wb_uart_regs #(
     else 
       rda_int_pnd <= ((rf_count == {1'b0,trigger_level}) && fifo_read) ? 1'b0 :  // reset condition
                      rda_int_rise ? 1'b1 :  // latch condition
-                     rda_int_pnd && ier[`UART_IE_RDA];  // default operation: remove if masked
+                     rda_int_pnd && ier[UART_IE_RDA];  // default operation: remove if masked
   end
 
   always  @(posedge clk or posedge wb_rst_i) begin
     if (wb_rst_i) thre_int_pnd <= 0;
     else 
-      thre_int_pnd <= fifo_write || (iir_read & ~iir[`UART_II_IP] & iir[`UART_II_II] == `UART_II_THRE)? 1'b0 :
+      thre_int_pnd <= fifo_write || (iir_read & ~iir[UART_II_IP] & iir[UART_II_II] == UART_II_THRE)? 1'b0 :
                       thre_int_rise ? 1'b1 :
-                      thre_int_pnd && ier[`UART_IE_THRE];
+                      thre_int_pnd && ier[UART_IE_THRE];
   end
 
   always  @(posedge clk or posedge wb_rst_i) begin
@@ -642,7 +642,7 @@ module mpsoc_wb_uart_regs #(
     else 
       ms_int_pnd <= msr_read ? 1'b0 :
                     ms_int_rise ? 1'b1 :
-                    ms_int_pnd && ier[`UART_IE_MS];
+                    ms_int_pnd && ier[UART_IE_MS];
   end
 
   always  @(posedge clk or posedge wb_rst_i) begin
@@ -650,7 +650,7 @@ module mpsoc_wb_uart_regs #(
     else 
       ti_int_pnd <= fifo_read ? 1'b0 :
                     ti_int_rise ? 1'b1 :
-                    ti_int_pnd && ier[`UART_IE_RDA];
+                    ti_int_pnd && ier[UART_IE_RDA];
   end  // end of pending flags
 
   // INT_O logic
@@ -672,28 +672,28 @@ module mpsoc_wb_uart_regs #(
     if (wb_rst_i)
       iir <= 1;
     else if (rls_int_pnd) begin  // interrupt is pending
-      iir[`UART_II_II] <= `UART_II_RLS;  // set identification register to correct value
-      iir[`UART_II_IP] <= 1'b0;  // and clear the IIR bit 0 (interrupt pending)
+      iir[UART_II_II] <= UART_II_RLS;  // set identification register to correct value
+      iir[UART_II_IP] <= 1'b0;  // and clear the IIR bit 0 (interrupt pending)
     end else  // the sequence of conditions determines priority of interrupt identification
       if (rda_int) begin
-        iir[`UART_II_II] <= `UART_II_RDA;
-        iir[`UART_II_IP] <= 1'b0;
+        iir[UART_II_II] <= UART_II_RDA;
+        iir[UART_II_IP] <= 1'b0;
       end
     else if (ti_int_pnd) begin
-      iir[`UART_II_II] <= `UART_II_TI;
-      iir[`UART_II_IP] <= 1'b0;
+      iir[UART_II_II] <= UART_II_TI;
+      iir[UART_II_IP] <= 1'b0;
     end
     else if (thre_int_pnd) begin
-      iir[`UART_II_II] <= `UART_II_THRE;
-      iir[`UART_II_IP] <= 1'b0;
+      iir[UART_II_II] <= UART_II_THRE;
+      iir[UART_II_IP] <= 1'b0;
     end
     else if (ms_int_pnd) begin
-      iir[`UART_II_II] <= `UART_II_MS;
-      iir[`UART_II_IP] <= 1'b0;
+      iir[UART_II_II] <= UART_II_MS;
+      iir[UART_II_IP] <= 1'b0;
     end
     else begin  // no interrupt is pending
-      iir[`UART_II_II] <= 0;
-      iir[`UART_II_IP] <= 1'b1;
+      iir[UART_II_II] <= 0;
+      iir[UART_II_IP] <= 1'b1;
     end
   end
 endmodule

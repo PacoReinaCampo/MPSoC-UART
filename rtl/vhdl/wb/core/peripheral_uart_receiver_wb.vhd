@@ -1,4 +1,4 @@
--- Converted from mpsoc_wb_uart_receiver.v
+-- Converted from peripheral_wb_uart_receiver.v
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -49,9 +49,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.mpsoc_uart_wb_pkg.all;
+use work.peripheral_wb_pkg.all;
 
-entity mpsoc_wb_uart_receiver is
+entity peripheral_uart_receiver_wb is
   port (
     clk       : in std_logic;
     wb_rst_i  : in std_logic;
@@ -70,10 +70,10 @@ entity mpsoc_wb_uart_receiver is
     rstate        : out std_logic_vector(3 downto 0);
     rf_push_pulse : out std_logic
     );
-end mpsoc_wb_uart_receiver;
+end peripheral_uart_receiver_wb;
 
-architecture RTL of mpsoc_wb_uart_receiver is
-  component mpsoc_wb_uart_rfifo
+architecture RTL of peripheral_uart_receiver_wb is
+  component peripheral_uart_rfifo_wb
     generic (
       FIFO_WIDTH     : integer := 8;
       FIFO_DEPTH     : integer := 16;
@@ -160,7 +160,7 @@ begin
   rcounter16_minus_1 <= std_logic_vector(unsigned(rcounter16)-to_unsigned(1, 3));
 
   -- RX FIFO instance
-  fifo_rx : mpsoc_wb_uart_rfifo
+  fifo_rx : peripheral_uart_rfifo_wb
     generic map (
       FIFO_WIDTH     => UART_FIFO_REC_WIDTH,
       FIFO_DEPTH     => 16,

@@ -1,4 +1,4 @@
--- Converted from mpsoc_wb_uart.v
+-- Converted from peripheral_wb_uart.v
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -49,9 +49,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.mpsoc_uart_wb_pkg.all;
+use work.peripheral_wb_pkg.all;
 
-entity mpsoc_wb_uart is
+entity peripheral_uart_wb is
   generic (
     SIM   : integer := 0;
     DEBUG : integer := 0
@@ -84,10 +84,10 @@ entity mpsoc_wb_uart is
     -- optional baudrate output
     baud_o : out std_logic
     );
-end mpsoc_wb_uart;
+end peripheral_uart_wb;
 
-architecture RTL of mpsoc_wb_uart is
-  component mpsoc_wb_uart_peripheral_bridge
+architecture RTL of peripheral_wb_uart is
+  component peripheral_uart_peripheral_bridge_wb
     port (
       clk : in std_logic;
 
@@ -111,7 +111,7 @@ architecture RTL of mpsoc_wb_uart is
       );
   end component;
 
-  component mpsoc_wb_uart_regs
+  component peripheral_uart_regs_wb
     generic (
       SIM : integer := 0
       );
@@ -154,7 +154,7 @@ begin
   --
 
   -- WISHBONE interface module
-  wb_interface : mpsoc_wb_uart_peripheral_bridge
+  uart_peripheral_bridge_wb : peripheral_uart_peripheral_bridge_wb
     port map (
       clk        => wb_clk_i,
       wb_rst_i   => wb_rst_i,
@@ -175,7 +175,7 @@ begin
       );
 
   -- Registers
-  regs : mpsoc_wb_uart_regs
+  uart_regs_wb : peripheral_uart_regs_wb
     generic map (
       SIM => SIM
       )

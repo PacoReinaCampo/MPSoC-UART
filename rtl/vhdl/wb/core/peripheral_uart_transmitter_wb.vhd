@@ -1,4 +1,4 @@
--- Converted from mpsoc_wb_uart_transmitter.v
+-- Converted from peripheral_wb_uart_transmitter.v
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -49,9 +49,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.mpsoc_uart_wb_pkg.all;
+use work.peripheral_wb_pkg.all;
 
-entity mpsoc_wb_uart_transmitter is
+entity peripheral_uart_transmitter_wb is
   generic (
     SIM : integer := 0
     );
@@ -68,10 +68,10 @@ entity mpsoc_wb_uart_transmitter is
     tstate    : out std_logic_vector(2 downto 0);
     tf_count  : out std_logic_vector(UART_FIFO_COUNTER_W-1 downto 0)
     );
-end mpsoc_wb_uart_transmitter;
+end peripheral_uart_transmitter_wb;
 
-architecture RTL of mpsoc_wb_uart_transmitter is
-  component mpsoc_wb_uart_tfifo
+architecture RTL of peripheral_uart_transmitter_wb is
+  component peripheral_uart_tfifo_wb
     generic (
       FIFO_WIDTH     : integer := 8;
       FIFO_DEPTH     : integer := 16;
@@ -134,7 +134,7 @@ begin
   --
   tf_data_in <= wb_dat_i;
 
-  fifo_tx : mpsoc_wb_uart_tfifo
+  fifo_tx : peripheral_uart_tfifo_wb
     generic map (
       FIFO_WIDTH     => 8,
       FIFO_DEPTH     => 16,

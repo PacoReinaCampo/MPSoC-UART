@@ -1,4 +1,4 @@
--- Converted from mpsoc_uart_fifo.sv
+-- Converted from peripheral_uart_fifo.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -48,9 +48,9 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
 
-use work.mpsoc_uart_ahb3_pkg.all;
+use work.peripheral_ahb3_pkg.all;
 
-entity mpsoc_uart_fifo is
+entity peripheral_uart_fifo is
   generic (
     DATA_WIDTH       : integer := 32;
     BUFFER_DEPTH     : integer := 2;
@@ -72,9 +72,9 @@ entity mpsoc_uart_fifo is
     data_i  : in  std_logic_vector(DATA_WIDTH-1 downto 0);
     ready_o : out std_logic
     );
-end mpsoc_uart_fifo;
+end peripheral_uart_fifo;
 
-architecture RTL of mpsoc_uart_fifo is
+architecture RTL of peripheral_uart_fifo is
   --////////////////////////////////////////////////////////////////
   --
   -- Variables

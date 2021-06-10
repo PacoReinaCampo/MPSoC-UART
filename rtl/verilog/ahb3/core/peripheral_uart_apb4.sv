@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module mpsoc_apb4_uart #(
+module peripheral_uart_apb4 #(
   parameter APB_ADDR_WIDTH = 12,  //APB slaves are 4KB by default
   parameter APB_DATA_WIDTH = 32   //APB slaves are 4KB by default
 )
@@ -118,7 +118,7 @@ module mpsoc_apb4_uart #(
   //
 
   // TODO: check that stop bits are really not necessary here
-  mpsoc_uart_rx mpsoc_uart_rx_i (
+  peripheral_uart_rx peripheral_uart_rx_i (
     .clk_i              ( CLK                           ),
     .rstn_i             ( RSTN                          ),
     .rx_i               ( rx_i                          ),
@@ -134,7 +134,7 @@ module mpsoc_apb4_uart #(
     .rx_ready_i         ( rx_ready                      )
   );
 
-  mpsoc_uart_tx mpsoc_uart_tx_i (
+  peripheral_uart_tx peripheral_uart_tx_i (
     .clk_i              ( CLK                           ),
     .rstn_i             ( RSTN                          ),
     .tx_o               ( tx_o                          ),
@@ -150,7 +150,7 @@ module mpsoc_apb4_uart #(
     .tx_ready_o         ( tx_ready                      )
   );
 
-  mpsoc_uart_fifo #(
+  peripheral_uart_fifo #(
     .DATA_WIDTH         ( 9                             ),
     .BUFFER_DEPTH       ( RX_FIFO_DEPTH                 )
   )
@@ -171,7 +171,7 @@ module mpsoc_apb4_uart #(
     .ready_o            ( rx_ready                      )
   );
 
-  mpsoc_uart_fifo #(
+  peripheral_uart_fifo #(
     .DATA_WIDTH         ( 8                             ),
     .BUFFER_DEPTH       ( TX_FIFO_DEPTH                 )
   )
@@ -193,11 +193,11 @@ module mpsoc_apb4_uart #(
     .ready_o            (                               )
   );
 
-  mpsoc_uart_interrupt #(
+  peripheral_uart_interrupt #(
     .TX_FIFO_DEPTH (TX_FIFO_DEPTH),
     .RX_FIFO_DEPTH (RX_FIFO_DEPTH)
   )
-  mpsoc_uart_interrupt_i (
+  peripheral_uart_interrupt_i (
     .clk_i              ( CLK                           ),
     .rstn_i             ( RSTN                          ),
 

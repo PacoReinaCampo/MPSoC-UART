@@ -48,7 +48,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
 
-use work.peripheral_uart_ahb3_pkg.all;
+use work.peripheral_ahb3_pkg.all;
 
 entity peripheral_uart_apb4 is
   generic (

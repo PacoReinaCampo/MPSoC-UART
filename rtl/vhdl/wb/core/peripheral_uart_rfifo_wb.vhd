@@ -1,4 +1,4 @@
--- Converted from mpsoc_wb_uart_rfifo.v
+-- Converted from peripheral_wb_uart_rfifo.v
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -49,9 +49,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.mpsoc_uart_wb_pkg.all;
+use work.peripheral_wb_pkg.all;
 
-entity mpsoc_wb_uart_rfifo is
+entity peripheral_uart_rfifo_wb is
   generic (
     FIFO_WIDTH     : integer := 8;
     FIFO_DEPTH     : integer := 16;
@@ -72,10 +72,10 @@ entity mpsoc_wb_uart_rfifo is
     count     : out std_logic_vector(FIFO_COUNTER_W-1 downto 0);
     error_bit : out std_logic
     );
-end mpsoc_wb_uart_rfifo;
+end peripheral_uart_rfifo_wb;
 
-architecture RTL of mpsoc_wb_uart_rfifo is
-  component mpsoc_wb_raminfr
+architecture RTL of peripheral_uart_rfifo_wb is
+  component peripheral_raminfr_wb
     generic (
       ADDR_WIDTH : integer := 4;
       DATA_WIDTH : integer := 8;
@@ -133,7 +133,7 @@ begin
   --
   top_plus_1 <= std_logic_vector(unsigned(top)+to_unsigned(1,FIFO_POINTER_W));
 
-  rfifo : mpsoc_wb_raminfr
+  rfifo : peripheral_raminfr_wb
     generic map (
       ADDR_WIDTH => FIFO_POINTER_W,
       DATA_WIDTH => 8,

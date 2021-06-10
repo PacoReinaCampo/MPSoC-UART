@@ -1,4 +1,4 @@
--- Converted from mpsoc_wb_uart_regs.v
+-- Converted from peripheral_wb_uart_regs.v
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -48,9 +48,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.mpsoc_uart_wb_pkg.all;
+use work.peripheral_wb_pkg.all;
 
-entity mpsoc_wb_uart_regs is
+entity peripheral_uart_regs_wb is
   generic (
     SIM : integer := 0
     );
@@ -72,10 +72,10 @@ entity mpsoc_wb_uart_regs is
     int_o        : out std_logic;
     baud_o       : out std_logic
     );
-end mpsoc_wb_uart_regs;
+end peripheral_wb_uart_regs;
 
-architecture RTL of mpsoc_wb_uart_regs is
-  component mpsoc_wb_uart_transmitter
+architecture RTL of peripheral_uart_regs_wb is
+  component peripheral_uart_transmitter_wb
     generic (
       SIM : integer := 0
       );
@@ -94,7 +94,7 @@ architecture RTL of mpsoc_wb_uart_regs is
       );
   end component;
 
-  component mpsoc_wb_uart_sync_flops
+  component peripheral_uart_sync_flops_wb
     generic (
       WIDTH      : integer   := 1;
       INIT_VALUE : std_logic := '0'
@@ -109,7 +109,7 @@ architecture RTL of mpsoc_wb_uart_regs is
       );
   end component;
 
-  component mpsoc_wb_uart_receiver
+  component peripheral_uart_receiver_wb
     port (
       clk       : in std_logic;
       wb_rst_i  : in std_logic;
@@ -295,7 +295,7 @@ begin
   rts_pad_o <= mcr(UART_MC_RTS);
   dtr_pad_o <= mcr(UART_MC_DTR);
 
-  transmitter : mpsoc_wb_uart_transmitter
+  transmitter : peripheral_uart_transmitter_wb
     generic map (
       SIM => SIM
       )
@@ -314,7 +314,7 @@ begin
       );
 
   -- Synchronizing and sampling serial RX input
-  i_uart_sync_flops : mpsoc_wb_uart_sync_flops
+  i_uart_sync_flops : peripheral_uart_sync_flops_wb
     generic map (
       WIDTH      => 1,
       INIT_VALUE => '0'
@@ -334,7 +334,7 @@ begin
   stx_pad_o <= '1'        when loopback = '1' else serial_out;
 
   -- Receiver Instance
-  receiver : mpsoc_wb_uart_receiver
+  receiver : peripheral_uart_receiver_wb
     port map (
       clk           => clk,
       wb_rst_i      => wb_rst_i,

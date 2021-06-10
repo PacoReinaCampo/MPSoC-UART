@@ -1,4 +1,4 @@
--- Converted from mpsoc_wb_uart_sync_flops.v
+-- Converted from peripheral_wb_uart_sync_flops.v
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -49,7 +49,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity mpsoc_wb_uart_sync_flops is
+entity peripheral_uart_sync_flops_wb is
   generic (
     WIDTH      : integer   := 1;
     INIT_VALUE : std_logic := '0'
@@ -62,16 +62,16 @@ entity mpsoc_wb_uart_sync_flops is
     async_dat_i     : in  std_logic_vector(WIDTH-1 downto 0);  -- asynchronous data input
     sync_dat_o      : out std_logic_vector(WIDTH-1 downto 0)  -- synchronous data output
     );
-end mpsoc_wb_uart_sync_flops;
+end peripheral_uart_sync_flops_wb;
 
-architecture RTL of mpsoc_wb_uart_sync_flops is
+architecture RTL of peripheral_uart_sync_flops_wb is
   --////////////////////////////////////////////////////////////////
   --
   -- Variables
   --
 
   -- Internal signal declarations
-  signal flop_0     : std_logic_vector(WIDTH-1 downto 0);
+  signal flop_0 : std_logic_vector(WIDTH-1 downto 0);
 
 begin
   --////////////////////////////////////////////////////////////////

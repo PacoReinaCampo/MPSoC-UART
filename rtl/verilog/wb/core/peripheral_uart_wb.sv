@@ -44,7 +44,7 @@
 
 import peripheral_wb_pkg::*;
 
-module peripheral_wb_uart #(
+module peripheral_uart_wb #(
   parameter SIM   = 0,
   parameter DEBUG = 0
 )

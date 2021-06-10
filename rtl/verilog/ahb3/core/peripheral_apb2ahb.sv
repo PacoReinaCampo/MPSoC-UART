@@ -42,7 +42,7 @@
 
 import peripheral_ahb3_pkg::*;
 
-module peripheral_bridge_apb2ahb #(
+module peripheral_apb2ahb #(
   parameter HADDR_SIZE = 32,
   parameter HDATA_SIZE = 32,
   parameter PADDR_SIZE = 10,
