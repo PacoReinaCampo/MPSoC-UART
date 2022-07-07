@@ -1,8 +1,0 @@
-# vsim -c -do "run.do" work.peripheral_uart_testbench 
-# Start time: 08:41:46 on Jul 07,2022
-# ** Error: (vsim-3170) Could not find 'peripheral_uart_testbench'.
-#         Searched libraries:
-#             D:/GitHub/Peripheral/MPSoC-UART/sim/verilog/tests/core/wb/msim/work
-# Error loading design
-# End time: 08:41:47 on Jul 07,2022, Elapsed time: 0:00:01
-# Errors: 1, Warnings: 0
