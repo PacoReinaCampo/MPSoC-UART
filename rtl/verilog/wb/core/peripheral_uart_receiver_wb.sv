@@ -42,6 +42,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
+import peripheral_uart_pkg::*;
 import peripheral_wb_pkg::*;
 
 module peripheral_uart_receiver_wb (

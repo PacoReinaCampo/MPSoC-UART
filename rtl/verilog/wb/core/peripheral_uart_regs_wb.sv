@@ -41,10 +41,11 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-import peripheral_uart_wb_pkg::*;
+import peripheral_uart_pkg::*;
+import peripheral_wb_pkg::*;
 
-`define UART_DL1 7:0
-`define UART_DL2 15:8
+// UART_DL1 = 7:0;
+// UART_DL2 = 15:8;
 
 module peripheral_wb_uart_regs #(
   parameter SIM = 0
@@ -211,8 +212,8 @@ module peripheral_wb_uart_regs #(
   always @(dl or dlab or ier or iir or scratch
            or lcr or lsr or msr or rf_data_out or wb_addr_i or wb_re_i) begin  // asynchrounous reading
     case (wb_addr_i)
-      UART_REG_RB  : wb_dat_o = dlab ? dl[UART_DL1] : rf_data_out[10:3];
-      UART_REG_IE  : wb_dat_o = dlab ? dl[UART_DL2] : {4'd0,ier};
+      UART_REG_RB  : wb_dat_o = dlab ? dl[7:0] : rf_data_out[10:3];
+      UART_REG_IE  : wb_dat_o = dlab ? dl[15:8] : {4'd0,ier};
       UART_REG_II  : wb_dat_o = {4'b1100,iir};
       UART_REG_LC  : wb_dat_o = lcr;
       UART_REG_LS  : wb_dat_o = lsr;
@@ -279,20 +280,12 @@ module peripheral_wb_uart_regs #(
   always @(posedge clk or posedge wb_rst_i) begin
     if (wb_rst_i) begin
       ier <= 4'b0000; // no interrupts after reset
-      ifdef PRESCALER_PRESET_HARD
-      dl[UART_DL2] <= PRESCALER_HIGH_PRESET;
-      else
-      dl[UART_DL2] <= 8'b0;
-      endif
+
+      dl[15:8] <= 8'b0;
     end
     else if (wb_we_i && wb_addr_i==UART_REG_IE)
       if (dlab) begin
-        dl[UART_DL2] <=
-        ifdef PRESCALER_PRESET_HARD
-        dl[UART_DL2];
-        else
-        wb_dat_i;
-        endif
+        dl[15:8] <= wb_dat_i;
       end
     else
       ier <= wb_dat_i[3:0]; // ier uses only 4 lsb
@@ -336,21 +329,15 @@ module peripheral_wb_uart_regs #(
   // TX_FIFO or UART_DL1
   always @(posedge clk or posedge wb_rst_i) begin
     if (wb_rst_i) begin
-      ifdef PRESCALER_PRESET_HARD
-      dl[UART_DL1]  <= PRESCALER_LOW_PRESET;
-      else
-      dl[UART_DL1]  <= 8'b0;
-      endif
+      dl[7:0] <= 8'b0;
+
       tf_push   <= 1'b0;
       start_dlc <= 1'b0;
     end
     else if (wb_we_i && wb_addr_i==UART_REG_TR)
       if (dlab) begin
-        ifdef PRESCALER_PRESET_HARD
-        dl[UART_DL1] <= dl[UART_DL1];
-        else
-        dl[UART_DL1] <= wb_dat_i;
-        endif
+        dl[7:0] <= wb_dat_i;
+
         start_dlc <= 1'b1; // enable DL counter
         tf_push <= 1'b0;
       end
@@ -366,12 +353,12 @@ module peripheral_wb_uart_regs #(
 
   // Receiver FIFO trigger level selection logic (asynchronous mux)
   always @(fcr)
-    case (fcr[UART_FC_TL])
+    case (fcr[1:0])
       2'b00 : trigger_level = 1;
       2'b01 : trigger_level = 4;
       2'b10 : trigger_level = 8;
       2'b11 : trigger_level = 14;
-    endcase // case(fcr[UART_FC_TL])
+    endcase // case(fcr[1:0])
 
   //  STATUS REGISTERS
 
@@ -632,7 +619,7 @@ module peripheral_wb_uart_regs #(
   always  @(posedge clk or posedge wb_rst_i) begin
     if (wb_rst_i) thre_int_pnd <= 0;
     else 
-      thre_int_pnd <= fifo_write || (iir_read & ~iir[UART_II_IP] & iir[UART_II_II] == UART_II_THRE)? 1'b0 :
+      thre_int_pnd <= fifo_write || (iir_read & ~iir[UART_II_IP] & iir[3:1] == UART_II_THRE)? 1'b0 :
                       thre_int_rise ? 1'b1 :
                       thre_int_pnd && ier[UART_IE_THRE];
   end
@@ -672,27 +659,27 @@ module peripheral_wb_uart_regs #(
     if (wb_rst_i)
       iir <= 1;
     else if (rls_int_pnd) begin  // interrupt is pending
-      iir[UART_II_II] <= UART_II_RLS;  // set identification register to correct value
+      iir[3:1] <= UART_II_RLS;  // set identification register to correct value
       iir[UART_II_IP] <= 1'b0;  // and clear the IIR bit 0 (interrupt pending)
     end else  // the sequence of conditions determines priority of interrupt identification
       if (rda_int) begin
-        iir[UART_II_II] <= UART_II_RDA;
+        iir[3:1] <= UART_II_RDA;
         iir[UART_II_IP] <= 1'b0;
       end
     else if (ti_int_pnd) begin
-      iir[UART_II_II] <= UART_II_TI;
+      iir[3:1] <= UART_II_TI;
       iir[UART_II_IP] <= 1'b0;
     end
     else if (thre_int_pnd) begin
-      iir[UART_II_II] <= UART_II_THRE;
+      iir[3:1] <= UART_II_THRE;
       iir[UART_II_IP] <= 1'b0;
     end
     else if (ms_int_pnd) begin
-      iir[UART_II_II] <= UART_II_MS;
+      iir[3:1] <= UART_II_MS;
       iir[UART_II_IP] <= 1'b0;
     end
     else begin  // no interrupt is pending
-      iir[UART_II_II] <= 0;
+      iir[3:1] <= 0;
       iir[UART_II_IP] <= 1'b1;
     end
   end

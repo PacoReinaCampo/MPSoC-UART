@@ -41,6 +41,8 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
+import peripheral_wb_pkg::*;
+
 module peripheral_bfm_master_wb #(
   parameter AW              = 32,
   parameter DW              = 32,

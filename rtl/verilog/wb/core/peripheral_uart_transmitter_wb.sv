@@ -42,6 +42,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
+import peripheral_uart_pkg::*;
 import peripheral_wb_pkg::*;
 
 module peripheral_uart_transmitter_wb #(
@@ -220,7 +221,7 @@ module peripheral_uart_transmitter_wb #(
         end
         s_send_stop : begin
           if (~|counter) begin
-            casez ({lcr[UART_LC_SB],lcr[UART_LC_BITS]})
+            casez ({lcr[UART_LC_SB],lcr[1:0]})
               3'b0??:  counter <= 5'b01101;  // 1 stop bit ok igor
               3'b100:  counter <= 5'b10101;  // 1.5 stop bit
               default: counter <= 5'b11101;  // 2 stop bits
