@@ -1,4 +1,4 @@
--- Converted from peripheral_raminfr_wb.v
+-- Converted from pkg/peripheral_ahb3_pkg.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -12,13 +12,13 @@
 --                  |_|                                                       //
 --                                                                            //
 --                                                                            //
---              Peripheral-UART for MPSoC                                     //
---              Universal Asynchronous Receiver-Transmitter for MPSoC         //
---              WishBone Bus Interface                                        //
+--              MPSoC-RISCV CPU                                               //
+--              RISC-V Package                                                //
+--              AMBA3 AHB-Lite Bus Interface                                  //
 --                                                                            //
 --//////////////////////////////////////////////////////////////////////////////
 
--- Copyright (c) 2018-2019 by the author(s)
+-- Copyright (c) 2017-2018 by the author(s)
 -- *
 -- * Permission is hereby granted, free of charge, to any person obtaining a copy
 -- * of this software and associated documentation files (the "Software"), to deal
@@ -40,53 +40,30 @@
 -- *
 -- * =============================================================================
 -- * Author(s):
--- *   Jacob Gorban <gorban@opencores.org>
 -- *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 -- */
 
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use ieee.math_real.all;
 
-use work.vhdl_pkg.all;
-use work.peripheral_wb_pkg.all;
+package peripheral_wb_pkg is
 
-entity peripheral_raminfr_wb is
-  generic (
-    ADDR_WIDTH : integer := 4;
-    DATA_WIDTH : integer := 8;
-    DEPTH      : integer := 16
-    );
-  port (
-    clk  : in  std_logic;
-    we   : in  std_logic;
-    a    : in  std_logic_vector(ADDR_WIDTH-1 downto 0);
-    dpra : in  std_logic_vector(ADDR_WIDTH-1 downto 0);
-    di   : in  std_logic_vector(DATA_WIDTH-1 downto 0);
-    dpo  : out std_logic_vector(DATA_WIDTH-1 downto 0)
-    );
-end peripheral_raminfr_wb;
+  constant CLASSIC_CYCLE : std_logic := '0';
+  constant BURST_CYCLE   : std_logic := '1';
 
-architecture RTL of peripheral_raminfr_wb is
-  --////////////////////////////////////////////////////////////////
-  --
-  -- Variables
-  --
-  signal ram : std_logic_matrix(DEPTH-1 downto 0)(DATA_WIDTH-1 downto 0);
+  constant READING : std_logic := '0';
+  constant WRITING : std_logic := '1';
 
-begin
-  --////////////////////////////////////////////////////////////////
-  --
-  -- Module Body
-  --
-  processing_0 : process (clk)
-  begin
-    if (rising_edge(clk)) then
-      if (we = '1') then
-        ram(to_integer(unsigned(a))) <= di;
-      end if;
-    end if;
-  end process;
+  constant CTI_CLASSIC      : std_logic_vector(2 downto 0) := "000";
+  constant CTI_CONST_BURST  : std_logic_vector(2 downto 0) := "001";
+  constant CTI_INC_BURST    : std_logic_vector(2 downto 0) := "010";
+  constant CTI_END_OF_BURST : std_logic_vector(2 downto 0) := "111";
 
-  dpo <= ram(to_integer(unsigned(dpra)));
-end RTL;
+  constant BTE_LINEAR  : std_logic_vector(1 downto 0) := "00";
+  constant BTE_WRAP_4  : std_logic_vector(1 downto 0) := "01";
+  constant BTE_WRAP_8  : std_logic_vector(1 downto 0) := "10";
+  constant BTE_WRAP_16 : std_logic_vector(1 downto 0) := "11";
+
+end peripheral_wb_pkg;

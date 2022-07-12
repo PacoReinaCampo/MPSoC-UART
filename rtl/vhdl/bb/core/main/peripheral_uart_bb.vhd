@@ -44,6 +44,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+
 use work.vhdl_pkg.all;
 
 entity peripheral_uart_bb is
@@ -65,6 +66,15 @@ entity peripheral_uart_bb is
 end peripheral_uart_bb;
 
 architecture rtl of peripheral_uart_bb is
+
+  component peripheral_sync_cell
+    port (
+      data_out : out std_logic;
+      clk      : in  std_logic;
+      data_in  : in  std_logic;
+      rst      : in  std_logic
+      );
+  end component;
 
   --0.  PARAMETER_DECLARATION
   --0.1.        Register base address (must be aligned to decoder bit width)
@@ -452,7 +462,7 @@ begin
   LINE_SYNCHRONIZTION_FILTERING : block
   begin
     --5.1.      Synchronize RXD input
-    sync_cell_uart_rxd : msp430_sync_cell
+    sync_cell_uart_rxd : peripheral_sync_cell
       port map (
         data_out => uart_rxd_sync_n,
         data_in  => not_uart_rxd,

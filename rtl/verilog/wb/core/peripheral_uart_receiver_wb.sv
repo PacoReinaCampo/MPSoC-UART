@@ -95,7 +95,7 @@ module peripheral_uart_receiver_wb (
 
   // RX FIFO signals
   reg   [UART_FIFO_REC_WIDTH-1:0] rf_data_in;
-  reg                              rf_push;
+  reg                             rf_push;
 
   wire break_error = (counter_b == 0);
 

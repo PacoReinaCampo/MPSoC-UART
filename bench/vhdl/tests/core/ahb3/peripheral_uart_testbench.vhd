@@ -215,7 +215,7 @@ begin
       PSLVERR => uart_PSLVERR
       );
 
-  apb4_uart : peripheral_apb4_uart
+  apb4_uart : peripheral_uart_apb4
     generic map (
       APB_ADDR_WIDTH => APB_ADDR_WIDTH,
       APB_DATA_WIDTH => APB_DATA_WIDTH

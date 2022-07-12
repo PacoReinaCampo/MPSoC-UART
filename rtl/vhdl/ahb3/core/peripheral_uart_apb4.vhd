@@ -1,4 +1,4 @@
--- Converted from peripheral_apb4_uart.sv
+-- Converted from peripheral_uart_apb4.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -48,6 +48,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
 
+use work.vhdl_pkg.all;
 use work.peripheral_ahb3_pkg.all;
 
 entity peripheral_uart_apb4 is
@@ -72,9 +73,9 @@ entity peripheral_uart_apb4 is
 
     event_o : out std_logic  -- interrupt/event output
     );
-end peripheral_apb4_uart;
+end peripheral_uart_apb4;
 
-architecture RTL of peripheral_apb4_uart is
+architecture RTL of peripheral_uart_apb4 is
   component peripheral_uart_rx
     port (
       clk_i           : in  std_logic;

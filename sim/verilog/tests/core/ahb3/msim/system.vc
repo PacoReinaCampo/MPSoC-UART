@@ -1,7 +1,7 @@
-+incdir+../../../../../../rtl/verilog/ahb3/pkg
+../../../../../../rtl/verilog/ahb3/pkg/peripheral_ahb3_pkg.sv
 
 ../../../../../../rtl/verilog/ahb3/core/peripheral_apb2ahb.sv
-../../../../../../rtl/verilog/ahb3/core/peripheral_apb4_uart.sv
+../../../../../../rtl/verilog/ahb3/core/peripheral_uart_apb4.sv
 ../../../../../../rtl/verilog/ahb3/core/peripheral_uart_fifo.sv
 ../../../../../../rtl/verilog/ahb3/core/peripheral_uart_interrupt.sv
 ../../../../../../rtl/verilog/ahb3/core/peripheral_uart_rx.sv

@@ -153,14 +153,14 @@ module peripheral_apb2ahb #(
     ahb_fsm   <= ST_AHB_IDLE;
 
     HREADYOUT <= 1'b1;
-    HRESP     <= `HRESP_OKAY;
+    HRESP     <= HRESP_OKAY;
   endtask //ahb_no_transfer
 
   task ahb_prep_transfer;
     ahb_fsm    <= ST_AHB_TRANSFER;
 
     HREADYOUT  <= 1'b0; //hold off master
-    HRESP      <= `HRESP_OKAY;
+    HRESP      <= HRESP_OKAY;
     ahb_treq   <= 1'b1; //request data transfer
   endtask //ahb_prep_transfer
 
@@ -173,13 +173,13 @@ module peripheral_apb2ahb #(
     input [2:0] hsize;
 
     case (hsize)
-      `HSIZE_B1024 : apb_beats = 1023/PDATA_SIZE; 
-      `HSIZE_B512  : apb_beats =  511/PDATA_SIZE;
-      `HSIZE_B256  : apb_beats =  255/PDATA_SIZE;
-      `HSIZE_B128  : apb_beats =  127/PDATA_SIZE;
-      `HSIZE_DWORD : apb_beats =   63/PDATA_SIZE;
-      `HSIZE_WORD  : apb_beats =   31/PDATA_SIZE;
-      `HSIZE_HWORD : apb_beats =   15/PDATA_SIZE;
+      HSIZE_B1024 : apb_beats = 1023/PDATA_SIZE; 
+      HSIZE_B512  : apb_beats =  511/PDATA_SIZE;
+      HSIZE_B256  : apb_beats =  255/PDATA_SIZE;
+      HSIZE_B128  : apb_beats =  127/PDATA_SIZE;
+      HSIZE_DWORD : apb_beats =   63/PDATA_SIZE;
+      HSIZE_WORD  : apb_beats =   31/PDATA_SIZE;
+      HSIZE_HWORD : apb_beats =   15/PDATA_SIZE;
       default      : apb_beats =    7/PDATA_SIZE;
     endcase
   endfunction //apb_beats
@@ -221,13 +221,13 @@ module peripheral_apb2ahb #(
 
     //get number of active lanes for a 1024bit databus (max width) for this HSIZE
     case (hsize)
-      `HSIZE_B1024 : full_pstrb = 128'hffff_ffff_ffff_ffff_ffff_ffff_ffff_ffff; 
-      `HSIZE_B512  : full_pstrb = 128'h0000_0000_0000_0000_ffff_ffff_ffff_ffff;
-      `HSIZE_B256  : full_pstrb = 128'h0000_0000_0000_0000_0000_0000_ffff_ffff;
-      `HSIZE_B128  : full_pstrb = 128'h0000_0000_0000_0000_0000_0000_0000_ffff;
-      `HSIZE_DWORD : full_pstrb = 128'h0000_0000_0000_0000_0000_0000_0000_00ff;
-      `HSIZE_WORD  : full_pstrb = 128'h0000_0000_0000_0000_0000_0000_0000_000f;
-      `HSIZE_HWORD : full_pstrb = 128'h0000_0000_0000_0000_0000_0000_0000_0003;
+      HSIZE_B1024 : full_pstrb = 128'hffff_ffff_ffff_ffff_ffff_ffff_ffff_ffff; 
+      HSIZE_B512  : full_pstrb = 128'h0000_0000_0000_0000_ffff_ffff_ffff_ffff;
+      HSIZE_B256  : full_pstrb = 128'h0000_0000_0000_0000_0000_0000_ffff_ffff;
+      HSIZE_B128  : full_pstrb = 128'h0000_0000_0000_0000_0000_0000_0000_ffff;
+      HSIZE_DWORD : full_pstrb = 128'h0000_0000_0000_0000_0000_0000_0000_00ff;
+      HSIZE_WORD  : full_pstrb = 128'h0000_0000_0000_0000_0000_0000_0000_000f;
+      HSIZE_HWORD : full_pstrb = 128'h0000_0000_0000_0000_0000_0000_0000_0003;
       default      : full_pstrb = 128'h0000_0000_0000_0000_0000_0000_0000_0001;
     endcase
 
@@ -251,7 +251,7 @@ module peripheral_apb2ahb #(
       ahb_fsm    <= ST_AHB_IDLE;
 
       HREADYOUT  <= 1'b1;
-      HRESP      <= `HRESP_OKAY;
+      HRESP      <= HRESP_OKAY;
 
       ahb_treq   <= 1'b0;
       ahb_haddr  <=  'h0;
@@ -273,10 +273,10 @@ module peripheral_apb2ahb #(
           if (HSEL && HREADY) begin
             //This (slave) is selected ... what kind of transfer is this?
             case (HTRANS)
-              `HTRANS_IDLE   : ahb_no_transfer;
-              `HTRANS_BUSY   : ahb_no_transfer;
-              `HTRANS_NONSEQ : ahb_prep_transfer;
-              `HTRANS_SEQ    : ahb_prep_transfer;
+              HTRANS_IDLE   : ahb_no_transfer;
+              HTRANS_BUSY   : ahb_no_transfer;
+              HTRANS_NONSEQ : ahb_prep_transfer;
+              HTRANS_SEQ    : ahb_prep_transfer;
             endcase //HTRANS
           end
           else ahb_no_transfer;
@@ -297,12 +297,12 @@ module peripheral_apb2ahb #(
             //HRESP=ERROR requires 2 cycles
             if (apb_pslverr) begin
               HREADYOUT <= 1'b0;
-              HRESP     <= `HRESP_ERROR;
+              HRESP     <= HRESP_ERROR;
               ahb_fsm   <= ST_AHB_ERROR;
             end
             else begin
               HREADYOUT <= 1'b1;
-              HRESP     <= `HRESP_OKAY;
+              HRESP     <= HRESP_OKAY;
               ahb_fsm   <= ST_AHB_IDLE;
             end
           end
@@ -320,7 +320,7 @@ module peripheral_apb2ahb #(
   end
 
   always @(posedge HCLK) begin
-    latch_ahb_hwdata <= HSEL & HREADY & HWRITE & ((HTRANS == `HTRANS_NONSEQ) || (HTRANS == `HTRANS_SEQ));
+    latch_ahb_hwdata <= HSEL & HREADY & HWRITE & ((HTRANS == HTRANS_NONSEQ) || (HTRANS == HTRANS_SEQ));
   end
 
   always @(posedge HCLK) begin
@@ -379,8 +379,8 @@ module peripheral_apb2ahb #(
 
             PSEL                 <= 1'b1;
             PENABLE              <= 1'b0;
-            PPROT                <= ((ahb_hprot & `HPROT_DATA      ) ? PPROT_DATA       : PPROT_INSTRUCTION) |
-                                    ((ahb_hprot & `HPROT_PRIVILEGED) ? PPROT_PRIVILEGED : PPROT_NORMAL     );
+            PPROT                <= ((ahb_hprot & HPROT_DATA      ) ? PPROT_DATA       : PPROT_INSTRUCTION) |
+                                    ((ahb_hprot & HPROT_PRIVILEGED) ? PPROT_PRIVILEGED : PPROT_NORMAL     );
             PADDR                <= ahb_haddr[PADDR_SIZE-1:0];
             PWRITE               <= ahb_hwrite;
             PWDATA               <= ahb_hwdata >> data_offset(ahb_haddr);

@@ -86,7 +86,7 @@ entity peripheral_uart_wb is
     );
 end peripheral_uart_wb;
 
-architecture RTL of peripheral_wb_uart is
+architecture RTL of peripheral_uart_wb is
   component peripheral_uart_peripheral_bridge_wb
     port (
       clk : in std_logic;

@@ -54,10 +54,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity peripheral_uart_synthesis is
-end peripheral_uart_synthesis;
+entity peripheral_uart_testbench is
+end peripheral_uart_testbench;
 
-architecture RTL of peripheral_uart_synthesis is
+architecture RTL of peripheral_uart_testbench is
 
   --////////////////////////////////////////////////////////////////
   --

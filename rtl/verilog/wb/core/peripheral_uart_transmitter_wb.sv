@@ -48,17 +48,17 @@ module peripheral_uart_transmitter_wb #(
   parameter SIM = 0
 )
   (
-    input                             clk,
-    input                             wb_rst_i,
-    input                       [7:0] lcr,
-    input                             tf_push,
-    input                       [7:0] wb_dat_i,
-    input                             enable,
-    input                             tx_reset,
-    input                             lsr_mask,  //reset of fifo
-    output                            stx_pad_o,
-    output reg                  [2:0] tstate,
-    output [`UART_FIFO_COUNTER_W-1:0] tf_count
+    input                            clk,
+    input                            wb_rst_i,
+    input                      [7:0] lcr,
+    input                            tf_push,
+    input                      [7:0] wb_dat_i,
+    input                            enable,
+    input                            tx_reset,
+    input                            lsr_mask,  //reset of fifo
+    output                           stx_pad_o,
+    output reg                 [2:0] tstate,
+    output [UART_FIFO_COUNTER_W-1:0] tf_count
   );
 
   //////////////////////////////////////////////////////////////////

@@ -1,6 +1,6 @@
-../../../../../../rtl/vhdl/bb/pkg/peripheral_pkg.vhd
+../../../../../../rtl/vhdl/bb/pkg/vhdl_pkg.vhd
 
 ../../../../../../rtl/vhdl/bb/core/fuse/peripheral_sync_cell.vhd
-../../../../../../rtl/vhdl/bb/core/main/peripheral_uart.vhd
+../../../../../../rtl/vhdl/bb/core/main/peripheral_uart_bb.vhd
 
-../../../../../../bench/vhdl/tests/core/wb/peripheral_uart_testbench.vhd
+../../../../../../bench/vhdl/tests/core/bb/peripheral_uart_testbench.vhd
