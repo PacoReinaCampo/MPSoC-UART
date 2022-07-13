@@ -1,4 +1,5 @@
 ../../../../../../rtl/vhdl/wb/pkg/vhdl_pkg.vhd
+../../../../../../rtl/vhdl/wb/pkg/peripheral_uart_pkg.vhd
 ../../../../../../rtl/vhdl/wb/pkg/peripheral_wb_pkg.vhd
 
 ../../../../../../rtl/vhdl/wb/core/peripheral_raminfr_wb.vhd

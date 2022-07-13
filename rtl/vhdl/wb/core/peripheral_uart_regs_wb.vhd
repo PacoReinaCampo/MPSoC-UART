@@ -1,4 +1,4 @@
--- Converted from peripheral_wb_uart_regs.v
+-- Converted from peripheral_uart_regs_wb.v
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -48,6 +48,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+use work.vhdl_pkg.all;
+use work.peripheral_uart_pkg.all;
 use work.peripheral_wb_pkg.all;
 
 entity peripheral_uart_regs_wb is
@@ -72,7 +74,7 @@ entity peripheral_uart_regs_wb is
     int_o        : out std_logic;
     baud_o       : out std_logic
     );
-end peripheral_wb_uart_regs;
+end peripheral_uart_regs_wb;
 
 architecture RTL of peripheral_uart_regs_wb is
   component peripheral_uart_transmitter_wb
