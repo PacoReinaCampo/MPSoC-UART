@@ -10,11 +10,13 @@
 │       ├── peripheral_ahb3_pkg.vhd
 │       └── vhdl_pkg.vhd
 ├── bb
-│   └── core
-│       ├── fuse
-│       │   └── peripheral_sync_cell.vhd
-│       └── main
-│           └── peripheral_uart_bb.vhd
+│   ├── core
+│   │   ├── fuse
+│   │   │   └── peripheral_sync_cell.vhd
+│   │   └── main
+│   │       └── peripheral_uart_bb.vhd
+│   └── pkg
+│       └── vhdl_pkg.vhd
 └── wb
     ├── core
     │   ├── peripheral_raminfr_wb.vhd
@@ -27,4 +29,6 @@
     │   ├── peripheral_uart_transmitter_wb.vhd
     │   └── peripheral_uart_wb.vhd
     └── pkg
+        ├── peripheral_uart_pkg.vhd
+        ├── peripheral_wb_pkg.vhd
         └── vhdl_pkg.vhd

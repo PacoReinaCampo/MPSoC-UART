@@ -6,3 +6,4 @@
         │   └── peripheral_uart_testbench.vhd
         └── wb
             └── peripheral_uart_testbench.vhd
+

@@ -26,4 +26,5 @@
     │   ├── peripheral_uart_transmitter_wb.sv
     │   └── peripheral_uart_wb.sv
     └── pkg
+        ├── peripheral_uart_pkg.sv
         └── peripheral_wb_pkg.sv
