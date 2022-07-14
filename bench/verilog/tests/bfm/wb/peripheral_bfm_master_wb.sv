@@ -41,6 +41,8 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
+import peripheral_wb_pkg::*;
+
 module peripheral_msi_wb_bfm_master #(
   parameter AW              = 32,
   parameter DW              = 32,
@@ -70,8 +72,6 @@ module peripheral_msi_wb_bfm_master #(
   //
   // Constants
   //
-
-  import peripheral_wb_pkg::*;
 
   parameter BUFFER_WIDTH = $clog2(MAX_BURST_LEN);
   parameter ADR_LSB      = $clog2(DW/8);

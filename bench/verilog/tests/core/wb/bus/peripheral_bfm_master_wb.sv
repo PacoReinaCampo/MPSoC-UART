@@ -73,8 +73,6 @@ module peripheral_bfm_master_wb #(
   // Constants
   //
 
-  import peripheral_bfm_wb_pkg::*;
-
   parameter BUFFER_WIDTH = $clog2(MAX_BURST_LEN);
   parameter ADR_LSB      = $clog2(DW/8);
 
