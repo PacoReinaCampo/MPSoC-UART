@@ -1,0 +1,3 @@
++incdir+../../../../../../rtl/verilog/wb/pkg
+
+../../../../../../bench/verilog/tests/core/wb/main/peripheral_uart_testbench.sv

@@ -38,4 +38,3 @@
             │   ├── peripheral_testbench_utils.sv
             │   └── peripheral_uart_testbench.sv
             └── peripheral_uart_testbench.sv
-
