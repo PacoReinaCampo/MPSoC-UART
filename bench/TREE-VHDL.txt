@@ -1,3 +1,4 @@
+vhdl
 └── tests
     └── core
         ├── ahb3
@@ -6,3 +7,5 @@
         │   └── peripheral_uart_testbench.vhd
         └── wb
             └── peripheral_uart_testbench.vhd
+
+5 directories, 3 files

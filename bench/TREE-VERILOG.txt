@@ -1,3 +1,4 @@
+verilog
 └── tests
     ├── bfm
     │   ├── ahb3
@@ -38,3 +39,5 @@
             │   ├── peripheral_testbench_utils.sv
             │   └── peripheral_uart_testbench.sv
             └── peripheral_uart_testbench.sv
+
+12 directories, 28 files

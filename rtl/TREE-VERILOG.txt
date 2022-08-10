@@ -1,3 +1,4 @@
+verilog
 ├── ahb3
 │   ├── core
 │   │   ├── peripheral_apb2ahb.sv
@@ -28,3 +29,5 @@
     └── pkg
         ├── peripheral_uart_pkg.sv
         └── peripheral_wb_pkg.sv
+
+10 directories, 20 files
