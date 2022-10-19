@@ -1,6 +1,6 @@
 ---
 title: 'MPSoC-UART'
-subtitle: 'QueenField ![](../../icon.jpg)'
+subtitle: 'QueenField ![](../../mpsoc-uart.svg){width=17cm}'
 
 author: Paco Reina Campo
 
