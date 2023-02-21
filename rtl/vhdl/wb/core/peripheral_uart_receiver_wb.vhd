@@ -1,49 +1,48 @@
 -- Converted from peripheral_wb_uart_receiver.v
 -- by verilog2vhdl - QueenField
 
---//////////////////////////////////////////////////////////////////////////////
---                                            __ _      _     _               //
---                                           / _(_)    | |   | |              //
---                __ _ _   _  ___  ___ _ __ | |_ _  ___| | __| |              //
---               / _` | | | |/ _ \/ _ \ '_ \|  _| |/ _ \ |/ _` |              //
---              | (_| | |_| |  __/  __/ | | | | | |  __/ | (_| |              //
---               \__, |\__,_|\___|\___|_| |_|_| |_|\___|_|\__,_|              //
---                  | |                                                       //
---                  |_|                                                       //
---                                                                            //
---                                                                            //
---              Peripheral-UART for MPSoC                                     //
---              Universal Asynchronous Receiver-Transmitter for MPSoC         //
---              WishBone Bus Interface                                        //
---                                                                            //
---//////////////////////////////////////////////////////////////////////////////
+--------------------------------------------------------------------------------
+--                                            __ _      _     _               --
+--                                           / _(_)    | |   | |              --
+--                __ _ _   _  ___  ___ _ __ | |_ _  ___| | __| |              --
+--               / _` | | | |/ _ \/ _ \ '_ \|  _| |/ _ \ |/ _` |              --
+--              | (_| | |_| |  __/  __/ | | | | | |  __/ | (_| |              --
+--               \__, |\__,_|\___|\___|_| |_|_| |_|\___|_|\__,_|              --
+--                  | |                                                       --
+--                  |_|                                                       --
+--                                                                            --
+--                                                                            --
+--              Peripheral-UART for MPSoC                                     --
+--              Universal Asynchronous Receiver-Transmitter for MPSoC         --
+--              WishBone Bus Interface                                        --
+--                                                                            --
+--------------------------------------------------------------------------------
 
 -- Copyright (c) 2018-2019 by the author(s)
--- *
--- * Permission is hereby granted, free of charge, to any person obtaining a copy
--- * of this software and associated documentation files (the "Software"), to deal
--- * in the Software without restriction, including without limitation the rights
--- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
--- * copies of the Software, and to permit persons to whom the Software is
--- * furnished to do so, subject to the following conditions:
--- *
--- * The above copyright notice and this permission notice shall be included in
--- * all copies or substantial portions of the Software.
--- *
--- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
--- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
--- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
--- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
--- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
--- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
--- * THE SOFTWARE.
--- *
--- * =============================================================================
--- * Author(s):
--- *   Jacob Gorban <gorban@opencores.org>
--- *   Igor Mohor <igorm@opencores.org>
--- *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
--- */
+--
+-- Permission is hereby granted, free of charge, to any person obtaining a copy
+-- of this software and associated documentation files (the "Software"), to deal
+-- in the Software without restriction, including without limitation the rights
+-- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+-- copies of the Software, and to permit persons to whom the Software is
+-- furnished to do so, subject to the following conditions:
+--
+-- The above copyright notice and this permission notice shall be included in
+-- all copies or substantial portions of the Software.
+--
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+-- THE SOFTWARE.
+--
+--------------------------------------------------------------------------------
+-- Author(s):
+--   Jacob Gorban <gorban@opencores.org>
+--   Igor Mohor <igorm@opencores.org>
+--   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 
 library ieee;
 use ieee.std_logic_1164.all;
@@ -74,7 +73,7 @@ entity peripheral_uart_receiver_wb is
     );
 end peripheral_uart_receiver_wb;
 
-architecture RTL of peripheral_uart_receiver_wb is
+architecture rtl of peripheral_uart_receiver_wb is
   component peripheral_uart_rfifo_wb
     generic (
       FIFO_WIDTH     : integer := 8;
@@ -98,10 +97,9 @@ architecture RTL of peripheral_uart_receiver_wb is
       );
   end component;
 
-  --////////////////////////////////////////////////////////////////
-  --
+  ------------------------------------------------------------------------------
   -- Constants
-  --
+  ------------------------------------------------------------------------------
   constant sr_idle         : std_logic_vector(3 downto 0) := "0000";
   constant sr_rec_start    : std_logic_vector(3 downto 0) := "0001";
   constant sr_rec_bit      : std_logic_vector(3 downto 0) := "0010";
@@ -114,10 +112,9 @@ architecture RTL of peripheral_uart_receiver_wb is
   constant sr_wait1        : std_logic_vector(3 downto 0) := "1001";
   constant sr_push         : std_logic_vector(3 downto 0) := "1010";
 
-  --////////////////////////////////////////////////////////////////
-  --
+  ------------------------------------------------------------------------------
   -- Variables
-  --
+  ------------------------------------------------------------------------------
   signal rstate_o       : std_logic_vector(3 downto 0);
   signal rcounter16     : std_logic_vector(3 downto 0);
   signal rbit_counter   : std_logic_vector(2 downto 0);
@@ -152,10 +149,9 @@ architecture RTL of peripheral_uart_receiver_wb is
   signal counter_t_o : std_logic_vector(9 downto 0);
 
 begin
-  --////////////////////////////////////////////////////////////////
-  --
+  ------------------------------------------------------------------------------
   -- Module Body
-  --
+  ------------------------------------------------------------------------------
   break_error        <= to_stdlogic(unsigned(counter_b) = X"00");
   rcounter16_eq_7    <= to_stdlogic(unsigned(rcounter16) = to_unsigned(7, 4));
   rcounter16_eq_0    <= to_stdlogic(unsigned(rcounter16) = to_unsigned(0, 4));
@@ -430,4 +426,4 @@ begin
 
   rf_count  <= rf_count_o;
   counter_t <= counter_t_o;
-end RTL;
+end rtl;
