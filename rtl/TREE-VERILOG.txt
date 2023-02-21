@@ -1,33 +1,32 @@
 verilog
-├── ahb3
-│   ├── core
+├── peripheral
+│   ├── ahb3
 │   │   ├── peripheral_apb2ahb.sv
 │   │   ├── peripheral_uart_apb4.sv
 │   │   ├── peripheral_uart_fifo.sv
 │   │   ├── peripheral_uart_interrupt.sv
 │   │   ├── peripheral_uart_rx.sv
 │   │   └── peripheral_uart_tx.sv
-│   └── pkg
-│       └── peripheral_ahb3_pkg.sv
-├── bb
-│   └── core
-│       ├── fuse
-│       │   └── peripheral_sync_cell.sv
-│       └── main
-│           └── peripheral_uart_bb.sv
-└── wb
-    ├── core
-    │   ├── peripheral_raminfr_wb.sv
-    │   ├── peripheral_uart_bridge_wb.sv
-    │   ├── peripheral_uart_receiver_wb.sv
-    │   ├── peripheral_uart_regs_wb.sv
-    │   ├── peripheral_uart_rfifo_wb.sv
-    │   ├── peripheral_uart_sync_flops_wb.sv
-    │   ├── peripheral_uart_tfifo_wb.sv
-    │   ├── peripheral_uart_transmitter_wb.sv
-    │   └── peripheral_uart_wb.sv
-    └── pkg
+│   ├── bb
+│   │   ├── fuse
+│   │   │   └── peripheral_sync_cell.sv
+│   │   └── main
+│   │       └── peripheral_uart_bb.sv
+│   └── wb
+│       ├── peripheral_raminfr_wb.sv
+│       ├── peripheral_uart_bridge_wb.sv
+│       ├── peripheral_uart_receiver_wb.sv
+│       ├── peripheral_uart_regs_wb.sv
+│       ├── peripheral_uart_rfifo_wb.sv
+│       ├── peripheral_uart_sync_flops_wb.sv
+│       ├── peripheral_uart_tfifo_wb.sv
+│       ├── peripheral_uart_transmitter_wb.sv
+│       └── peripheral_uart_wb.sv
+└── pkg
+    ├── ahb3
+    │   └── peripheral_ahb3_pkg.sv
+    └── wb
         ├── peripheral_uart_pkg.sv
         └── peripheral_wb_pkg.sv
 
-10 directories, 20 files
+9 directories, 20 files

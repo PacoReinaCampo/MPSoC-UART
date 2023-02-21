@@ -37,98 +37,89 @@
  *
  * =============================================================================
  * Author(s):
- *   Jacob Gorban <gorban@opencores.org>
- *   Igor Mohor <igorm@opencores.org>
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-import peripheral_wb_pkg::*;
+module peripheral_uart_testbench;
 
-module peripheral_uart_tfifo_wb #(
-  parameter FIFO_WIDTH     = 8,
-  parameter FIFO_DEPTH     = 16,
-  parameter FIFO_POINTER_W = 4,
-  parameter FIFO_COUNTER_W = 5
-)
-  (
-    input                           clk,
-    input                           wb_rst_i,
-    input                           push,
-    input                           pop,
-    input      [FIFO_WIDTH-1:0]     data_in,
-    input                           fifo_reset,
-    input                           reset_status,
+  //////////////////////////////////////////////////////////////////////////////
+  //
+  // Constants
+  //
+  parameter SIM   = 0;
+  parameter DEBUG = 0;
 
-    output     [FIFO_WIDTH-1:0]     data_out,
-    output reg                      overrun,
-    output reg [FIFO_COUNTER_W-1:0] count
-  );
-
-  //////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
   //
   // Variables
   //
 
-  // FIFO pointers
-  reg  [FIFO_POINTER_W-1:0] top;
-  reg  [FIFO_POINTER_W-1:0] bottom;
+  //Common signals
+  wire                   rst;
+  wire                   clk;
 
-  wire [FIFO_POINTER_W-1:0] top_plus_1 = top + 4'd1;
+  //UART WB
 
-  //////////////////////////////////////////////////////////////////
+  // WISHBONE interface
+  logic  [2:0]           wb_adr_i;
+  logic  [7:0]           wb_dat_i;
+  logic  [7:0]           wb_dat_o;
+  logic                  wb_we_i;
+  logic                  wb_stb_i;
+  logic                  wb_cyc_i;
+  logic  [3:0]           wb_sel_i;
+  logic                  wb_ack_o;
+  logic                  int_o;
+
+  // UART  signals
+  logic                  srx_pad_i;
+  logic                  stx_pad_o;
+  logic                  rts_pad_o;
+  logic                  cts_pad_i;
+  logic                  dtr_pad_o;
+  logic                  dsr_pad_i;
+  logic                  ri_pad_i;
+  logic                  dcd_pad_i;
+
+  // optional baudrate output
+  logic baud_o;
+
+  //////////////////////////////////////////////////////////////////////////////
   //
   // Module Body
   //
-  peripheral_raminfr_wb #(
-    .ADDR_WIDTH (FIFO_POINTER_W),
-    .DATA_WIDTH (FIFO_WIDTH),
-    .DEPTH      (FIFO_DEPTH)
+
+  //DUT WB
+  peripheral_uart_wb #(
+    .SIM   (SIM),
+    .DEBUG (DEBUG)
   )
-  raminfr_wb ( 
-    .clk(clk), 
-    .we(push), 
-    .a(top), 
-    .dpra(bottom), 
-    .di(data_in), 
-    .dpo(data_out)
-  ); 
+  uart_wb (
+    .wb_clk_i (clk),
+    .wb_rst_i (rst),
 
-  always @(posedge clk or posedge wb_rst_i) begin  // synchronous FIFO
-    if (wb_rst_i) begin
-      top    <= 0;
-      bottom <= 0;
-      count  <= 0;
-    end
-    else if (fifo_reset) begin
-      top    <= 0;
-      bottom <= 0;
-      count  <= 0;
-    end
-    else begin
-      case ({push, pop})
-        2'b10 : if (count<FIFO_DEPTH) begin  // overrun condition
-          top   <= top_plus_1;
-          count <= count + 5'd1;
-        end
-        2'b01 : if(count>0) begin
-          bottom <= bottom + 4'd1;
-          count  <= count - 5'd1;
-        end
-        2'b11 : begin
-          bottom <= bottom + 4'd1;
-          top    <= top_plus_1;
-        end
-        default: ;
-      endcase
-    end
-  end  // always
+    // WISHBONE interface
+    .wb_adr_i (wb_adr_i),
+    .wb_dat_i (wb_dat_i),
+    .wb_dat_o (wb_dat_o),
+    .wb_we_i  (wb_we_i),
+    .wb_stb_i (wb_stb_i),
+    .wb_cyc_i (wb_cyc_i),
+    .wb_sel_i (wb_sel_i),
+    .wb_ack_o (wb_ack_o),
+    .int_o    (int_o),
 
-  always @(posedge clk or posedge wb_rst_i) begin  // synchronous FIFO
-    if (wb_rst_i)
-      overrun   <= 1'b0;
-    else if(fifo_reset | reset_status) 
-      overrun   <= 1'b0;
-    else if(push & (count==FIFO_DEPTH))
-      overrun   <= 1'b1;
-  end  // always
+    // UART  signals
+    .srx_pad_i (srx_pad_i),
+    .stx_pad_o (stx_pad_o),
+    .rts_pad_o (rts_pad_o),
+    .cts_pad_i (cts_pad_i),
+    .dtr_pad_o (dtr_pad_o),
+    .dsr_pad_i (dsr_pad_i),
+    .ri_pad_i  (ri_pad_i),
+    .dcd_pad_i (dcd_pad_i),
+
+    // optional baudrate output
+    .baud_o (baud_o)
+  );
 endmodule

@@ -1,37 +1,35 @@
 vhdl
-├── ahb3
-│   ├── core
+├── peripheral
+│   ├── ahb3
 │   │   ├── peripheral_apb2ahb.vhd
 │   │   ├── peripheral_uart_apb4.vhd
 │   │   ├── peripheral_uart_fifo.vhd
 │   │   ├── peripheral_uart_interrupt.vhd
 │   │   ├── peripheral_uart_rx.vhd
 │   │   └── peripheral_uart_tx.vhd
-│   └── pkg
-│       ├── peripheral_ahb3_pkg.vhd
-│       └── vhdl_pkg.vhd
-├── bb
-│   ├── core
+│   ├── bb
 │   │   ├── fuse
 │   │   │   └── peripheral_sync_cell.vhd
 │   │   └── main
 │   │       └── peripheral_uart_bb.vhd
-│   └── pkg
-│       └── vhdl_pkg.vhd
-└── wb
+│   └── wb
+│       ├── peripheral_raminfr_wb.vhd
+│       ├── peripheral_uart_peripheral_bridge_wb.vhd
+│       ├── peripheral_uart_receiver_wb.vhd
+│       ├── peripheral_uart_regs_wb.vhd
+│       ├── peripheral_uart_rfifo_wb.vhd
+│       ├── peripheral_uart_sync_flops_wb.vhd
+│       ├── peripheral_uart_tfifo_wb.vhd
+│       ├── peripheral_uart_transmitter_wb.vhd
+│       └── peripheral_uart_wb.vhd
+└── pkg
     ├── core
-    │   ├── peripheral_raminfr_wb.vhd
-    │   ├── peripheral_uart_peripheral_bridge_wb.vhd
-    │   ├── peripheral_uart_receiver_wb.vhd
-    │   ├── peripheral_uart_regs_wb.vhd
-    │   ├── peripheral_uart_rfifo_wb.vhd
-    │   ├── peripheral_uart_sync_flops_wb.vhd
-    │   ├── peripheral_uart_tfifo_wb.vhd
-    │   ├── peripheral_uart_transmitter_wb.vhd
-    │   └── peripheral_uart_wb.vhd
-    └── pkg
-        ├── peripheral_uart_pkg.vhd
-        ├── peripheral_wb_pkg.vhd
-        └── vhdl_pkg.vhd
+    │   └── vhdl_pkg.vhd
+    └── peripheral
+        ├── ahb3
+        │   └── peripheral_ahb3_pkg.vhd
+        └── wb
+            ├── peripheral_uart_pkg.vhd
+            └── peripheral_wb_pkg.vhd
 
-11 directories, 23 files
+11 directories, 21 files

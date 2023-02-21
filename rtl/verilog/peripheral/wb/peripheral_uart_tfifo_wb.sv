@@ -37,52 +37,98 @@
  *
  * =============================================================================
  * Author(s):
- *   Andrej Erzen <andreje@flextronics.si>
- *   Tadej Markovic <tadejm@flextronics.si>
+ *   Jacob Gorban <gorban@opencores.org>
+ *   Igor Mohor <igorm@opencores.org>
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module peripheral_uart_sync_flops_wb #(
-  parameter WIDTH      = 1,
-  parameter INIT_VALUE = 1'b0
+import peripheral_wb_pkg::*;
+
+module peripheral_uart_tfifo_wb #(
+  parameter FIFO_WIDTH     = 8,
+  parameter FIFO_DEPTH     = 16,
+  parameter FIFO_POINTER_W = 4,
+  parameter FIFO_COUNTER_W = 5
 )
   (
-    input                  rst_i,            // reset input
-    input                  clk_i,            // clock input
-    input                  stage1_rst_i,     // synchronous reset for stage 1 FF
-    input                  stage1_clk_en_i,  // synchronous clock enable for stage 1 FF
-    input      [WIDTH-1:0] async_dat_i,      // asynchronous data input
-    output reg [WIDTH-1:0] sync_dat_o        // synchronous data output
+    input                           clk,
+    input                           wb_rst_i,
+    input                           push,
+    input                           pop,
+    input      [FIFO_WIDTH-1:0]     data_in,
+    input                           fifo_reset,
+    input                           reset_status,
+
+    output     [FIFO_WIDTH-1:0]     data_out,
+    output reg                      overrun,
+    output reg [FIFO_COUNTER_W-1:0] count
   );
 
-  //////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
   //
   // Variables
   //
 
-  // Internal signal declarations
-  reg [WIDTH-1:0] flop_0;
+  // FIFO pointers
+  reg  [FIFO_POINTER_W-1:0] top;
+  reg  [FIFO_POINTER_W-1:0] bottom;
 
-  //////////////////////////////////////////////////////////////////
+  wire [FIFO_POINTER_W-1:0] top_plus_1 = top + 4'd1;
+
+  //////////////////////////////////////////////////////////////////////////////
   //
   // Module Body
   //
+  peripheral_raminfr_wb #(
+    .ADDR_WIDTH (FIFO_POINTER_W),
+    .DATA_WIDTH (FIFO_WIDTH),
+    .DEPTH      (FIFO_DEPTH)
+  )
+  raminfr_wb ( 
+    .clk(clk), 
+    .we(push), 
+    .a(top), 
+    .dpra(bottom), 
+    .di(data_in), 
+    .dpo(data_out)
+  ); 
 
-  // first stage
-  always @ (posedge clk_i or posedge rst_i) begin
-    if (rst_i)
-      flop_0 <= {WIDTH{INIT_VALUE}};
-    else
-      flop_0 <= async_dat_i;    
-  end
+  always @(posedge clk or posedge wb_rst_i) begin  // synchronous FIFO
+    if (wb_rst_i) begin
+      top    <= 0;
+      bottom <= 0;
+      count  <= 0;
+    end
+    else if (fifo_reset) begin
+      top    <= 0;
+      bottom <= 0;
+      count  <= 0;
+    end
+    else begin
+      case ({push, pop})
+        2'b10 : if (count<FIFO_DEPTH) begin  // overrun condition
+          top   <= top_plus_1;
+          count <= count + 5'd1;
+        end
+        2'b01 : if(count>0) begin
+          bottom <= bottom + 4'd1;
+          count  <= count - 5'd1;
+        end
+        2'b11 : begin
+          bottom <= bottom + 4'd1;
+          top    <= top_plus_1;
+        end
+        default: ;
+      endcase
+    end
+  end  // always
 
-  // second stage
-  always @ (posedge clk_i or posedge rst_i) begin
-    if (rst_i)
-      sync_dat_o <= {WIDTH{INIT_VALUE}};
-    else if (stage1_rst_i)
-      sync_dat_o <= {WIDTH{INIT_VALUE}};
-    else if (stage1_clk_en_i)
-      sync_dat_o <= flop_0;       
-  end
+  always @(posedge clk or posedge wb_rst_i) begin  // synchronous FIFO
+    if (wb_rst_i)
+      overrun   <= 1'b0;
+    else if(fifo_reset | reset_status) 
+      overrun   <= 1'b0;
+    else if(push & (count==FIFO_DEPTH))
+      overrun   <= 1'b1;
+  end  // always
 endmodule

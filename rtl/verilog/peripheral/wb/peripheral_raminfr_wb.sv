@@ -37,89 +37,41 @@
  *
  * =============================================================================
  * Author(s):
+ *   Jacob Gorban <gorban@opencores.org>
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module peripheral_uart_testbench;
+//Following is the Verilog code for a dual-port RAM with asynchronous read. 
+module peripheral_raminfr_wb #(
+  parameter ADDR_WIDTH = 4,
+  parameter DATA_WIDTH = 8,
+  parameter DEPTH      = 16
+)
+  (
+    input                   clk,
+    input                   we,
+    input  [ADDR_WIDTH-1:0] a,
+    input  [ADDR_WIDTH-1:0] dpra,
+    input  [DATA_WIDTH-1:0] di,
+    output [DATA_WIDTH-1:0] dpo
+    //output [DATA_WIDTH-1:0] spo,
+  );
 
-  //////////////////////////////////////////////////////////////////
-  //
-  // Constants
-  //
-  parameter SIM   = 0;
-  parameter DEBUG = 0;
-
-  //////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
   //
   // Variables
   //
+  reg   [DATA_WIDTH-1:0] ram [DEPTH-1:0];
 
-  //Common signals
-  wire                   rst;
-  wire                   clk;
-
-  //UART WB
-
-  // WISHBONE interface
-  logic  [2:0]           wb_adr_i;
-  logic  [7:0]           wb_dat_i;
-  logic  [7:0]           wb_dat_o;
-  logic                  wb_we_i;
-  logic                  wb_stb_i;
-  logic                  wb_cyc_i;
-  logic  [3:0]           wb_sel_i;
-  logic                  wb_ack_o;
-  logic                  int_o;
-
-  // UART  signals
-  logic                  srx_pad_i;
-  logic                  stx_pad_o;
-  logic                  rts_pad_o;
-  logic                  cts_pad_i;
-  logic                  dtr_pad_o;
-  logic                  dsr_pad_i;
-  logic                  ri_pad_i;
-  logic                  dcd_pad_i;
-
-  // optional baudrate output
-  logic baud_o;
-
-  //////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
   //
   // Module Body
   //
-
-  //DUT WB
-  peripheral_uart_wb #(
-    .SIM   (SIM),
-    .DEBUG (DEBUG)
-  )
-  uart_wb (
-    .wb_clk_i (clk),
-    .wb_rst_i (rst),
-
-    // WISHBONE interface
-    .wb_adr_i (wb_adr_i),
-    .wb_dat_i (wb_dat_i),
-    .wb_dat_o (wb_dat_o),
-    .wb_we_i  (wb_we_i),
-    .wb_stb_i (wb_stb_i),
-    .wb_cyc_i (wb_cyc_i),
-    .wb_sel_i (wb_sel_i),
-    .wb_ack_o (wb_ack_o),
-    .int_o    (int_o),
-
-    // UART  signals
-    .srx_pad_i (srx_pad_i),
-    .stx_pad_o (stx_pad_o),
-    .rts_pad_o (rts_pad_o),
-    .cts_pad_i (cts_pad_i),
-    .dtr_pad_o (dtr_pad_o),
-    .dsr_pad_i (dsr_pad_i),
-    .ri_pad_i  (ri_pad_i),
-    .dcd_pad_i (dcd_pad_i),
-
-    // optional baudrate output
-    .baud_o (baud_o)
-  );
+  always @(posedge clk) begin
+    if (we) begin
+      ram[a] <= di;
+    end     
+  end   
+  //  assign spo = ram[a];   
+  assign dpo = ram[dpra];   
 endmodule

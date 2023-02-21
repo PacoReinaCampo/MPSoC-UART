@@ -37,41 +37,52 @@
  *
  * =============================================================================
  * Author(s):
- *   Jacob Gorban <gorban@opencores.org>
+ *   Andrej Erzen <andreje@flextronics.si>
+ *   Tadej Markovic <tadejm@flextronics.si>
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-//Following is the Verilog code for a dual-port RAM with asynchronous read. 
-module peripheral_raminfr_wb #(
-  parameter ADDR_WIDTH = 4,
-  parameter DATA_WIDTH = 8,
-  parameter DEPTH      = 16
+module peripheral_uart_sync_flops_wb #(
+  parameter WIDTH      = 1,
+  parameter INIT_VALUE = 1'b0
 )
   (
-    input                   clk,
-    input                   we,
-    input  [ADDR_WIDTH-1:0] a,
-    input  [ADDR_WIDTH-1:0] dpra,
-    input  [DATA_WIDTH-1:0] di,
-    output [DATA_WIDTH-1:0] dpo
-    //output [DATA_WIDTH-1:0] spo,
+    input                  rst_i,            // reset input
+    input                  clk_i,            // clock input
+    input                  stage1_rst_i,     // synchronous reset for stage 1 FF
+    input                  stage1_clk_en_i,  // synchronous clock enable for stage 1 FF
+    input      [WIDTH-1:0] async_dat_i,      // asynchronous data input
+    output reg [WIDTH-1:0] sync_dat_o        // synchronous data output
   );
 
-  //////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
   //
   // Variables
   //
-  reg   [DATA_WIDTH-1:0] ram [DEPTH-1:0];
 
-  //////////////////////////////////////////////////////////////////
+  // Internal signal declarations
+  reg [WIDTH-1:0] flop_0;
+
+  //////////////////////////////////////////////////////////////////////////////
   //
   // Module Body
   //
-  always @(posedge clk) begin
-    if (we) begin
-      ram[a] <= di;
-    end     
-  end   
-  //  assign spo = ram[a];   
-  assign dpo = ram[dpra];   
+
+  // first stage
+  always @ (posedge clk_i or posedge rst_i) begin
+    if (rst_i)
+      flop_0 <= {WIDTH{INIT_VALUE}};
+    else
+      flop_0 <= async_dat_i;    
+  end
+
+  // second stage
+  always @ (posedge clk_i or posedge rst_i) begin
+    if (rst_i)
+      sync_dat_o <= {WIDTH{INIT_VALUE}};
+    else if (stage1_rst_i)
+      sync_dat_o <= {WIDTH{INIT_VALUE}};
+    else if (stage1_clk_en_i)
+      sync_dat_o <= flop_0;       
+  end
 endmodule
