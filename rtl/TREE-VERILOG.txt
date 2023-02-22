@@ -23,10 +23,12 @@ verilog
 │       ├── peripheral_uart_transmitter_wb.sv
 │       └── peripheral_uart_wb.sv
 └── pkg
-    ├── ahb3
-    │   └── peripheral_ahb3_pkg.sv
-    └── wb
-        ├── peripheral_uart_pkg.sv
-        └── peripheral_wb_pkg.sv
+    ├── core
+    │   └── peripheral_uart_pkg.sv
+    └── peripheral
+        ├── ahb3
+        │   └── peripheral_ahb3_pkg.sv
+        └── wb
+            └── peripheral_wb_pkg.sv
 
-9 directories, 20 files
+11 directories, 20 files

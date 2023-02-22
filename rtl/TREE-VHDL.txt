@@ -24,12 +24,12 @@ vhdl
 │       └── peripheral_uart_wb.vhd
 └── pkg
     ├── core
+    │   ├── peripheral_uart_pkg.vhd
     │   └── vhdl_pkg.vhd
     └── peripheral
         ├── ahb3
         │   └── peripheral_ahb3_pkg.vhd
         └── wb
-            ├── peripheral_uart_pkg.vhd
             └── peripheral_wb_pkg.vhd
 
 11 directories, 21 files
