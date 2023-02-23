@@ -1,8 +1,8 @@
-../../../../../../rtl/vhdl/ahb3/pkg/peripheral_uart_ahb3_pkg.vhd
+../../../../../../rtl/vhdl/pkg/peripheral/ahb3/peripheral_uart_ahb3_pkg.vhd
 
-../../../../../../rtl/vhdl/ahb3/core/peripheral_bridge_apb2ahb.vhd
-../../../../../../rtl/vhdl/ahb3/core/peripheral_uart_apb4.vhd
-../../../../../../rtl/vhdl/ahb3/core/peripheral_uart_fifo.vhd
-../../../../../../rtl/vhdl/ahb3/core/peripheral_uart_interrupt.vhd
-../../../../../../rtl/vhdl/ahb3/core/peripheral_uart_rx.vhd
-../../../../../../rtl/vhdl/ahb3/core/peripheral_uart_tx.vhd
+../../../../../../rtl/vhdl/peripheral/ahb3/peripheral_bridge_apb2ahb.vhd
+../../../../../../rtl/vhdl/peripheral/ahb3/peripheral_uart_apb4.vhd
+../../../../../../rtl/vhdl/peripheral/ahb3/peripheral_uart_fifo.vhd
+../../../../../../rtl/vhdl/peripheral/ahb3/peripheral_uart_interrupt.vhd
+../../../../../../rtl/vhdl/peripheral/ahb3/peripheral_uart_rx.vhd
+../../../../../../rtl/vhdl/peripheral/ahb3/peripheral_uart_tx.vhd

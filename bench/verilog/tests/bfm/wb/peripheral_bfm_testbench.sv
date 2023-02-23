@@ -79,8 +79,8 @@ module peripheral_bfm_testbench;
   //
   // Module Body
   //
-  vlog_tb_utils vlog_tb_utils0();
-  vlog_tap_generator #("wb_bfm.tap", 1) vtg();
+  peripheral_testbench_utils utils_testbench();
+  peripheral_tap_generator #("wb_bfm.tap", 1) vtg();
 
   always #5 wb_clk <= ~wb_clk;
   initial  #100 wb_rst <= 0;

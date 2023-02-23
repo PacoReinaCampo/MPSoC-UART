@@ -1,4 +1,4 @@
-../../../../../../rtl/verilog/bb/core/fuse/peripheral_sync_cell.sv
-../../../../../../rtl/verilog/bb/core/main/peripheral_uart_bb.sv
+../../../../../../rtl/verilog/peripheral/bb/fuse/peripheral_sync_cell.sv
+../../../../../../rtl/verilog/peripheral/bb/main/peripheral_uart_bb.sv
 
-../../../../../../bench/verilog/tests/core/bb/peripheral_uart_testbench.sv
+../../../../../../bench/verilog/tests/peripheral/bb/peripheral_uart_testbench.sv

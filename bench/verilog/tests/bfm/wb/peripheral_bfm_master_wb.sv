@@ -43,7 +43,7 @@
 
 import peripheral_wb_pkg::*;
 
-module peripheral_msi_wb_bfm_master #(
+module peripheral_bfm_master_wb #(
   parameter AW              = 32,
   parameter DW              = 32,
   parameter TP              = 0,

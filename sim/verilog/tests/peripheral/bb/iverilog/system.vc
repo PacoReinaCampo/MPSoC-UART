@@ -1,6 +1,6 @@
-+incdir+../../../../../../rtl/verilog/ahb3/pkg
++incdir+../../../../../../rtl/verilog/pkg/peripheral/ahb3
 
-../../../../../../rtl/verilog/bb/core/fuse/peripheral_sync_cell.sv
-../../../../../../rtl/verilog/bb/core/main/peripheral_uart.sv
+../../../../../../rtl/verilog/peripheral/bb/fuse/peripheral_sync_cell.sv
+../../../../../../rtl/verilog/peripheral/bb/main/peripheral_uart.sv
 
-../../../../../../bench/verilog/tests/core/bb/peripheral_uart_testbench.sv
+../../../../../../bench/verilog/tests/peripheral/bb/peripheral_uart_testbench.sv

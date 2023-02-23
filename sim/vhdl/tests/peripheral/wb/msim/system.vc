@@ -1,15 +1,15 @@
-../../../../../../rtl/vhdl/wb/pkg/vhdl_pkg.vhd
-../../../../../../rtl/vhdl/wb/pkg/peripheral_uart_pkg.vhd
-../../../../../../rtl/vhdl/wb/pkg/peripheral_wb_pkg.vhd
+../../../../../../rtl/vhdl/pkg/core/vhdl_pkg.vhd
+../../../../../../rtl/vhdl/pkg/core/peripheral_uart_pkg.vhd
+../../../../../../rtl/vhdl/pkg/peripheral/wb/peripheral_wb_pkg.vhd
 
-../../../../../../rtl/vhdl/wb/core/peripheral_raminfr_wb.vhd
-../../../../../../rtl/vhdl/wb/core/peripheral_uart_wb.vhd
-../../../../../../rtl/vhdl/wb/core/peripheral_uart_peripheral_bridge_wb.vhd
-../../../../../../rtl/vhdl/wb/core/peripheral_uart_receiver_wb.vhd
-../../../../../../rtl/vhdl/wb/core/peripheral_uart_regs_wb.vhd
-../../../../../../rtl/vhdl/wb/core/peripheral_uart_rfifo_wb.vhd
-../../../../../../rtl/vhdl/wb/core/peripheral_uart_sync_flops_wb.vhd
-../../../../../../rtl/vhdl/wb/core/peripheral_uart_tfifo_wb.vhd
-../../../../../../rtl/vhdl/wb/core/peripheral_uart_transmitter_wb.vhd
+../../../../../../rtl/vhdl/peripheral/wb/peripheral_raminfr_wb.vhd
+../../../../../../rtl/vhdl/peripheral/wb/peripheral_uart_wb.vhd
+../../../../../../rtl/vhdl/peripheral/wb/peripheral_uart_peripheral_bridge_wb.vhd
+../../../../../../rtl/vhdl/peripheral/wb/peripheral_uart_receiver_wb.vhd
+../../../../../../rtl/vhdl/peripheral/wb/peripheral_uart_regs_wb.vhd
+../../../../../../rtl/vhdl/peripheral/wb/peripheral_uart_rfifo_wb.vhd
+../../../../../../rtl/vhdl/peripheral/wb/peripheral_uart_sync_flops_wb.vhd
+../../../../../../rtl/vhdl/peripheral/wb/peripheral_uart_tfifo_wb.vhd
+../../../../../../rtl/vhdl/peripheral/wb/peripheral_uart_transmitter_wb.vhd
 
-../../../../../../bench/vhdl/tests/core/wb/peripheral_uart_testbench.vhd
+../../../../../../bench/vhdl/tests/peripheral/wb/peripheral_uart_testbench.vhd
