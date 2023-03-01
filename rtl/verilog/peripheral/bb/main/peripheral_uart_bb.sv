@@ -278,7 +278,7 @@ module peripheral_uart_bb (
   //--------------------------------
   wire     uart_rxd_sync_n;
 
-  msp430_sync_cell sync_cell_uart_rxd (
+  peripheral_sync_cell sync_cell_uart_rxd (
     .data_out  (uart_rxd_sync_n),
     .data_in   (~uart_rxd),
     .clk       (mclk),
