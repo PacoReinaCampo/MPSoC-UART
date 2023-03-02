@@ -90,9 +90,9 @@ module peripheral_bfm_testbench;
   //
   // TB and DUT
   //
-  test #( .PDATA_SIZE ( PDATA_SIZE ))
-  tb ( .* );
+  peripheral_bfm_apb4 #( .PDATA_SIZE ( PDATA_SIZE ))
+  bfm_apb4 ( .* );
 
-  apb_gpio #( .PDATA_SIZE ( PDATA_SIZE ))
+  peripheral_gpio_apb4 #( .PDATA_SIZE ( PDATA_SIZE ))
   dut ( .* );
-endmodule : testbench_top
+endmodule : peripheral_bfm_testbench

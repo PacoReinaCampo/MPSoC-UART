@@ -45,10 +45,10 @@
 all: build simulate
 
 build:
-	xvlog -i ../../../../../../uvm/src -prj system.prj
+	iverilog -g2012 -o system.vvp -c system.vc -s peripheral_bfm_testbench
 
 simulate:
-	xelab test
-	xsim -R test
+	vvp system.vvp
+
 clean:
-	rm -rf *.dir *.jou *.log *.pb
+	rm -rf system.vvp

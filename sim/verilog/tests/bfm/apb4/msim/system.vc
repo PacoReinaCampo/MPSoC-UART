@@ -42,13 +42,8 @@
 ##                                                                               ##
 ###################################################################################
 
-all: build simulate
+../../../../../../bench/verilog/tests/bfm/apb4/peripheral_gpio_apb4.sv
 
-build:
-	xvlog -i ../../../../../../uvm/src -prj system.prj
-
-simulate:
-	xelab test
-	xsim -R test
-clean:
-	rm -rf *.dir *.jou *.log *.pb
+../../../../../../bench/verilog/tests/bfm/apb4/peripheral_bfm_apb4.sv
+../../../../../../bench/verilog/tests/bfm/apb4/peripheral_bfm_master_apb4.sv
+../../../../../../bench/verilog/tests/bfm/apb4/peripheral_bfm_testbench.sv

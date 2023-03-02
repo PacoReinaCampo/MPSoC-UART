@@ -95,11 +95,11 @@ module peripheral_bfm_apb4 #(
   //
   // Instantiate the APB-Master
   //
-  apb_master_bfm #(
+  peripheral_bfm_master_apb4 #(
     .PADDR_SIZE (          4 ),
     .PDATA_SIZE ( PDATA_SIZE )
   )
-  apb_mst_bfm (
+  bfm_master_apb4 (
     .*
   );
 
@@ -233,28 +233,28 @@ module peripheral_bfm_apb4 #(
     $display ("Checking reset values ...");
 
     //read register(s) contents
-    apb_mst_bfm.read(MODE, readdata);
+    bfm_master_apb4.read(MODE, readdata);
     check("MODE", readdata, {PDATA_SIZE{1'b0}});
 
-    apb_mst_bfm.read(DIRECTION, readdata);
+    bfm_master_apb4.read(DIRECTION, readdata);
     check("DIRECTION", readdata, {PDATA_SIZE{1'b0}});
 
-    apb_mst_bfm.read(OUTPUT, readdata);
+    bfm_master_apb4.read(OUTPUT, readdata);
     check("OUTPUT", readdata, {PDATA_SIZE{1'b0}});
 
-    apb_mst_bfm.read(TYPE, readdata);
+    bfm_master_apb4.read(TYPE, readdata);
     check("TriggerType", readdata, {PDATA_SIZE{1'b0}});
 
-    apb_mst_bfm.read(LVL0, readdata);
+    bfm_master_apb4.read(LVL0, readdata);
     check("TriggerLevelEdge0", readdata, {PDATA_SIZE{1'b0}});
 
-    apb_mst_bfm.read(LVL1, readdata);
+    bfm_master_apb4.read(LVL1, readdata);
     check("TriggerLevelEdge1", readdata, {PDATA_SIZE{1'b0}});
 
-    apb_mst_bfm.read(STATUS, readdata);
+    bfm_master_apb4.read(STATUS, readdata);
     check("STATUS", readdata, {PDATA_SIZE{1'b0}});
 
-    apb_mst_bfm.read(IRQ_ENA, readdata);
+    bfm_master_apb4.read(IRQ_ENA, readdata);
     check("IRQ", readdata, {PDATA_SIZE{1'b0}});
   endtask : test_reset_register_values
 
@@ -270,10 +270,10 @@ module peripheral_bfm_apb4 #(
         for (int d   =0; d <= 1<<PDATA_SIZE; d++) begin
           gpio_i = d;
 
-          apb_mst_bfm.write(MODE     , {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{mode[0]}});
-          apb_mst_bfm.write(DIRECTION, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{dir [0]}});
-          apb_mst_bfm.write(OUTPUT   , {PSTRB_SIZE{1'b1}}, d);
-          apb_mst_bfm.read (INPUT    , readdata);
+          bfm_master_apb4.write(MODE     , {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{mode[0]}});
+          bfm_master_apb4.write(DIRECTION, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{dir [0]}});
+          bfm_master_apb4.write(OUTPUT   , {PSTRB_SIZE{1'b1}}, d);
+          bfm_master_apb4.read (INPUT    , readdata);
 
           //check read data
           check("INPUT", readdata, d[PDATA_SIZE-1:0]);
@@ -313,10 +313,10 @@ module peripheral_bfm_apb4 #(
 
         gpio_i = $random;
 
-        apb_mst_bfm.write(MODE     , {PSTRB_SIZE{1'b1}}, mode);
-        apb_mst_bfm.write(DIRECTION, {PSTRB_SIZE{1'b1}}, dir );
-        apb_mst_bfm.write(OUTPUT   , {PSTRB_SIZE{1'b1}}, d   );
-        apb_mst_bfm.read (INPUT    , readdata);
+        bfm_master_apb4.write(MODE     , {PSTRB_SIZE{1'b1}}, mode);
+        bfm_master_apb4.write(DIRECTION, {PSTRB_SIZE{1'b1}}, dir );
+        bfm_master_apb4.write(OUTPUT   , {PSTRB_SIZE{1'b1}}, d   );
+        bfm_master_apb4.read (INPUT    , readdata);
 
         //check read data
         check($sformatf("INPUT   (%0d %0d %0d %0d)", run, mode, dir, d), readdata, gpio_i);
@@ -341,30 +341,30 @@ module peripheral_bfm_apb4 #(
     gpio_i = {PDATA_SIZE{1'b0}};
 
     //set trigger type to level
-    apb_mst_bfm.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
+    bfm_master_apb4.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
 
     //enable LVL0
-    apb_mst_bfm.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
+    bfm_master_apb4.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
     //wait for data to propagate
     @(posedge PCLK);
 
     //read STATUS register
-    apb_mst_bfm.read(STATUS, readdata);
+    bfm_master_apb4.read(STATUS, readdata);
     check("STATUS-0", readdata, {PDATA_SIZE{1'b1}});
 
     //disable LVL0
-    apb_mst_bfm.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
+    bfm_master_apb4.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
 
     //check STATUS register (should not have changed)
-    apb_mst_bfm.read(STATUS, readdata);
+    bfm_master_apb4.read(STATUS, readdata);
     check("STATUS-1", readdata, {PDATA_SIZE{1'b1}});
 
     //clear STATUS register
-    apb_mst_bfm.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
+    bfm_master_apb4.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
     //check STATUS register
-    apb_mst_bfm.read(STATUS, readdata);
+    bfm_master_apb4.read(STATUS, readdata);
     check("STATUS-2", readdata, {PDATA_SIZE{1'b0}});
   endtask : test_clear_status
 
@@ -379,19 +379,19 @@ module peripheral_bfm_apb4 #(
     gpio_i = {PDATA_SIZE{1'b1}};
 
     //set trigger type to level
-    apb_mst_bfm.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
+    bfm_master_apb4.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
 
     //disble LVL1
-    apb_mst_bfm.write(LVL1, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
+    bfm_master_apb4.write(LVL1, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
 
     //enable LVL0
-    apb_mst_bfm.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
+    bfm_master_apb4.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
     for (int run=0; run < runs; run++) begin
       if (VERBOSE > 0) $display("  Trigger Level-Low test run=%0d", run);
 
       //clear STATUS register
-      apb_mst_bfm.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
+      bfm_master_apb4.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
       //drive gpio_i
       gpio_data = $random;
@@ -405,7 +405,7 @@ module peripheral_bfm_apb4 #(
       repeat(3) @(posedge PCLK);
 
       //read STATUS register
-      apb_mst_bfm.read(STATUS, readdata);
+      bfm_master_apb4.read(STATUS, readdata);
       check("STATUS", readdata, ~gpio_data);
     end
   endtask : test_trigger_level_low
@@ -421,19 +421,19 @@ module peripheral_bfm_apb4 #(
     gpio_i = {PDATA_SIZE{1'b0}};
 
     //set trigger type to level
-    apb_mst_bfm.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
+    bfm_master_apb4.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
 
     //disbale LVL0
-    apb_mst_bfm.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
+    bfm_master_apb4.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
 
     //enable LVL1
-    apb_mst_bfm.write(LVL1, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
+    bfm_master_apb4.write(LVL1, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
     for (int run=0; run < runs; run++) begin
       if (VERBOSE > 0) $display("  Trigger Level-High test run=%0d", run);
 
       //clear STATUS register
-      apb_mst_bfm.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
+      bfm_master_apb4.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
       //drive gpio_i
       gpio_data = $random;
@@ -447,7 +447,7 @@ module peripheral_bfm_apb4 #(
       repeat(3) @(posedge PCLK);
 
       //read STATUS register
-      apb_mst_bfm.read(STATUS, readdata);
+      bfm_master_apb4.read(STATUS, readdata);
       check("STATUS", readdata, gpio_data);
     end
   endtask : test_trigger_level_high
@@ -466,19 +466,19 @@ module peripheral_bfm_apb4 #(
     gpio_i = {PDATA_SIZE{1'b1}};
 
     //set trigger type to level
-    apb_mst_bfm.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
+    bfm_master_apb4.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
 
     for (int run=0; run < runs; run++) begin
       if (VERBOSE > 0) $display("  Trigger Level-Random test run=%0d", run);
 
       //disable LVL0
-      apb_mst_bfm.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
+      bfm_master_apb4.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
 
       //disable LVL1
-      apb_mst_bfm.write(LVL1, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
+      bfm_master_apb4.write(LVL1, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
 
       //clear STATUS register
-      apb_mst_bfm.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
+      bfm_master_apb4.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
       //drive gpio_i
       gpio_data = $random;
@@ -490,14 +490,14 @@ module peripheral_bfm_apb4 #(
       //randomize level triggers
       lvl0 = $random;
       lvl1 = $random;
-      apb_mst_bfm.write(LVL0, {PSTRB_SIZE{1'b1}}, lvl0);
-      apb_mst_bfm.write(LVL1, {PSTRB_SIZE{1'b1}}, lvl1);
+      bfm_master_apb4.write(LVL0, {PSTRB_SIZE{1'b1}}, lvl0);
+      bfm_master_apb4.write(LVL1, {PSTRB_SIZE{1'b1}}, lvl1);
 
       //allow data to propagate
       @(posedge PCLK);
 
       //read STATUS register
-      apb_mst_bfm.read(STATUS, readdata);
+      bfm_master_apb4.read(STATUS, readdata);
 
       for (int b=0; b<PDATA_SIZE; b++) begin
         expected[b] = (lvl0[b] & ~gpio_data[b]) | (lvl1[b] & gpio_data[b]);
@@ -517,13 +517,13 @@ module peripheral_bfm_apb4 #(
     $display ("Trigger Falling-Edge test ...");
 
     //set trigger type to edge
-    apb_mst_bfm.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
+    bfm_master_apb4.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
     //disble LVL1 (rising edge)
-    apb_mst_bfm.write(LVL1, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
+    bfm_master_apb4.write(LVL1, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
 
     //enable LVL0 (falling edge)
-    apb_mst_bfm.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
+    bfm_master_apb4.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
     for (int run=0; run < runs; run++) begin
       if (VERBOSE > 0) $display("  Trigger Falling-Edge test run=%0d", run);
@@ -537,7 +537,7 @@ module peripheral_bfm_apb4 #(
       repeat(3) @(posedge PCLK);
 
       //clear STATUS register
-      apb_mst_bfm.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
+      bfm_master_apb4.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
       //drive 2nd data onto gpio_i
       gpio_data1 = $random;
@@ -548,7 +548,7 @@ module peripheral_bfm_apb4 #(
       repeat(4) @(posedge PCLK);
 
       //read STATUS register
-      apb_mst_bfm.read(STATUS, readdata);
+      bfm_master_apb4.read(STATUS, readdata);
 
       for (int b=0; b<PDATA_SIZE; b++) begin
         expected[b] = gpio_data0[b] & ~gpio_data1[b];
@@ -568,13 +568,13 @@ module peripheral_bfm_apb4 #(
     $display ("Trigger Rising-Edge test ...");
 
     //set trigger type to edge
-    apb_mst_bfm.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
+    bfm_master_apb4.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
     //disble LVL0 (falling edge)
-    apb_mst_bfm.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
+    bfm_master_apb4.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
 
     //enable LVL1 (rising edge)
-    apb_mst_bfm.write(LVL1, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
+    bfm_master_apb4.write(LVL1, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
     for (int run=0; run < runs; run++) begin
       if (VERBOSE > 0) $display("  Trigger Rising-Edge test run=%0d", run);
@@ -588,7 +588,7 @@ module peripheral_bfm_apb4 #(
       repeat(3) @(posedge PCLK);
 
       //clear STATUS register
-      apb_mst_bfm.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
+      bfm_master_apb4.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
       //drive 2nd data onto gpio_i
       gpio_data1 = $random;
@@ -599,7 +599,7 @@ module peripheral_bfm_apb4 #(
       repeat(4) @(posedge PCLK);
 
       //read STATUS register
-      apb_mst_bfm.read(STATUS, readdata);
+      bfm_master_apb4.read(STATUS, readdata);
 
       for (int b=0; b<PDATA_SIZE; b++) begin
         expected[b] = ~gpio_data0[b] & gpio_data1[b];
@@ -621,7 +621,7 @@ module peripheral_bfm_apb4 #(
     $display ("Trigger Random-Edge test ...");
 
     //set trigger type to edge
-    apb_mst_bfm.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
+    bfm_master_apb4.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
     for (int run=0; run < runs; run++) begin
       if (VERBOSE > 0) $display("  Trigger Random-Edge test run=%0d", run);
@@ -629,8 +629,8 @@ module peripheral_bfm_apb4 #(
       //randomize trigger edge(s)
       lvl0 = $random;
       lvl1 = $random;
-      apb_mst_bfm.write(LVL0, {PSTRB_SIZE{1'b1}}, lvl0);
-      apb_mst_bfm.write(LVL1, {PSTRB_SIZE{1'b1}}, lvl1);
+      bfm_master_apb4.write(LVL0, {PSTRB_SIZE{1'b1}}, lvl0);
+      bfm_master_apb4.write(LVL1, {PSTRB_SIZE{1'b1}}, lvl1);
 
       //drive 1st data onto gpio_i
       gpio_data0 = $random;
@@ -641,7 +641,7 @@ module peripheral_bfm_apb4 #(
       repeat(3) @(posedge PCLK);
 
       //clear STATUS register
-      apb_mst_bfm.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
+      bfm_master_apb4.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
       //drive 2nd data onto gpio_i
       gpio_data1 = $random;
@@ -652,7 +652,7 @@ module peripheral_bfm_apb4 #(
       repeat(4) @(posedge PCLK);
 
       //read STATUS register
-      apb_mst_bfm.read(STATUS, readdata);
+      bfm_master_apb4.read(STATUS, readdata);
 
       for (int b=0; b<PDATA_SIZE; b++) begin
         expected[b] = (lvl0[b] &  gpio_data0[b] & ~gpio_data1[b]) | (lvl1[b] & ~gpio_data0[b] &  gpio_data1[b]);
@@ -674,11 +674,11 @@ module peripheral_bfm_apb4 #(
     $display ("IRQ test ...");
 
     //disable all triggers
-    apb_mst_bfm.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
-    apb_mst_bfm.write(LVL1, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
+    bfm_master_apb4.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
+    bfm_master_apb4.write(LVL1, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
 
     //clear STATUS
-    apb_mst_bfm.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
+    bfm_master_apb4.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
     //IRQ should be low
     check("irq_o-0", irq_o, 1'b0);
@@ -687,12 +687,12 @@ module peripheral_bfm_apb4 #(
 
     //enable level-high triggers
     gpio_i = {PDATA_SIZE{1'b0}};
-    apb_mst_bfm.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
-    apb_mst_bfm.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
-    apb_mst_bfm.write(LVL1, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
+    bfm_master_apb4.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
+    bfm_master_apb4.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
+    bfm_master_apb4.write(LVL1, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
     //enable IRQs
-    apb_mst_bfm.write(IRQ_ENA, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
+    bfm_master_apb4.write(IRQ_ENA, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
     //trigger all inputs
     gpio_i = {PDATA_SIZE{1'b1}};
@@ -709,7 +709,7 @@ module peripheral_bfm_apb4 #(
     //Test 2, test IRQ_ENA
 
     //disable IRQs
-    apb_mst_bfm.write(IRQ_ENA, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
+    bfm_master_apb4.write(IRQ_ENA, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
 
     //check irq_o
     repeat(2) @(posedge PCLK);
@@ -718,23 +718,23 @@ module peripheral_bfm_apb4 #(
     // Test 3, check STAT/ENA combination
 
     //Check STAT is all ones
-    apb_mst_bfm.read(STATUS, readdata);
+    bfm_master_apb4.read(STATUS, readdata);
     check("STATUS", readdata, {PDATA_SIZE{1'b1}});
 
     for (int b=0; b < PDATA_SIZE; b++) begin
       //Enable bitwise IRQs
-      apb_mst_bfm.write(IRQ_ENA, {PSTRB_SIZE{1'b1}}, 1<<b);
+      bfm_master_apb4.write(IRQ_ENA, {PSTRB_SIZE{1'b1}}, 1<<b);
 
       //check irq_o
       repeat(2) @(posedge PCLK);
       check($sformatf("irq_o-3-%0d",b), irq_o, 1'b1);
 
       //clear status bit
-      apb_mst_bfm.write(STATUS, {PSTRB_SIZE{1'b1}}, 1<<b);
+      bfm_master_apb4.write(STATUS, {PSTRB_SIZE{1'b1}}, 1<<b);
 
       //check irq_o
       repeat(2) @(posedge PCLK);
       check($sformatf("irq_o-3-%0d",b), irq_o, 1'b0);
     end
   endtask : test_irq
-endmodule : test
+endmodule : peripheral_bfm_apb4

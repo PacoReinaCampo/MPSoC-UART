@@ -45,10 +45,11 @@
 all: build simulate
 
 build:
-	xvlog -i ../../../../../../uvm/src -prj system.prj
+	if [ ! -e work ]; then vlib work; fi
+	vlog -sv -f system.vc
 
 simulate:
-	xelab test
-	xsim -R test
+	vsim -c -do run.do work.peripheral_bfm_testbench
+
 clean:
-	rm -rf *.dir *.jou *.log *.pb
+	rm -rf work transcript

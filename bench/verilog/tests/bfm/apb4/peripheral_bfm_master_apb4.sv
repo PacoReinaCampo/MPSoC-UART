@@ -127,4 +127,4 @@ module peripheral_bfm_master_apb4 #(
     PWRITE  = 1'bx;
     PENABLE = 1'b0;
   endtask
-endmodule : apb_master_bfm
+endmodule : peripheral_bfm_master_apb4
