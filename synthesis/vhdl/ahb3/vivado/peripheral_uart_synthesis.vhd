@@ -1,53 +1,53 @@
--- Converted from bench/verilog/regression/mpsoc_uart_synthesis.sv
+-- Converted from bench/verilog/regression/peripheral_uart_synthesis.sv
 -- by verilog2vhdl - QueenField
 
---//////////////////////////////////////////////////////////////////////////////
---                                            __ _      _     _               //
---                                           / _(_)    | |   | |              //
---                __ _ _   _  ___  ___ _ __ | |_ _  ___| | __| |              //
---               / _` | | | |/ _ \/ _ \ '_ \|  _| |/ _ \ |/ _` |              //
---              | (_| | |_| |  __/  __/ | | | | | |  __/ | (_| |              //
---               \__, |\__,_|\___|\___|_| |_|_| |_|\___|_|\__,_|              //
---                  | |                                                       //
---                  |_|                                                       //
---                                                                            //
---                                                                            //
---              MPSoC-RISCV CPU                                               //
---              Universal Asynchronous Receiver-Transmitter                   //
---              AMBA3 AHB-Lite Bus Interface                                  //
---                                                                            //
---//////////////////////////////////////////////////////////////////////////////
+--------------------------------------------------------------------------------
+--                                            __ _      _     _               --
+--                                           / _(_)    | |   | |              --
+--                __ _ _   _  ___  ___ _ __ | |_ _  ___| | __| |              --
+--               / _` | | | |/ _ \/ _ \ '_ \|  _| |/ _ \ |/ _` |              --
+--              | (_| | |_| |  __/  __/ | | | | | |  __/ | (_| |              --
+--               \__, |\__,_|\___|\___|_| |_|_| |_|\___|_|\__,_|              --
+--                  | |                                                       --
+--                  |_|                                                       --
+--                                                                            --
+--                                                                            --
+--              MPSoC-RISCV CPU                                               --
+--              Universal Asynchronous Receiver-Transmitter                   --
+--              AMBA3 AHB-Lite Bus Interface                                  --
+--                                                                            --
+--------------------------------------------------------------------------------
 
 -- Copyright (c) 2018-2019 by the author(s)
--- *
--- * Permission is hereby granted, free of charge, to any person obtaining a copy
--- * of this software and associated documentation files (the "Software"), to deal
--- * in the Software without restriction, including without limitation the rights
--- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
--- * copies of the Software, and to permit persons to whom the Software is
--- * furnished to do so, subject to the following conditions:
--- *
--- * The above copyright notice and this permission notice shall be included in
--- * all copies or substantial portions of the Software.
--- *
--- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
--- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
--- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
--- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
--- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
--- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
--- * THE SOFTWARE.
--- *
--- * =============================================================================
--- * Author(s):
--- *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
--- */
+--
+-- Permission is hereby granted, free of charge, to any person obtaining a copy
+-- of this software and associated documentation files (the "Software"), to deal
+-- in the Software without restriction, including without limitation the rights
+-- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+-- copies of the Software, and to permit persons to whom the Software is
+-- furnished to do so, subject to the following conditions:
+--
+-- The above copyright notice and this permission notice shall be included in
+-- all copies or substantial portions of the Software.
+--
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+-- THE SOFTWARE.
+--
+--------------------------------------------------------------------------------
+-- Author(s):
+--   Paco Reina Campo <pacoreinacampo@queenfield.tech>
+--
 
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity mpsoc_uart_synthesis is
+entity peripheral_uart_synthesis is
   generic (
     HADDR_SIZE     : integer := 8;
     HDATA_SIZE     : integer := 32;
@@ -75,10 +75,10 @@ entity mpsoc_uart_synthesis is
     uart_HREADY    : in  std_logic;
     uart_HRESP     : out std_logic
   );
-end mpsoc_uart_synthesis;
+end peripheral_uart_synthesis;
 
-architecture RTL of mpsoc_uart_synthesis is
-  component mpsoc_bridge_apb2ahb
+architecture rtl of peripheral_uart_synthesis is
+  component peripheral_bridge_apb2ahb
     generic (
       HADDR_SIZE : integer := 32;
       HDATA_SIZE : integer := 32;
@@ -120,7 +120,7 @@ architecture RTL of mpsoc_uart_synthesis is
       );
   end component;
 
-  component mpsoc_apb4_uart
+  component peripheral_apb4_uart
     generic (
       APB_ADDR_WIDTH : integer := 12;  --APB slaves are 4KB by default
       APB_DATA_WIDTH : integer := 32  --APB slaves are 4KB by default
@@ -144,7 +144,7 @@ architecture RTL of mpsoc_uart_synthesis is
       );
   end component;
 
-  --////////////////////////////////////////////////////////////////
+  ------------------------------------------------------------------------------
   --
   -- Variables
   --
@@ -164,13 +164,13 @@ architecture RTL of mpsoc_uart_synthesis is
   signal uart_event_o : std_logic;
 
 begin
-  --////////////////////////////////////////////////////////////////
+  ------------------------------------------------------------------------------
   --
   -- Module Body
   --
 
   --DUT AHB3
-  bridge_apb2ahb : mpsoc_bridge_apb2ahb
+  bridge_apb2ahb : peripheral_bridge_apb2ahb
     generic map (
       HADDR_SIZE => HADDR_SIZE,
       HDATA_SIZE => HDATA_SIZE,
@@ -213,7 +213,7 @@ begin
       PSLVERR => uart_PSLVERR
       );
 
-  apb4_uart : mpsoc_apb4_uart
+  apb4_uart : peripheral_apb4_uart
     generic map (
       APB_ADDR_WIDTH => APB_ADDR_WIDTH,
       APB_DATA_WIDTH => APB_DATA_WIDTH
@@ -235,4 +235,4 @@ begin
 
       event_o => uart_event_o
       );
-end RTL;
+end rtl;

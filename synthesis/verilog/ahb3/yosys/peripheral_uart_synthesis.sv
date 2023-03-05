@@ -11,7 +11,7 @@
 //                                                                            //
 //              MPSoC-RISCV CPU                                               //
 //              Universal Asynchronous Receiver-Transmitter                   //
-//              AMBA3 AHB-Lite Bus Interface                                  //
+//              Wishbone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module mpsoc_uart_synthesis #(
+module peripheral_uart_synthesis #(
   parameter HADDR_SIZE =  8,
   parameter HDATA_SIZE = 32,
   parameter APB_ADDR_WIDTH =  8,
@@ -94,7 +94,7 @@ module mpsoc_uart_synthesis #(
   //
 
   //DUT AHB3
-  mpsoc_bridge_apb2ahb #(
+  peripheral_bridge_apb2ahb #(
     .HADDR_SIZE ( HADDR_SIZE     ),
     .HDATA_SIZE ( HDATA_SIZE     ),
     .PADDR_SIZE ( APB_ADDR_WIDTH ),
@@ -136,7 +136,7 @@ module mpsoc_uart_synthesis #(
     .PSLVERR ( uart_PSLVERR )
   );
 
-  mpsoc_apb4_uart #(
+  peripheral_apb4_uart #(
     .APB_ADDR_WIDTH ( APB_ADDR_WIDTH ),
     .APB_DATA_WIDTH ( APB_DATA_WIDTH )
   )

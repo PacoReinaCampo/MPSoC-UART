@@ -10,8 +10,8 @@
 //                                                                            //
 //                                                                            //
 //              MPSoC-RISCV CPU                                               //
-//              Universal Asynchronous Receiver-Transmitter                   //
-//              Blackbone Bus Interface                                       //
+//              Master Slave Interface Tesbench                               //
+//              Wishbone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -40,45 +40,75 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module mpsoc_uart_synthesis (
-  input              mclk,         // Main system clock
-  input              puc_rst,      // Main system reset
+module peripheral_uart_synthesis #(
+  parameter SIM   = 0,
+  parameter DEBUG = 0
+)
+  (
+    input                  clk,
+    input                  rst,
 
-  input              smclk_en,     // SMCLK enable (from CPU)
+    // WISHBONE interface
+    input  [2:0]           wb_adr_i,
+    input  [7:0]           wb_dat_i,
+    output [7:0]           wb_dat_o,
+    input                  wb_we_i,
+    input                  wb_stb_i,
+    input                  wb_cyc_i,
+    input  [3:0]           wb_sel_i,
+    output                 wb_ack_o,
+    output                 int_o,
 
-  input       [13:0] per_addr,     // Peripheral address
-  output      [15:0] per_dout,     // Peripheral data output
-  input       [15:0] per_din,      // Peripheral data input
-  input              per_en,       // Peripheral enable (high active)
-  input       [ 1:0] per_we,       // Peripheral write enable (high active)
+    // UART signals
+    input                  srx_pad_i,
+    output                 stx_pad_o,
+    output                 rts_pad_o,
+    input                  cts_pad_i,
+    output                 dtr_pad_o,
+    input                  dsr_pad_i,
+    input                  ri_pad_i,
+    input                  dcd_pad_i,
 
-  output             irq_uart_rx,  // UART receive interrupt
-  output             irq_uart_tx,  // UART transmit interrupt
-  input              uart_rxd,     // UART Data Receive (RXD)
-  output             uart_txd      // UART Data Transmit (TXD)
-);
+    // optional baudrate output
+    output baud_o
+  );
 
   //////////////////////////////////////////////////////////////////
   //
   // Module Body
   //
 
-  //DUT BB
-  msp430_uart uart (
-    .mclk         (mclk),         // Main system clock
-    .puc_rst      (puc_rst),      // Main system reset
-	
-    .smclk_en     (smclk_en),     // SMCLK enable (from CPU)
+  //DUT WB
+  peripheral_wb_uart #(
+    .SIM   (SIM),
+    .DEBUG (DEBUG)
+  )
+  wb_uart (
+    .wb_clk_i (clk),
+    .wb_rst_i (rst),
 
-    .per_addr     (per_addr),     // Peripheral address
-    .per_dout     (per_dout),     // Peripheral data output
-    .per_din      (per_din),      // Peripheral data input
-    .per_en       (per_en),       // Peripheral enable (high active)
-    .per_we       (per_we),       // Peripheral write enable (high active)
+    // WISHBONE interface
+    .wb_adr_i (wb_adr_i),
+    .wb_dat_i (wb_dat_i),
+    .wb_dat_o (wb_dat_o),
+    .wb_we_i  (wb_we_i ),
+    .wb_stb_i (wb_stb_i),
+    .wb_cyc_i (wb_cyc_i),
+    .wb_sel_i (wb_sel_i),
+    .wb_ack_o (wb_ack_o),
+    .int_o    (int_o),
 
-    .irq_uart_rx  (irq_uart_rx),  // UART receive interrupt
-    .irq_uart_tx  (irq_uart_tx),  // UART transmit interrupt
-    .uart_rxd     (uart_rxd),     // UART Data Receive (RXD)
-    .uart_txd     (uart_txd)      // UART Data Transmit (TXD)
+    // UART  signals
+    .srx_pad_i (srx_pad_i),
+    .stx_pad_o (stx_pad_o),
+    .rts_pad_o (rts_pad_o),
+    .cts_pad_i (cts_pad_i),
+    .dtr_pad_o (dtr_pad_o),
+    .dsr_pad_i (dsr_pad_i),
+    .ri_pad_i  (ri_pad_i ),
+    .dcd_pad_i (dcd_pad_i),
+
+    // optional baudrate output
+    .baud_o (baud_o)
   );
 endmodule
