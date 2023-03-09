@@ -86,6 +86,11 @@ entity peripheral_uart_wb is
 end peripheral_uart_wb;
 
 architecture rtl of peripheral_uart_wb is
+
+  ------------------------------------------------------------------------------
+  -- Components
+  ------------------------------------------------------------------------------
+
   component peripheral_uart_peripheral_bridge_wb
     port (
       clk : in std_logic;

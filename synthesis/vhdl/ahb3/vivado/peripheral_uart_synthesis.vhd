@@ -78,6 +78,11 @@ entity peripheral_uart_synthesis is
 end peripheral_uart_synthesis;
 
 architecture rtl of peripheral_uart_synthesis is
+
+  ------------------------------------------------------------------------------
+  -- Components
+  ------------------------------------------------------------------------------
+
   component peripheral_bridge_apb2ahb
     generic (
       HADDR_SIZE : integer := 32;

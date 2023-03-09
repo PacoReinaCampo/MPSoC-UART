@@ -50,6 +50,11 @@ entity peripheral_uart_testbench is
 end peripheral_uart_testbench;
 
 architecture rtl of peripheral_uart_testbench is
+
+  ------------------------------------------------------------------------------
+  -- Components
+  ------------------------------------------------------------------------------
+
   component peripheral_uart_wb
     generic (
       SIM   : integer := 0;

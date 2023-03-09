@@ -73,6 +73,11 @@ entity peripheral_uart_tfifo_wb is
 end peripheral_uart_tfifo_wb;
 
 architecture rtl of peripheral_uart_tfifo_wb is
+
+  ------------------------------------------------------------------------------
+  -- Components
+  ------------------------------------------------------------------------------
+
   component peripheral_raminfr_wb
     generic (
       ADDR_WIDTH : integer := 4;

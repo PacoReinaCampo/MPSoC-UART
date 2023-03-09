@@ -75,6 +75,11 @@ entity peripheral_uart_synthesis is
 end peripheral_uart_synthesis;
 
 architecture rtl of peripheral_uart_synthesis is
+
+  ------------------------------------------------------------------------------
+  -- Components
+  ------------------------------------------------------------------------------
+
   component bb_uart
     port (
       mclk     : in  std_logic;

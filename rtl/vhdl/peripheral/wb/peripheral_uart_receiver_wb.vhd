@@ -74,6 +74,11 @@ entity peripheral_uart_receiver_wb is
 end peripheral_uart_receiver_wb;
 
 architecture rtl of peripheral_uart_receiver_wb is
+
+  ------------------------------------------------------------------------------
+  -- Components
+  ------------------------------------------------------------------------------
+
   component peripheral_uart_rfifo_wb
     generic (
       FIFO_WIDTH     : integer := 8;

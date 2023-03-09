@@ -75,6 +75,11 @@ entity peripheral_uart_apb4 is
 end peripheral_uart_apb4;
 
 architecture rtl of peripheral_uart_apb4 is
+
+  ------------------------------------------------------------------------------
+  -- Components
+  ------------------------------------------------------------------------------
+
   component peripheral_uart_rx
     port (
       clk_i           : in  std_logic;

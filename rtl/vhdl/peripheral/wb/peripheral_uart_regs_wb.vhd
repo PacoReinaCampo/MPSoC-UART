@@ -76,6 +76,11 @@ entity peripheral_uart_regs_wb is
 end peripheral_uart_regs_wb;
 
 architecture rtl of peripheral_uart_regs_wb is
+
+  ------------------------------------------------------------------------------
+  -- Components
+  ------------------------------------------------------------------------------
+
   component peripheral_uart_transmitter_wb
     generic (
       SIM : integer := 0
