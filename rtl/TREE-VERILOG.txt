@@ -28,7 +28,9 @@ verilog
     └── peripheral
         ├── ahb3
         │   └── peripheral_ahb3_pkg.sv
+        ├── axi4
+        │   └── peripheral_axi4_pkg.sv
         └── wb
             └── peripheral_wb_pkg.sv
 
-11 directories, 20 files
+12 directories, 21 files
