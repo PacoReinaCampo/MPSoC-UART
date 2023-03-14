@@ -91,8 +91,8 @@ module peripheral_uart_testbench;
 
   //DUT WB
   peripheral_uart_wb #(
-    .SIM   (SIM),
-    .DEBUG (DEBUG)
+  .SIM   (SIM),
+  .DEBUG (DEBUG)
   )
   uart_wb (
     .wb_clk_i (clk),

@@ -81,8 +81,8 @@ module peripheral_uart_testbench;
   always #100 wb_clk <= !wb_clk;
 
   peripheral_bfm_transactor_wb #(
-    .MEM_HIGH (MEMORY_SIZE-1),
-    .VERBOSE  (0)
+  .MEM_HIGH (MEMORY_SIZE-1),
+  .VERBOSE  (0)
   )
   master (
     .wb_clk_i (wb_clk),
@@ -90,7 +90,7 @@ module peripheral_uart_testbench;
     .wb_adr_o (wb_adr),
     .wb_dat_o (wb_dat),
     .wb_sel_o (wb_sel),
-    .wb_we_o  (wb_we), 
+    .wb_we_o  (wb_we),
     .wb_cyc_o (wb_cyc),
     .wb_stb_o (wb_stb),
     .wb_cti_o (wb_cti),
@@ -111,8 +111,8 @@ module peripheral_uart_testbench;
   end
 
   peripheral_uart_wb #(
-    .SIM   (1),
-    .DEBUG (0)
+  .SIM   (1),
+  .DEBUG (0)
   )
   dut (
     .wb_clk_i (wb_clk),

@@ -46,21 +46,21 @@ module peripheral_uart_fifo #(
   parameter LOG_BUFFER_DEPTH = $clog2(BUFFER_DEPTH)
 )
   (
-    input  logic                      clk_i,
-    input  logic                      rstn_i,
+  input  logic                      clk_i,
+  input  logic                      rstn_i,
 
-    input  logic                      clr_i,
+  input  logic                      clr_i,
 
-    output logic [LOG_BUFFER_DEPTH:0] elements_o,
+  output logic [LOG_BUFFER_DEPTH:0] elements_o,
 
-    output logic [DATA_WIDTH    -1:0] data_o,
-    output logic                      valid_o,
-    input  logic                      ready_i,
+  output logic [DATA_WIDTH    -1:0] data_o,
+  output logic                      valid_o,
+  input  logic                      ready_i,
 
-    input  logic                      valid_i,
-    input  logic [DATA_WIDTH    -1:0] data_i,
-    output logic                      ready_o
-  );
+  input  logic                      valid_i,
+  input  logic [DATA_WIDTH    -1:0] data_i,
+  output logic                      ready_o
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -68,9 +68,9 @@ module peripheral_uart_fifo #(
   //
 
   // Internal data structures
-  logic [LOG_BUFFER_DEPTH-1:0]     pointer_in;  // location to which we last wrote
+  logic [LOG_BUFFER_DEPTH-1:0]     pointer_in; // location to which we last wrote
   logic [LOG_BUFFER_DEPTH-1:0]     pointer_out; // location from which we last sent
-  logic [LOG_BUFFER_DEPTH  :0]     elements;    // number of elements in the buffer
+  logic [LOG_BUFFER_DEPTH  :0]     elements; // number of elements in the buffer
   logic [DATA_WIDTH      -1:0]     buffer [BUFFER_DEPTH-1:0];
 
   logic                            full;

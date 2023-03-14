@@ -50,57 +50,57 @@ module peripheral_apb2ahb #(
   parameter SYNC_DEPTH =  3
 )
   (
-    //AHB Slave Interface
-    input                         HRESETn,
-                                  HCLK,
-    input                         HSEL,
-    input      [HADDR_SIZE  -1:0] HADDR,
-    input      [HDATA_SIZE  -1:0] HWDATA,
-    output reg [HDATA_SIZE  -1:0] HRDATA,
-    input                         HWRITE,
-    input      [             2:0] HSIZE,
-    input      [             2:0] HBURST,
-    input      [             3:0] HPROT,
-    input      [             1:0] HTRANS,
-    input                         HMASTLOCK,
-    output reg                    HREADYOUT,
-    input                         HREADY,
-    output reg                    HRESP,
+  //AHB Slave Interface
+  input                         HRESETn,
+  HCLK,
+  input                         HSEL,
+  input      [HADDR_SIZE  -1:0] HADDR,
+  input      [HDATA_SIZE  -1:0] HWDATA,
+  output reg [HDATA_SIZE  -1:0] HRDATA,
+  input                         HWRITE,
+  input      [             2:0] HSIZE,
+  input      [             2:0] HBURST,
+  input      [             3:0] HPROT,
+  input      [             1:0] HTRANS,
+  input                         HMASTLOCK,
+  output reg                    HREADYOUT,
+  input                         HREADY,
+  output reg                    HRESP,
 
-    //APB Master Interface
-    input                         PRESETn,
-    input                         PCLK,
-    output reg                    PSEL,
-    output reg                    PENABLE,
-    output reg [             2:0] PPROT,
-    output reg                    PWRITE,
-    output reg                    PSTRB,
-    output reg [PADDR_SIZE  -1:0] PADDR,
-    output reg [PDATA_SIZE  -1:0] PWDATA,
-    input      [PDATA_SIZE  -1:0] PRDATA,
-    input                         PREADY,
-    input                         PSLVERR
-  );
+  //APB Master Interface
+  input                         PRESETn,
+  input                         PCLK,
+  output reg                    PSEL,
+  output reg                    PENABLE,
+  output reg [             2:0] PPROT,
+  output reg                    PWRITE,
+  output reg                    PSTRB,
+  output reg [PADDR_SIZE  -1:0] PADDR,
+  output reg [PDATA_SIZE  -1:0] PWDATA,
+  input      [PDATA_SIZE  -1:0] PRDATA,
+  input                         PREADY,
+  input                         PSLVERR
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
   // Constants
   //
   localparam       ST_AHB_IDLE     = 2'b00,
-                   ST_AHB_TRANSFER = 2'b01,
-                   ST_AHB_ERROR    = 2'b10;
+  ST_AHB_TRANSFER = 2'b01,
+  ST_AHB_ERROR    = 2'b10;
 
   localparam       ST_APB_IDLE     = 2'b00,
-                   ST_APB_SETUP    = 2'b01,
-                   ST_APB_TRANSFER = 2'b10;
+  ST_APB_SETUP    = 2'b01,
+  ST_APB_TRANSFER = 2'b10;
 
   //PPROT
   localparam [2:0] PPROT_NORMAL      = 3'b000,
-                   PPROT_PRIVILEGED  = 3'b001,
-                   PPROT_SECURE      = 3'b000,
-                   PPROT_NONSECURE   = 3'b010,
-                   PPROT_DATA        = 3'b000,
-                   PPROT_INSTRUCTION = 3'b100;
+  PPROT_PRIVILEGED  = 3'b001,
+  PPROT_SECURE      = 3'b000,
+  PPROT_NONSECURE   = 3'b010,
+  PPROT_DATA        = 3'b000,
+  PPROT_INSTRUCTION = 3'b100;
 
   //SYNC_DEPTH
   localparam SYNC_DEPTH_MIN = 3;
@@ -111,14 +111,14 @@ module peripheral_apb2ahb #(
   // Variables
   //
 
-  logic                      ahb_treq;      //transfer request from AHB Statemachine
-  logic                      treq_toggle;   //toggle-signal-version
-  logic [SYNC_DEPTH_CHK-1:0] treq_sync;     //synchronized transfer request
+  logic                      ahb_treq; //transfer request from AHB Statemachine
+  logic                      treq_toggle; //toggle-signal-version
+  logic [SYNC_DEPTH_CHK-1:0] treq_sync; //synchronized transfer request
   logic                      apb_treq_strb; //transfer request strobe to APB Statemachine
 
-  logic                      apb_tack;      //transfer acknowledge from APB Statemachine
-  logic                      tack_toggle;   //toggle-signal-version
-  logic [SYNC_DEPTH_CHK-1:0] tack_sync;     //synchronized transfer acknowledge
+  logic                      apb_tack; //transfer acknowledge from APB Statemachine
+  logic                      tack_toggle; //toggle-signal-version
+  logic [SYNC_DEPTH_CHK-1:0] tack_sync; //synchronized transfer acknowledge
   logic                      ahb_tack_strb; //transfer acknowledge strobe to AHB Statemachine
 
   //store AHB data locally (pipelined bus)
@@ -173,7 +173,7 @@ module peripheral_apb2ahb #(
     input [2:0] hsize;
 
     case (hsize)
-      HSIZE_B1024 : apb_beats = 1023/PDATA_SIZE; 
+      HSIZE_B1024 : apb_beats = 1023/PDATA_SIZE;
       HSIZE_B512  : apb_beats =  511/PDATA_SIZE;
       HSIZE_B256  : apb_beats =  255/PDATA_SIZE;
       HSIZE_B128  : apb_beats =  127/PDATA_SIZE;
@@ -189,7 +189,7 @@ module peripheral_apb2ahb #(
 
     //Which bits in HADDR should be taken into account?
     case (data_size)
-      1024    : address_mask = 7'b111_1111; 
+      1024    : address_mask = 7'b111_1111;
       512     : address_mask = 7'b011_1111;
       256     : address_mask = 7'b001_1111;
       128     : address_mask = 7'b000_1111;
@@ -221,7 +221,7 @@ module peripheral_apb2ahb #(
 
     //get number of active lanes for a 1024bit databus (max width) for this HSIZE
     case (hsize)
-      HSIZE_B1024 : full_pstrb = 128'hffff_ffff_ffff_ffff_ffff_ffff_ffff_ffff; 
+      HSIZE_B1024 : full_pstrb = 128'hffff_ffff_ffff_ffff_ffff_ffff_ffff_ffff;
       HSIZE_B512  : full_pstrb = 128'h0000_0000_0000_0000_ffff_ffff_ffff_ffff;
       HSIZE_B256  : full_pstrb = 128'h0000_0000_0000_0000_0000_0000_ffff_ffff;
       HSIZE_B128  : full_pstrb = 128'h0000_0000_0000_0000_0000_0000_0000_ffff;
@@ -283,29 +283,29 @@ module peripheral_apb2ahb #(
         end
 
         ST_AHB_TRANSFER:
-          if (ahb_tack_strb) begin
+        if (ahb_tack_strb) begin
 
-            /*
-             * APB acknowledged transfer. Current transfer done
-             * Check AHB bus to determine if another transfer is pending
-             */
+          /*
+           * APB acknowledged transfer. Current transfer done
+           * Check AHB bus to determine if another transfer is pending
+           */
 
-            //assign read data
-            HRDATA <= apb_prdata; 
+          //assign read data
+          HRDATA <= apb_prdata;
 
-            //indicate transfer done. Normally HREADYOUT = '1', HRESP=OKAY
-            //HRESP=ERROR requires 2 cycles
-            if (apb_pslverr) begin
-              HREADYOUT <= 1'b0;
-              HRESP     <= HRESP_ERROR;
-              ahb_fsm   <= ST_AHB_ERROR;
-            end
-            else begin
-              HREADYOUT <= 1'b1;
-              HRESP     <= HRESP_OKAY;
-              ahb_fsm   <= ST_AHB_IDLE;
-            end
+          //indicate transfer done. Normally HREADYOUT = '1', HRESP=OKAY
+          //HRESP=ERROR requires 2 cycles
+          if (apb_pslverr) begin
+            HREADYOUT <= 1'b0;
+            HRESP     <= HRESP_ERROR;
+            ahb_fsm   <= ST_AHB_ERROR;
           end
+          else begin
+            HREADYOUT <= 1'b1;
+            HRESP     <= HRESP_OKAY;
+            ahb_fsm   <= ST_AHB_IDLE;
+          end
+        end
         else begin
           HREADYOUT <= 1'b0; //transfer still in progress
         end
@@ -374,22 +374,22 @@ module peripheral_apb2ahb #(
 
       case (apb_fsm)
         ST_APB_IDLE:
-          if (apb_treq_strb) begin
-            apb_fsm              <= ST_APB_SETUP;
+        if (apb_treq_strb) begin
+          apb_fsm              <= ST_APB_SETUP;
 
-            PSEL                 <= 1'b1;
-            PENABLE              <= 1'b0;
-            PPROT                <= ((ahb_hprot & HPROT_DATA      ) ? PPROT_DATA       : PPROT_INSTRUCTION) |
-                                    ((ahb_hprot & HPROT_PRIVILEGED) ? PPROT_PRIVILEGED : PPROT_NORMAL     );
-            PADDR                <= ahb_haddr[PADDR_SIZE-1:0];
-            PWRITE               <= ahb_hwrite;
-            PWDATA               <= ahb_hwdata >> data_offset(ahb_haddr);
-            PSTRB                <= ahb_hwrite & pstrb(ahb_hsize,ahb_haddr[PADDR_SIZE-1:0]); //TODO: check/sim
+          PSEL                 <= 1'b1;
+          PENABLE              <= 1'b0;
+          PPROT                <= ((ahb_hprot & HPROT_DATA      ) ? PPROT_DATA       : PPROT_INSTRUCTION) |
+          ((ahb_hprot & HPROT_PRIVILEGED) ? PPROT_PRIVILEGED : PPROT_NORMAL     );
+          PADDR                <= ahb_haddr[PADDR_SIZE-1:0];
+          PWRITE               <= ahb_hwrite;
+          PWDATA               <= ahb_hwdata >> data_offset(ahb_haddr);
+          PSTRB                <= ahb_hwrite & pstrb(ahb_hsize,ahb_haddr[PADDR_SIZE-1:0]); //TODO: check/sim
 
-            apb_prdata           <= 'h0;                                   //clear prdata
-            apb_beat_cnt         <= apb_beats(ahb_hsize);
-            apb_beat_data_offset <= data_offset(ahb_haddr) + PDATA_SIZE;   //for the NEXT transfer
-          end
+          apb_prdata           <= 'h0; //clear prdata
+          apb_beat_cnt         <= apb_beats(ahb_hsize);
+          apb_beat_data_offset <= data_offset(ahb_haddr) + PDATA_SIZE; //for the NEXT transfer
+        end
 
         ST_APB_SETUP: begin
           //retain all signals and assert PENABLE
@@ -398,37 +398,37 @@ module peripheral_apb2ahb #(
         end
 
         ST_APB_TRANSFER:
-          if (PREADY) begin
-            apb_beat_cnt         <= apb_beat_cnt -1;
-            apb_beat_data_offset <= apb_beat_data_offset + PDATA_SIZE;
+        if (PREADY) begin
+          apb_beat_cnt         <= apb_beat_cnt -1;
+          apb_beat_data_offset <= apb_beat_data_offset + PDATA_SIZE;
 
-            apb_prdata           <= (apb_prdata << PDATA_SIZE) | (PRDATA << data_offset(ahb_haddr));//TODO: check/sim
-            apb_pslverr          <= PSLVERR;
+          apb_prdata           <= (apb_prdata << PDATA_SIZE) | (PRDATA << data_offset(ahb_haddr)); //TODO: check/sim
+          apb_pslverr          <= PSLVERR;
 
-            PENABLE              <= 1'b0;
+          PENABLE              <= 1'b0;
 
-            if (PSLVERR || ~|apb_beat_cnt) begin
-              /*
-               * Transfer complete
-               * Go back to IDLE
-               * Signal AHB fsm, transfer complete
-               */
-              apb_fsm  <= ST_APB_IDLE;
-              apb_tack <= 1'b1;
-              PSEL     <= 1'b0;
-            end
-            else begin
-              /*
-               * More beats in current transfer
-               * Setup next address and data
-               */
-              apb_fsm       <= ST_APB_SETUP;
-
-              PADDR  <= PADDR + (1 << ahb_hsize);
-              PWDATA <= ahb_hwdata >> apb_beat_data_offset;
-              PSTRB  <= ahb_hwrite & pstrb(ahb_hsize,PADDR + (1 << ahb_hsize));
-            end
+          if (PSLVERR || ~|apb_beat_cnt) begin
+            /*
+             * Transfer complete
+             * Go back to IDLE
+             * Signal AHB fsm, transfer complete
+             */
+            apb_fsm  <= ST_APB_IDLE;
+            apb_tack <= 1'b1;
+            PSEL     <= 1'b0;
           end
+          else begin
+            /*
+             * More beats in current transfer
+             * Setup next address and data
+             */
+            apb_fsm       <= ST_APB_SETUP;
+
+            PADDR  <= PADDR + (1 << ahb_hsize);
+            PWDATA <= ahb_hwdata >> apb_beat_data_offset;
+            PSTRB  <= ahb_hwrite & pstrb(ahb_hsize,PADDR + (1 << ahb_hsize));
+          end
+        end
       endcase
     end
   end

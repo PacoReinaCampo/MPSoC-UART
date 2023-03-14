@@ -49,20 +49,20 @@
 
 module peripheral_uart_bb (
   // OUTPUTs
-  output             irq_uart_rx,     // UART receive interrupt
-  output             irq_uart_tx,     // UART transmit interrupt
-  output      [15:0] per_dout,        // Peripheral data output
-  output             uart_txd,        // UART Data Transmit (TXD)
+  output             irq_uart_rx, // UART receive interrupt
+  output             irq_uart_tx, // UART transmit interrupt
+  output      [15:0] per_dout, // Peripheral data output
+  output             uart_txd, // UART Data Transmit (TXD)
 
   // INPUTs
-  input              mclk,            // Main system clock
-  input       [13:0] per_addr,        // Peripheral address
-  input       [15:0] per_din,         // Peripheral data input
-  input              per_en,          // Peripheral enable (high active)
-  input        [1:0] per_we,          // Peripheral write enable (high active)
-  input              puc_rst,         // Main system reset
-  input              smclk_en,        // SMCLK enable (from CPU)
-  input              uart_rxd         // UART Data Receive (RXD)
+  input              mclk, // Main system clock
+  input       [13:0] per_addr, // Peripheral address
+  input       [15:0] per_din, // Peripheral data input
+  input              per_en, // Peripheral enable (high active)
+  input        [1:0] per_we, // Peripheral write enable (high active)
+  input              puc_rst, // Main system reset
+  input              smclk_en, // SMCLK enable (from CPU)
+  input              uart_rxd // UART Data Receive (RXD)
 );
 
   //=============================================================================
@@ -77,11 +77,11 @@ module peripheral_uart_bb (
 
   // Register addresses offset
   parameter [DEC_WD-1:0] CTRL        =  'h0,
-                         STATUS      =  'h1,
-                         BAUD_LO     =  'h2,
-                         BAUD_HI     =  'h3,
-                         DATA_TX     =  'h4,
-                         DATA_RX     =  'h5;
+  STATUS      =  'h1,
+  BAUD_LO     =  'h2,
+  BAUD_HI     =  'h3,
+  DATA_TX     =  'h4,
+  DATA_RX     =  'h5;
 
   // Register one-hot decoder utilities
   parameter              DEC_SZ      =  (1 << DEC_WD);
@@ -89,11 +89,11 @@ module peripheral_uart_bb (
 
   // Register one-hot decoder
   parameter [DEC_SZ-1:0] CTRL_D      = (BASE_REG << CTRL),
-                         STATUS_D    = (BASE_REG << STATUS), 
-                         BAUD_LO_D   = (BASE_REG << BAUD_LO), 
-                         BAUD_HI_D   = (BASE_REG << BAUD_HI), 
-                         DATA_TX_D   = (BASE_REG << DATA_TX), 
-                         DATA_RX_D   = (BASE_REG << DATA_RX);
+  STATUS_D    = (BASE_REG << STATUS),
+  BAUD_LO_D   = (BASE_REG << BAUD_LO),
+  BAUD_HI_D   = (BASE_REG << BAUD_HI),
+  DATA_TX_D   = (BASE_REG << DATA_TX),
+  DATA_RX_D   = (BASE_REG << DATA_RX);
 
   //============================================================================
   // 2)  REGISTER DECODER
@@ -107,11 +107,11 @@ module peripheral_uart_bb (
 
   // Register address decode
   wire [DEC_SZ-1:0] reg_dec      = (CTRL_D    &  {DEC_SZ{(reg_addr==(CTRL    >>1))}}) |
-                                   (STATUS_D  &  {DEC_SZ{(reg_addr==(STATUS  >>1))}}) |
-                                   (BAUD_LO_D &  {DEC_SZ{(reg_addr==(BAUD_LO >>1))}}) |
-                                   (BAUD_HI_D &  {DEC_SZ{(reg_addr==(BAUD_HI >>1))}}) |
-                                   (DATA_TX_D &  {DEC_SZ{(reg_addr==(DATA_TX >>1))}}) |
-                                   (DATA_RX_D &  {DEC_SZ{(reg_addr==(DATA_RX >>1))}});
+  (STATUS_D  &  {DEC_SZ{(reg_addr==(STATUS  >>1))}}) |
+  (BAUD_LO_D &  {DEC_SZ{(reg_addr==(BAUD_LO >>1))}}) |
+  (BAUD_HI_D &  {DEC_SZ{(reg_addr==(BAUD_HI >>1))}}) |
+  (DATA_TX_D &  {DEC_SZ{(reg_addr==(DATA_TX >>1))}}) |
+  (DATA_RX_D &  {DEC_SZ{(reg_addr==(DATA_RX >>1))}});
 
   // Read/Write probes
   wire              reg_lo_write =  per_we[0] & reg_sel;
@@ -194,7 +194,7 @@ module peripheral_uart_bb (
   end
 
   assign     status = {status_tx_empty_pnd, status_tx_pnd,   status_rx_ovflw_pnd, status_rx_pnd,
-                       status_tx_full,      status_tx_busy,  1'b0,                status_rx_busy};
+  status_tx_full,      status_tx_busy,  1'b0,                status_rx_busy};
 
   // BAUD_LO Register
   //-----------------
@@ -258,11 +258,11 @@ module peripheral_uart_bb (
   wire [15:0] data_rx_rd  = {8'h00, (data_rx  & {8{reg_rd[DATA_RX]}})}  << (8 & {4{DATA_RX[0]}});
 
   assign      per_dout  =  ctrl_rd    |
-                           status_rd  |
-                           baud_lo_rd |
-                           baud_hi_rd |
-                           data_tx_rd |
-                           data_rx_rd;
+  status_rd  |
+  baud_lo_rd |
+  baud_hi_rd |
+  data_tx_rd |
+  data_rx_rd;
 
   //=============================================================================
   // 5)  UART CLOCK SELECTION
@@ -330,10 +330,10 @@ module peripheral_uart_bb (
     else if (~ctrl_en)           rxfer_bit <=  4'h0;
     else if (rxfer_start)        rxfer_bit <=  4'h1;
     else if (uclk_en)
-      begin
-        if (rxfer_done)          rxfer_bit <=  4'h0;
-        else if (rxfer_bit_inc)  rxfer_bit <=  rxfer_bit+4'h1;
-      end
+    begin
+      if (rxfer_done)          rxfer_bit <=  4'h0;
+      else if (rxfer_bit_inc)  rxfer_bit <=  rxfer_bit+4'h1;
+    end
   end
 
   always @ (posedge mclk or posedge puc_rst) begin
@@ -457,10 +457,10 @@ module peripheral_uart_bb (
   // Receive interrupt can be generated with the completion of a received byte
   // or an overflow occures.
   assign  irq_uart_rx    = (status_rx_pnd       & ctrl_ien_rx)        |
-                           (status_rx_ovflw_pnd & ctrl_ien_rx_ovflw);
+  (status_rx_ovflw_pnd & ctrl_ien_rx_ovflw);
 
   // Transmit interrupt can be generated with the transmition completion of
   // a byte or when the tranmit buffer is empty (i.e. nothing left to transmit)
   assign  irq_uart_tx    = (status_tx_pnd       & ctrl_ien_tx)        |
-                           (status_tx_empty_pnd & ctrl_ien_tx_empty);
+  (status_tx_empty_pnd & ctrl_ien_tx_empty);
 endmodule // peripheral_uart_bb

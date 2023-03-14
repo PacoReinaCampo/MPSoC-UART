@@ -85,8 +85,8 @@ module peripheral_uart_testbench;
   logic                       uart_PREADY;
   logic                       uart_PSLVERR;
 
-  logic                       uart_rx_i;  // Receiver input
-  logic                       uart_tx_o;  // Transmitter output
+  logic                       uart_rx_i; // Receiver input
+  logic                       uart_tx_o; // Transmitter output
 
   logic                       uart_event_o;
 
@@ -97,11 +97,11 @@ module peripheral_uart_testbench;
 
   //DUT AHB3
   peripheral_apb2ahb #(
-    .HADDR_SIZE ( HADDR_SIZE     ),
-    .HDATA_SIZE ( HDATA_SIZE     ),
-    .PADDR_SIZE ( APB_ADDR_WIDTH ),
-    .PDATA_SIZE ( APB_DATA_WIDTH ),
-    .SYNC_DEPTH ( SYNC_DEPTH     )
+  .HADDR_SIZE ( HADDR_SIZE     ),
+  .HDATA_SIZE ( HDATA_SIZE     ),
+  .PADDR_SIZE ( APB_ADDR_WIDTH ),
+  .PDATA_SIZE ( APB_DATA_WIDTH ),
+  .SYNC_DEPTH ( SYNC_DEPTH     )
   )
   apb2ahb (
     //AHB Slave Interface
@@ -139,8 +139,8 @@ module peripheral_uart_testbench;
   );
 
   peripheral_uart_apb4 #(
-    .APB_ADDR_WIDTH ( APB_ADDR_WIDTH ),
-    .APB_DATA_WIDTH ( APB_DATA_WIDTH )
+  .APB_ADDR_WIDTH ( APB_ADDR_WIDTH ),
+  .APB_DATA_WIDTH ( APB_DATA_WIDTH )
   )
   uart_apb4 (
     .RSTN ( HRESETn ),

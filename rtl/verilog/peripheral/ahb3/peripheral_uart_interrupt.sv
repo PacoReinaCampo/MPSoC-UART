@@ -45,25 +45,25 @@ module peripheral_uart_interrupt #(
   parameter RX_FIFO_DEPTH = 32
 )
   (
-    input  logic                           clk_i,
-    input  logic                           rstn_i,
+  input  logic                           clk_i,
+  input  logic                           rstn_i,
 
-    // registers
-    input  logic [                    2:0] IER_i, // interrupt enable register
-    input  logic                           RDA_i, // receiver data available
-    input  logic                           CTI_i, // character timeout indication
+  // registers
+  input  logic [                    2:0] IER_i, // interrupt enable register
+  input  logic                           RDA_i, // receiver data available
+  input  logic                           CTI_i, // character timeout indication
 
-    // control logic
-    input  logic                           error_i,
-    input  logic [$clog2(RX_FIFO_DEPTH):0] rx_elements_i,
-    input  logic [$clog2(TX_FIFO_DEPTH):0] tx_elements_i,
-    input  logic [                    1:0] trigger_level_i,
+  // control logic
+  input  logic                           error_i,
+  input  logic [$clog2(RX_FIFO_DEPTH):0] rx_elements_i,
+  input  logic [$clog2(TX_FIFO_DEPTH):0] tx_elements_i,
+  input  logic [                    1:0] trigger_level_i,
 
-    input  logic [                    3:0] clr_int_i, // one hot
+  input  logic [                    3:0] clr_int_i, // one hot
 
-    output logic                           interrupt_o,
-    output logic [                    3:0] IIR_o
-  );
+  output logic                           interrupt_o,
+  output logic [                    3:0] IIR_o
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -82,21 +82,21 @@ module peripheral_uart_interrupt #(
     trigger_level_reached = 1'b0;
     case (trigger_level_i)
       2'b00:
-        if ($unsigned(rx_elements_i) == 1) begin
-          trigger_level_reached = 1'b1;
-        end
+      if ($unsigned(rx_elements_i) == 1) begin
+        trigger_level_reached = 1'b1;
+      end
       2'b01:
-        if ($unsigned(rx_elements_i) == 4) begin
-          trigger_level_reached = 1'b1;
-        end
+      if ($unsigned(rx_elements_i) == 4) begin
+        trigger_level_reached = 1'b1;
+      end
       2'b10:
-        if ($unsigned(rx_elements_i) == 8) begin
-          trigger_level_reached = 1'b1;
-        end
+      if ($unsigned(rx_elements_i) == 8) begin
+        trigger_level_reached = 1'b1;
+      end
       2'b11:
-        if ($unsigned(rx_elements_i) == 14) begin
-          trigger_level_reached = 1'b1;
-        end
+      if ($unsigned(rx_elements_i) == 14) begin
+        trigger_level_reached = 1'b1;
+      end
       default : ;
     endcase
   end

@@ -109,13 +109,13 @@ module peripheral_uart_rx (
   always @(*) begin
     case(cfg_bits_i)
       2'b00:
-        s_target_bits = 3'h4;
+      s_target_bits = 3'h4;
       2'b01:
-        s_target_bits = 3'h5;
+      s_target_bits = 3'h5;
       2'b10:
-        s_target_bits = 3'h6;
+      s_target_bits = 3'h6;
       2'b11:
-        s_target_bits = 3'h7;
+      s_target_bits = 3'h7;
     endcase
   end
 
@@ -149,13 +149,13 @@ module peripheral_uart_rx (
         parity_bit_next = parity_bit ^ reg_rx_sync[2];
         case(cfg_bits_i)
           2'b00:
-            reg_data_next = {3'b000,reg_rx_sync[2],reg_data[4:1]};
+          reg_data_next = {3'b000,reg_rx_sync[2],reg_data[4:1]};
           2'b01:
-            reg_data_next = {2'b00,reg_rx_sync[2],reg_data[5:1]};
+          reg_data_next = {2'b00,reg_rx_sync[2],reg_data[5:1]};
           2'b10:
-            reg_data_next = {1'b0,reg_rx_sync[2],reg_data[6:1]};
+          reg_data_next = {1'b0,reg_rx_sync[2],reg_data[6:1]};
           2'b11:
-            reg_data_next = {reg_rx_sync[2],reg_data[7:1]};
+          reg_data_next = {reg_rx_sync[2],reg_data[7:1]};
         endcase
         if (bit_done) begin
           sampleData = 1'b1;
@@ -174,8 +174,8 @@ module peripheral_uart_rx (
         if(rx_ready_i)
           if (cfg_parity_en_i)
             NS = PARITY;
-        else
-          NS = STOP_BIT;
+          else
+            NS = STOP_BIT;
       end
       PARITY: begin
         baudgen_en = 1'b1;
@@ -192,7 +192,7 @@ module peripheral_uart_rx (
         end
       end
       default:
-        NS = IDLE;
+      NS = IDLE;
     endcase
   end
 

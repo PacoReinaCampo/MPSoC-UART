@@ -53,23 +53,23 @@ module peripheral_bfm_memory_wb #(
   parameter RD_MAX_DELAY = 4
 )
   (
-    input      wb_clk_i,
-    input      wb_rst_i,
+  input      wb_clk_i,
+  input      wb_rst_i,
 
-    input  [AW  -1:0] wb_adr_i,
-    input  [DW  -1:0] wb_dat_i,
-    input  [DW/8-1:0] wb_sel_i,
-    input             wb_we_i,
-    input  [     1:0] wb_bte_i,
-    input  [     2:0] wb_cti_i,
-    input             wb_cyc_i,
-    input             wb_stb_i,
+  input  [AW  -1:0] wb_adr_i,
+  input  [DW  -1:0] wb_dat_i,
+  input  [DW/8-1:0] wb_sel_i,
+  input             wb_we_i,
+  input  [     1:0] wb_bte_i,
+  input  [     2:0] wb_cti_i,
+  input             wb_cyc_i,
+  input             wb_stb_i,
 
-    output            wb_ack_o,
-    output            wb_err_o,
-    output            wb_rty_o,
-    output [DW  -1:0] wb_dat_o
-  );
+  output            wb_ack_o,
+  output            wb_err_o,
+  output            wb_rty_o,
+  output [DW  -1:0] wb_dat_o
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -107,9 +107,9 @@ module peripheral_bfm_memory_wb #(
   // Module Body
   //
   peripheral_bfm_slave_wb #(
-    .AW    (AW),
-    .DW    (DW),
-    .DEBUG (DEBUG)
+  .AW    (AW),
+  .DW    (DW),
+  .DEBUG (DEBUG)
   )
   bfm_slave_wb (
     .wb_clk   (wb_clk_i),

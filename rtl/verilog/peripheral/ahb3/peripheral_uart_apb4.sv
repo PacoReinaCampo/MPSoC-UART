@@ -41,26 +41,26 @@
  */
 
 module peripheral_uart_apb4 #(
-  parameter APB_ADDR_WIDTH = 12,  //APB slaves are 4KB by default
-  parameter APB_DATA_WIDTH = 32   //APB slaves are 4KB by default
+  parameter APB_ADDR_WIDTH = 12, //APB slaves are 4KB by default
+  parameter APB_DATA_WIDTH = 32 //APB slaves are 4KB by default
 )
   (
-    input  logic                      CLK,
-    input  logic                      RSTN,
-    input  logic [APB_ADDR_WIDTH-1:0] PADDR,
-    input  logic [APB_DATA_WIDTH-1:0] PWDATA,
-    input  logic                      PWRITE,
-    input  logic                      PSEL,
-    input  logic                      PENABLE,
-    output logic [APB_DATA_WIDTH-1:0] PRDATA,
-    output logic                      PREADY,
-    output logic                      PSLVERR,
+  input  logic                      CLK,
+  input  logic                      RSTN,
+  input  logic [APB_ADDR_WIDTH-1:0] PADDR,
+  input  logic [APB_DATA_WIDTH-1:0] PWDATA,
+  input  logic                      PWRITE,
+  input  logic                      PSEL,
+  input  logic                      PENABLE,
+  output logic [APB_DATA_WIDTH-1:0] PRDATA,
+  output logic                      PREADY,
+  output logic                      PSLVERR,
 
-    input  logic                      rx_i,      // Receiver input
-    output logic                      tx_o,      // Transmitter output
+  input  logic                      rx_i, // Receiver input
+  output logic                      tx_o, // Transmitter output
 
-    output logic                      event_o    // interrupt/event output
-  );
+  output logic                      event_o // interrupt/event output
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -151,8 +151,8 @@ module peripheral_uart_apb4 #(
   );
 
   peripheral_uart_fifo #(
-    .DATA_WIDTH         ( 9                             ),
-    .BUFFER_DEPTH       ( RX_FIFO_DEPTH                 )
+  .DATA_WIDTH         ( 9                             ),
+  .BUFFER_DEPTH       ( RX_FIFO_DEPTH                 )
   )
   uart_rx_fifo_i (
     .clk_i              ( CLK                           ),
@@ -172,8 +172,8 @@ module peripheral_uart_apb4 #(
   );
 
   peripheral_uart_fifo #(
-    .DATA_WIDTH         ( 8                             ),
-    .BUFFER_DEPTH       ( TX_FIFO_DEPTH                 )
+  .DATA_WIDTH         ( 8                             ),
+  .BUFFER_DEPTH       ( TX_FIFO_DEPTH                 )
   )
   uart_tx_fifo_i (
     .clk_i              ( CLK                           ),
@@ -194,8 +194,8 @@ module peripheral_uart_apb4 #(
   );
 
   peripheral_uart_interrupt #(
-    .TX_FIFO_DEPTH (TX_FIFO_DEPTH),
-    .RX_FIFO_DEPTH (RX_FIFO_DEPTH)
+  .TX_FIFO_DEPTH (TX_FIFO_DEPTH),
+  .RX_FIFO_DEPTH (RX_FIFO_DEPTH)
   )
   peripheral_uart_interrupt_i (
     .clk_i              ( CLK                           ),
@@ -252,7 +252,7 @@ module peripheral_uart_apb4 #(
           end
         end
         LCR:
-          regs_n[LCR] = PWDATA[7:0];
+        regs_n[LCR] = PWDATA[7:0];
         FCR: begin // write only register, fifo control register
           rx_fifo_clr_n   = PWDATA[1];
           tx_fifo_clr_n   = PWDATA[2];
@@ -286,7 +286,7 @@ module peripheral_uart_apb4 #(
           clr_int = 4'b1100; // clear parrity interrupt error
         end
         LCR: // Line Control Register
-          PRDATA = {24'b0, regs_q[LCR]};
+        PRDATA = {24'b0, regs_q[LCR]};
         IER: begin // either IER or DLM
           if (regs_q[LCR][7]) begin // Divisor Latch Access Bit (DLAB)
             PRDATA = {24'b0, regs_q[DLM + 'd8]};

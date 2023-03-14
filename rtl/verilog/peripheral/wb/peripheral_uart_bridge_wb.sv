@@ -51,12 +51,12 @@ module peripheral_uart_bridge_wb (
   input              wb_stb_i,
   input              wb_cyc_i,
   input      [ 3:0]  wb_sel_i,
-  input      [ 2:0]  wb_adr_i,  //WISHBONE address line
+  input      [ 2:0]  wb_adr_i, //WISHBONE address line
 
-  input      [ 7:0] wb_dat_i,   //input WISHBONE bus 
+  input      [ 7:0] wb_dat_i, //input WISHBONE bus 
   output reg [ 7:0] wb_dat_o,
   output     [ 2:0] wb_adr_int, // internal signal for address bus
-  input      [ 7:0] wb_dat8_o,  // internal 8 bit output to be put into wb_dat_o
+  input      [ 7:0] wb_dat8_o, // internal 8 bit output to be put into wb_dat_o
   output reg [ 7:0] wb_dat8_i,
   input      [31:0] wb_dat32_o, // 32 bit data output (for debug interface)
   output reg        wb_ack_o,
@@ -74,7 +74,7 @@ module peripheral_uart_bridge_wb (
   reg        wb_cyc_is;
   reg        wb_stb_is;
 
-  reg        wre;  // timing control signal for write or read enable
+  reg        wre; // timing control signal for write or read enable
 
   // wb_ack_o FSM
   reg [1:0] wbstate;
@@ -84,39 +84,39 @@ module peripheral_uart_bridge_wb (
   // Module Body
   //
   always  @(posedge clk or posedge wb_rst_i)
-    if (wb_rst_i) begin
-      wb_ack_o <= 1'b0;
-      wbstate  <= 0;
-      wre      <= 1'b1;
-    end else
-      case (wbstate)
-        0: begin
-          if (wb_stb_is & wb_cyc_is) begin
-            wre <= 0;
-            wbstate  <= 1;
-            wb_ack_o <= 1;
-          end
-          else begin
-            wre      <= 1;
-            wb_ack_o <= 0;
-          end
+  if (wb_rst_i) begin
+    wb_ack_o <= 1'b0;
+    wbstate  <= 0;
+    wre      <= 1'b1;
+  end else
+    case (wbstate)
+      0: begin
+        if (wb_stb_is & wb_cyc_is) begin
+          wre <= 0;
+          wbstate  <= 1;
+          wb_ack_o <= 1;
         end
-        1: begin
-          wb_ack_o <= 0;
-          wbstate  <= 2;
-          wre      <= 0;
-        end
-        2: begin
-          wb_ack_o <= 0;
-          wbstate  <= 3;
-          wre      <= 0;
-        end
-        3: begin
-          wb_ack_o <= 0;
-          wbstate  <= 0;
+        else begin
           wre      <= 1;
+          wb_ack_o <= 0;
         end
-      endcase
+      end
+      1: begin
+        wb_ack_o <= 0;
+        wbstate  <= 2;
+        wre      <= 0;
+      end
+      2: begin
+        wb_ack_o <= 0;
+        wbstate  <= 3;
+        wre      <= 0;
+      end
+      3: begin
+        wb_ack_o <= 0;
+        wbstate  <= 0;
+        wre      <= 1;
+      end
+    endcase
 
   assign we_o =  wb_we_is & wb_stb_is & wb_cyc_is & wre ; //WE for registers  
   assign re_o = ~wb_we_is & wb_stb_is & wb_cyc_is & wre ; //RE for registers  

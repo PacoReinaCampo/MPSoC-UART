@@ -49,45 +49,45 @@ module peripheral_uart_wb #(
   parameter DEBUG = 0
 )
   (
-    input                  wb_clk_i,
-    input                  wb_rst_i,
+  input                  wb_clk_i,
+  input                  wb_rst_i,
 
-    // WISHBONE interface
-    input  [2:0]           wb_adr_i,
-    input  [7:0]           wb_dat_i,
-    output [7:0]           wb_dat_o,
-    input                  wb_we_i,
-    input                  wb_stb_i,
-    input                  wb_cyc_i,
-    input  [3:0]           wb_sel_i,
-    output                 wb_ack_o,
-    output                 int_o,
+  // WISHBONE interface
+  input  [2:0]           wb_adr_i,
+  input  [7:0]           wb_dat_i,
+  output [7:0]           wb_dat_o,
+  input                  wb_we_i,
+  input                  wb_stb_i,
+  input                  wb_cyc_i,
+  input  [3:0]           wb_sel_i,
+  output                 wb_ack_o,
+  output                 int_o,
 
-    // UART signals
-    input                  srx_pad_i,
-    output                 stx_pad_o,
-    output                 rts_pad_o,
-    input                  cts_pad_i,
-    output                 dtr_pad_o,
-    input                  dsr_pad_i,
-    input                  ri_pad_i,
-    input                  dcd_pad_i,
+  // UART signals
+  input                  srx_pad_i,
+  output                 stx_pad_o,
+  output                 rts_pad_o,
+  input                  cts_pad_i,
+  output                 dtr_pad_o,
+  input                  dsr_pad_i,
+  input                  ri_pad_i,
+  input                  dcd_pad_i,
 
-    // optional baudrate output
-    output baud_o
-  );
+  // optional baudrate output
+  output baud_o
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
   // Variables
   //
 
-  wire [ 7:0] wb_dat8_i;  // 8-bit internal data input
-  wire [ 7:0] wb_dat8_o;  // 8-bit internal data output
+  wire [ 7:0] wb_dat8_i; // 8-bit internal data input
+  wire [ 7:0] wb_dat8_o; // 8-bit internal data output
   wire [31:0] wb_dat32_o; // debug interface 32-bit output
   wire [ 2:0] wb_adr_int;
-  wire        we_o;  // Write enable for registers
-  wire        re_o;  // Read enable for registers
+  wire        we_o; // Write enable for registers
+  wire        re_o; // Read enable for registers
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -102,7 +102,7 @@ module peripheral_uart_wb #(
     .wb_dat_o   ( wb_dat_o   ),
     .wb_dat8_i  ( wb_dat8_i  ),
     .wb_dat8_o  ( wb_dat8_o  ),
-    .wb_dat32_o ( 32'b0      ),                 
+    .wb_dat32_o ( 32'b0      ),
     .wb_sel_i   ( 4'b0       ),
     .wb_we_i    ( wb_we_i    ),
     .wb_stb_i   ( wb_stb_i   ),
@@ -116,7 +116,7 @@ module peripheral_uart_wb #(
 
   // Registers
   peripheral_uart_regs_wb #(
-    .SIM (SIM)
+  .SIM (SIM)
   ) uart_regs_wb (
     .clk          ( wb_clk_i   ),
     .wb_rst_i     ( wb_rst_i   ),

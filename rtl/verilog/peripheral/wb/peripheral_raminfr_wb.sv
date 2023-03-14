@@ -48,14 +48,14 @@ module peripheral_raminfr_wb #(
   parameter DEPTH      = 16
 )
   (
-    input                   clk,
-    input                   we,
-    input  [ADDR_WIDTH-1:0] a,
-    input  [ADDR_WIDTH-1:0] dpra,
-    input  [DATA_WIDTH-1:0] di,
-    output [DATA_WIDTH-1:0] dpo
-    //output [DATA_WIDTH-1:0] spo,
-  );
+  input                   clk,
+  input                   we,
+  input  [ADDR_WIDTH-1:0] a,
+  input  [ADDR_WIDTH-1:0] dpra,
+  input  [DATA_WIDTH-1:0] di,
+  output [DATA_WIDTH-1:0] dpo
+  //output [DATA_WIDTH-1:0] spo,
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -70,8 +70,8 @@ module peripheral_raminfr_wb #(
   always @(posedge clk) begin
     if (we) begin
       ram[a] <= di;
-    end     
-  end   
+    end
+  end
   //  assign spo = ram[a];   
-  assign dpo = ram[dpra];   
+  assign dpo = ram[dpra];
 endmodule

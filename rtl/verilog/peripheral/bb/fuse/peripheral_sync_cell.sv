@@ -49,12 +49,12 @@
 
 module peripheral_sync_cell (
   // OUTPUTs
-  output              data_out,      // Synchronized data output
+  output              data_out, // Synchronized data output
 
   // INPUTs
-  input               clk,          // Receiving clock
-  input               data_in,      // Asynchronous data input
-  input               rst           // Receiving reset (active high)
+  input               clk, // Receiving clock
+  input               data_in, // Asynchronous data input
+  input               rst // Receiving reset (active high)
 );
 
   //=============================================================================

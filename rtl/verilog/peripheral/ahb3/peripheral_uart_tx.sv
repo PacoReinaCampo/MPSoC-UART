@@ -101,13 +101,13 @@ module peripheral_uart_tx (
   always @(*) begin
     case(cfg_bits_i)
       2'b00:
-        s_target_bits = 3'h4;
+      s_target_bits = 3'h4;
       2'b01:
-        s_target_bits = 3'h5;
+      s_target_bits = 3'h5;
       2'b10:
-        s_target_bits = 3'h6;
+      s_target_bits = 3'h6;
       2'b11:
-        s_target_bits = 3'h7;
+      s_target_bits = 3'h7;
     endcase
   end
 
@@ -182,7 +182,7 @@ module peripheral_uart_tx (
         end
       end
       default:
-        NS = IDLE;
+      NS = IDLE;
     endcase
   end
 

@@ -49,18 +49,18 @@ module peripheral_uart_transmitter_wb #(
   parameter SIM = 0
 )
   (
-    input                            clk,
-    input                            wb_rst_i,
-    input                      [7:0] lcr,
-    input                            tf_push,
-    input                      [7:0] wb_dat_i,
-    input                            enable,
-    input                            tx_reset,
-    input                            lsr_mask,  //reset of fifo
-    output                           stx_pad_o,
-    output reg                 [2:0] tstate,
-    output [UART_FIFO_COUNTER_W-1:0] tf_count
-  );
+  input                            clk,
+  input                            wb_rst_i,
+  input                      [7:0] lcr,
+  input                            tf_push,
+  input                      [7:0] wb_dat_i,
+  input                            enable,
+  input                            tx_reset,
+  input                            lsr_mask, //reset of fifo
+  output                           stx_pad_o,
+  output reg                 [2:0] tstate,
+  output [UART_FIFO_COUNTER_W-1:0] tf_count
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -80,10 +80,10 @@ module peripheral_uart_transmitter_wb #(
   // Variables
   //
   reg [4:0] counter;
-  reg [2:0] bit_counter;  // counts the bits to be sent
-  reg [6:0] shift_out;  // output shift register
+  reg [2:0] bit_counter; // counts the bits to be sent
+  reg [6:0] shift_out; // output shift register
   reg       stx_o_tmp;
-  reg       parity_xor;  // parity of the word
+  reg       parity_xor; // parity of the word
   reg       tf_pop;
   reg       bit_out;
 
@@ -101,13 +101,13 @@ module peripheral_uart_transmitter_wb #(
   assign tf_data_in = wb_dat_i;
 
   peripheral_uart_tfifo_wb #(
-    .FIFO_WIDTH     (8),
-    .FIFO_DEPTH     (16),
-    .FIFO_POINTER_W (4),
-    .FIFO_COUNTER_W (5)
+  .FIFO_WIDTH     (8),
+  .FIFO_DEPTH     (16),
+  .FIFO_POINTER_W (4),
+  .FIFO_COUNTER_W (5)
   )
-  uart_tfifo_wb (  // error bit signal is not used in transmitter FIFO
-    .clk          ( clk         ), 
+  uart_tfifo_wb ( // error bit signal is not used in transmitter FIFO
+    .clk          ( clk         ),
     .wb_rst_i     ( wb_rst_i    ),
     .data_in      ( tf_data_in  ),
     .data_out     ( tf_data_out ),
@@ -132,7 +132,7 @@ module peripheral_uart_transmitter_wb #(
     end
     else if (enable | SIM) begin
       case (tstate)
-        s_idle : if (~|tf_count) begin  // if tf_count==0
+        s_idle : if (~|tf_count) begin // if tf_count==0
           tstate    <= s_idle;
           stx_o_tmp <= 1'b1;
         end
@@ -143,7 +143,7 @@ module peripheral_uart_transmitter_wb #(
         end
         s_pop_byte : begin
           tf_pop <= 1'b1;
-          case (lcr[/*UART_LC_BITS*/1:0])  // number of bits in a word
+          case (lcr[/*UART_LC_BITS*/1:0]) // number of bits in a word
             2'b00 : begin
               bit_counter <= 3'b100;
               parity_xor  <= ^tf_data_out[4:0];
@@ -190,7 +190,7 @@ module peripheral_uart_transmitter_wb #(
               {shift_out[5:0],bit_out  } <= {shift_out[6:1], shift_out[0]};
               tstate <= s_send_byte;
             end
-            else if (~lcr[UART_LC_PE]) begin  // end of byte
+            else if (~lcr[UART_LC_PE]) begin // end of byte
               tstate <= s_send_stop;
             end
             else begin
@@ -222,9 +222,9 @@ module peripheral_uart_transmitter_wb #(
         s_send_stop : begin
           if (~|counter) begin
             casez ({lcr[UART_LC_SB],lcr[1:0]})
-              3'b0??:  counter <= 5'b01101;  // 1 stop bit ok igor
-              3'b100:  counter <= 5'b10101;  // 1.5 stop bit
-              default: counter <= 5'b11101;  // 2 stop bits
+              3'b0??:  counter <= 5'b01101; // 1 stop bit ok igor
+              3'b100:  counter <= 5'b10101; // 1.5 stop bit
+              default: counter <= 5'b11101; // 2 stop bits
             endcase
           end
           else if (counter == 5'b00001) begin
@@ -236,12 +236,12 @@ module peripheral_uart_transmitter_wb #(
           stx_o_tmp <= 1'b1;
         end
         default : // should never get here
-          tstate <= s_idle;
+        tstate <= s_idle;
       endcase
     end // end if enable
     else
-      tf_pop <= 1'b0;  // tf_pop must be 1 cycle width
+      tf_pop <= 1'b0; // tf_pop must be 1 cycle width
   end // transmitter logic
 
-  assign stx_pad_o = lcr[UART_LC_BC] ? 1'b0 : stx_o_tmp;    // Break condition
+  assign stx_pad_o = lcr[UART_LC_BC] ? 1'b0 : stx_o_tmp; // Break condition
 endmodule

@@ -51,19 +51,19 @@ module peripheral_uart_rfifo_wb #(
   parameter FIFO_COUNTER_W = 5
 )
   (
-    input                       clk,
-    input                       wb_rst_i,
-    input                       push,
-    input                       pop,
-    input  [FIFO_WIDTH-1:0]     data_in,
-    input                       fifo_reset,
-    input                       reset_status,
+  input                       clk,
+  input                       wb_rst_i,
+  input                       push,
+  input                       pop,
+  input  [FIFO_WIDTH-1:0]     data_in,
+  input                       fifo_reset,
+  input                       reset_status,
 
-    output     [FIFO_WIDTH    -1:0] data_out,
-    output reg                      overrun,
-    output reg [FIFO_COUNTER_W-1:0] count,
-    output                          error_bit
-  );
+  output     [FIFO_WIDTH    -1:0] data_out,
+  output reg                      overrun,
+  output reg [FIFO_COUNTER_W-1:0] count,
+  output                          error_bit
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -103,19 +103,19 @@ module peripheral_uart_rfifo_wb #(
   // Module Body
   //
   peripheral_raminfr_wb #(
-    .ADDR_WIDTH (FIFO_POINTER_W),
-    .DATA_WIDTH (8),
-    .DEPTH      (FIFO_DEPTH)
+  .ADDR_WIDTH (FIFO_POINTER_W),
+  .DATA_WIDTH (8),
+  .DEPTH      (FIFO_DEPTH)
   ) raminfr_wb (
-    .clk  (clk), 
-    .we   (push), 
-    .a    (top), 
-    .dpra (bottom), 
-    .di   (data_in[FIFO_WIDTH-1:FIFO_WIDTH-8]), 
+    .clk  (clk),
+    .we   (push),
+    .a    (top),
+    .dpra (bottom),
+    .di   (data_in[FIFO_WIDTH-1:FIFO_WIDTH-8]),
     .dpo  (data8_out)
-  ); 
+  );
 
-  always @(posedge clk or posedge wb_rst_i) begin  // synchronous FIFO
+  always @(posedge clk or posedge wb_rst_i) begin // synchronous FIFO
     if (wb_rst_i) begin
       top      <= 0;
       bottom   <= 0;
@@ -160,7 +160,7 @@ module peripheral_uart_rfifo_wb #(
     end
     else begin
       case ({push, pop})
-        2'b10 : if (count<FIFO_DEPTH) begin  // overrun condition
+        2'b10 : if (count<FIFO_DEPTH) begin // overrun condition
           top       <= top_plus_1;
           fifo[top] <= data_in[2:0];
           count     <= count + 5'd1;
@@ -178,16 +178,16 @@ module peripheral_uart_rfifo_wb #(
         default: ;
       endcase
     end
-  end   // always
+  end // always
 
-  always @(posedge clk or posedge wb_rst_i) begin  // synchronous FIFO
+  always @(posedge clk or posedge wb_rst_i) begin // synchronous FIFO
     if (wb_rst_i)
       overrun   <= 1'b0;
-    else if(fifo_reset | reset_status) 
+    else if(fifo_reset | reset_status)
       overrun   <= 1'b0;
     else if(push & ~pop & (count==FIFO_DEPTH))
       overrun   <= 1'b1;
-  end   // always
+  end // always
 
   // please note though that data_out is only valid one clock after pop signal
   assign data_out = {data8_out,fifo[bottom]};
@@ -215,7 +215,7 @@ module peripheral_uart_rfifo_wb #(
 
   // a 1 is returned if any of the error bits in the fifo is 1
   assign  error_bit = |(word0[2:0]  | word1[2:0]  | word2[2:0]  | word3[2:0]  |
-                        word4[2:0]  | word5[2:0]  | word6[2:0]  | word7[2:0]  |
-                        word8[2:0]  | word9[2:0]  | word10[2:0] | word11[2:0] |
-                        word12[2:0] | word13[2:0] | word14[2:0] | word15[2:0] );
+  word4[2:0]  | word5[2:0]  | word6[2:0]  | word7[2:0]  |
+  word8[2:0]  | word9[2:0]  | word10[2:0] | word11[2:0] |
+  word12[2:0] | word13[2:0] | word14[2:0] | word15[2:0] );
 endmodule
