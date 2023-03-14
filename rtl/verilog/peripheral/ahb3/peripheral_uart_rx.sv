@@ -41,19 +41,19 @@
  */
 
 module peripheral_uart_rx (
-  input  logic            clk_i,
-  input  logic            rstn_i,
-  input  logic            rx_i,
-  input  logic [15:0]     cfg_div_i,
-  input  logic            cfg_en_i,
-  input  logic            cfg_parity_en_i,
-  input  logic [ 1:0]     cfg_bits_i,
-  output logic            busy_o,
-  output logic            err_o,
-  input  logic            err_clr_i,
-  output logic [ 7:0]     rx_data_o,
-  output logic            rx_valid_o,
-  input  logic            rx_ready_i
+  input  logic        clk_i,
+  input  logic        rstn_i,
+  input  logic        rx_i,
+  input  logic [15:0] cfg_div_i,
+  input  logic        cfg_en_i,
+  input  logic        cfg_parity_en_i,
+  input  logic [ 1:0] cfg_bits_i,
+  output logic        busy_o,
+  output logic        err_o,
+  input  logic        err_clr_i,
+  output logic [ 7:0] rx_data_o,
+  output logic        rx_valid_o,
+  input  logic        rx_ready_i
 );
 
   //////////////////////////////////////////////////////////////////////////////
@@ -61,30 +61,30 @@ module peripheral_uart_rx (
   // Constants
   //
 
-  parameter [2:0] IDLE      = 3'b110;
+  parameter [2:0] IDLE = 3'b110;
   parameter [2:0] START_BIT = 3'b101;
-  parameter [2:0] DATA      = 3'b100;
+  parameter [2:0] DATA = 3'b100;
   parameter [2:0] SAVE_DATA = 3'b011;
-  parameter [2:0] PARITY    = 3'b010;
-  parameter [2:0] STOP_BIT  = 3'b001;
+  parameter [2:0] PARITY = 3'b010;
+  parameter [2:0] STOP_BIT = 3'b001;
 
   //////////////////////////////////////////////////////////////////////////////
   //
   // Variables
   //
 
-  logic [2:0]  CS, NS;
+  logic [2:0] CS, NS;
 
-  logic [7:0]  reg_data;
-  logic [7:0]  reg_data_next;
+  logic [ 7:0] reg_data;
+  logic [ 7:0] reg_data_next;
 
-  logic [2:0]  reg_rx_sync;
+  logic [ 2:0] reg_rx_sync;
 
 
-  logic [2:0]  reg_bit_count;
-  logic [2:0]  reg_bit_count_next;
+  logic [ 2:0] reg_bit_count;
+  logic [ 2:0] reg_bit_count_next;
 
-  logic [2:0]  s_target_bits;
+  logic [ 2:0] s_target_bits;
 
   logic        parity_bit;
   logic        parity_bit_next;
@@ -107,63 +107,53 @@ module peripheral_uart_rx (
   assign busy_o = (CS != IDLE);
 
   always @(*) begin
-    case(cfg_bits_i)
-      2'b00:
-      s_target_bits = 3'h4;
-      2'b01:
-      s_target_bits = 3'h5;
-      2'b10:
-      s_target_bits = 3'h6;
-      2'b11:
-      s_target_bits = 3'h7;
+    case (cfg_bits_i)
+      2'b00: s_target_bits = 3'h4;
+      2'b01: s_target_bits = 3'h5;
+      2'b10: s_target_bits = 3'h6;
+      2'b11: s_target_bits = 3'h7;
     endcase
   end
 
   always @(*) begin
-    NS = CS;
-    sampleData = 1'b0;
-    reg_bit_count_next  = reg_bit_count;
-    reg_data_next = reg_data;
-    rx_valid_o = 1'b0;
-    baudgen_en = 1'b0;
-    start_bit  = 1'b0;
-    parity_bit_next = parity_bit;
-    set_error  = 1'b0;
-    case(CS)
+    NS                 = CS;
+    sampleData         = 1'b0;
+    reg_bit_count_next = reg_bit_count;
+    reg_data_next      = reg_data;
+    rx_valid_o         = 1'b0;
+    baudgen_en         = 1'b0;
+    start_bit          = 1'b0;
+    parity_bit_next    = parity_bit;
+    set_error          = 1'b0;
+    case (CS)
       IDLE: begin
         if (s_rx_fall) begin
-          NS = START_BIT;
+          NS         = START_BIT;
           baudgen_en = 1'b1;
           start_bit  = 1'b1;
         end
       end
       START_BIT: begin
         parity_bit_next = 1'b0;
-        baudgen_en = 1'b1;
-        start_bit  = 1'b1;
-        if (bit_done)
-          NS = DATA;
+        baudgen_en      = 1'b1;
+        start_bit       = 1'b1;
+        if (bit_done) NS = DATA;
       end
       DATA: begin
-        baudgen_en = 1'b1;
+        baudgen_en      = 1'b1;
         parity_bit_next = parity_bit ^ reg_rx_sync[2];
-        case(cfg_bits_i)
-          2'b00:
-          reg_data_next = {3'b000,reg_rx_sync[2],reg_data[4:1]};
-          2'b01:
-          reg_data_next = {2'b00,reg_rx_sync[2],reg_data[5:1]};
-          2'b10:
-          reg_data_next = {1'b0,reg_rx_sync[2],reg_data[6:1]};
-          2'b11:
-          reg_data_next = {reg_rx_sync[2],reg_data[7:1]};
+        case (cfg_bits_i)
+          2'b00: reg_data_next = {3'b000, reg_rx_sync[2], reg_data[4:1]};
+          2'b01: reg_data_next = {2'b00, reg_rx_sync[2], reg_data[5:1]};
+          2'b10: reg_data_next = {1'b0, reg_rx_sync[2], reg_data[6:1]};
+          2'b11: reg_data_next = {reg_rx_sync[2], reg_data[7:1]};
         endcase
         if (bit_done) begin
           sampleData = 1'b1;
           if (reg_bit_count == s_target_bits) begin
             reg_bit_count_next = 'h0;
-            NS = SAVE_DATA;
-          end
-          else begin
+            NS                 = SAVE_DATA;
+          end else begin
             reg_bit_count_next = reg_bit_count + 1;
           end
         end
@@ -171,17 +161,14 @@ module peripheral_uart_rx (
       SAVE_DATA: begin
         baudgen_en = 1'b1;
         rx_valid_o = 1'b1;
-        if(rx_ready_i)
-          if (cfg_parity_en_i)
-            NS = PARITY;
-          else
-            NS = STOP_BIT;
+        if (rx_ready_i)
+          if (cfg_parity_en_i) NS = PARITY;
+          else NS = STOP_BIT;
       end
       PARITY: begin
         baudgen_en = 1'b1;
         if (bit_done) begin
-          if(parity_bit != reg_rx_sync[2])
-            set_error = 1'b1;
+          if (parity_bit != reg_rx_sync[2]) set_error = 1'b1;
           NS = STOP_BIT;
         end
       end
@@ -191,30 +178,26 @@ module peripheral_uart_rx (
           NS = IDLE;
         end
       end
-      default:
-      NS = IDLE;
+      default: NS = IDLE;
     endcase
   end
 
   always @(posedge clk_i or negedge rstn_i) begin
     if (rstn_i == 1'b0) begin
-      CS             <= IDLE;
-      reg_data       <= 8'hFF;
-      reg_bit_count  <=  'h0;
-      parity_bit     <= 1'b0;
-    end
-    else begin
-      if(bit_done) begin
+      CS            <= IDLE;
+      reg_data      <= 8'hFF;
+      reg_bit_count <= 'h0;
+      parity_bit    <= 1'b0;
+    end else begin
+      if (bit_done) begin
         parity_bit <= parity_bit_next;
-      end
-      else if(sampleData) begin
+      end else if (sampleData) begin
         reg_data <= reg_data_next;
       end
       reg_bit_count <= reg_bit_count_next;
-      if(cfg_en_i) begin
+      if (cfg_en_i) begin
         CS <= NS;
-      end
-      else begin
+      end else begin
         CS <= IDLE;
       end
     end
@@ -223,13 +206,10 @@ module peripheral_uart_rx (
   assign s_rx_fall = ~reg_rx_sync[1] & reg_rx_sync[2];
 
   always @(posedge clk_i or negedge rstn_i) begin
-    if (rstn_i == 1'b0)
-      reg_rx_sync <= 3'b111;
+    if (rstn_i == 1'b0) reg_rx_sync <= 3'b111;
     else begin
-      if (cfg_en_i)
-        reg_rx_sync <= {reg_rx_sync[1:0],rx_i};
-      else
-        reg_rx_sync <= 3'b111;
+      if (cfg_en_i) reg_rx_sync <= {reg_rx_sync[1:0], rx_i};
+      else reg_rx_sync <= 3'b111;
     end
   end
 
@@ -237,23 +217,19 @@ module peripheral_uart_rx (
     if (rstn_i == 1'b0) begin
       baud_cnt <= 'h0;
       bit_done <= 1'b0;
-    end
-    else begin
-      if(baudgen_en) begin
-        if(!start_bit && (baud_cnt == cfg_div_i)) begin
+    end else begin
+      if (baudgen_en) begin
+        if (!start_bit && (baud_cnt == cfg_div_i)) begin
           baud_cnt <= 'h0;
           bit_done <= 1'b1;
-        end
-        else if(start_bit && (baud_cnt == {1'b0,cfg_div_i[15:1]})) begin
+        end else if (start_bit && (baud_cnt == {1'b0, cfg_div_i[15:1]})) begin
           baud_cnt <= 'h0;
           bit_done <= 1'b1;
-        end
-        else begin
+        end else begin
           baud_cnt <= baud_cnt + 1;
           bit_done <= 1'b0;
         end
-      end
-      else begin
+      end else begin
         baud_cnt <= 'h0;
         bit_done <= 1'b0;
       end
@@ -263,14 +239,11 @@ module peripheral_uart_rx (
   always @(posedge clk_i or negedge rstn_i) begin
     if (rstn_i == 1'b0) begin
       err_o <= 1'b0;
-    end
-    else begin
-      if(err_clr_i) begin
+    end else begin
+      if (err_clr_i) begin
         err_o <= 1'b0;
-      end
-      else begin
-        if(set_error)
-          err_o <= 1'b1;
+      end else begin
+        if (set_error) err_o <= 1'b1;
       end
     end
   end

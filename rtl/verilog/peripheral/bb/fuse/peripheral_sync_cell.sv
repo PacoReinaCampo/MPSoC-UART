@@ -49,24 +49,24 @@
 
 module peripheral_sync_cell (
   // OUTPUTs
-  output              data_out, // Synchronized data output
+  output data_out,  // Synchronized data output
 
   // INPUTs
-  input               clk, // Receiving clock
-  input               data_in, // Asynchronous data input
-  input               rst // Receiving reset (active high)
+  input clk,      // Receiving clock
+  input data_in,  // Asynchronous data input
+  input rst       // Receiving reset (active high)
 );
 
   //=============================================================================
   // 1)  SYNCHRONIZER
   //=============================================================================
 
-  reg  [1:0] data_sync;
+  reg [1:0] data_sync;
 
   always @(posedge clk or posedge rst) begin
-    if (rst) data_sync <=  2'b00;
-    else     data_sync <=  {data_sync[0], data_in};
+    if (rst) data_sync <= 2'b00;
+    else data_sync <= {data_sync[0], data_in};
   end
 
-  assign     data_out   =   data_sync[1];
-endmodule // peripheral_sync_cell
+  assign data_out = data_sync[1];
+endmodule  // peripheral_sync_cell

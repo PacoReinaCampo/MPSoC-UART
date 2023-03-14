@@ -46,21 +46,21 @@ module peripheral_uart_testbench;
   //
   // Variables
   //
-  logic             mclk; // Main system clock
-  logic             puc_rst; // Main system reset
+  logic        mclk;  // Main system clock
+  logic        puc_rst;  // Main system reset
 
-  logic             smclk_en; // SMCLK enable (from CPU)
+  logic        smclk_en;  // SMCLK enable (from CPU)
 
-  logic      [13:0] per_addr; // Peripheral address
-  logic      [15:0] per_dout; // Peripheral data output
-  logic      [15:0] per_din; // Peripheral data input
-  logic             per_en; // Peripheral enable (high active)
-  logic      [ 1:0] per_we; // Peripheral write enable (high active)
+  logic [13:0] per_addr;  // Peripheral address
+  logic [15:0] per_dout;  // Peripheral data output
+  logic [15:0] per_din;  // Peripheral data input
+  logic        per_en;  // Peripheral enable (high active)
+  logic [ 1:0] per_we;  // Peripheral write enable (high active)
 
-  logic             irq_uart_rx; // UART receive interrupt
-  logic             irq_uart_tx; // UART transmit interrupt
-  logic             uart_txd; // UART Data Transmit (TXD)
-  logic             uart_rxd; // UART Data Receive (RXD)
+  logic        irq_uart_rx;  // UART receive interrupt
+  logic        irq_uart_tx;  // UART transmit interrupt
+  logic        uart_txd;  // UART Data Transmit (TXD)
+  logic        uart_rxd;  // UART Data Receive (RXD)
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -69,20 +69,20 @@ module peripheral_uart_testbench;
 
   //DUT BB
   peripheral_uart_bb uart_bb (
-    .mclk         (mclk), // Main system clock
-    .puc_rst      (puc_rst), // Main system reset
+    .mclk   (mclk),    // Main system clock
+    .puc_rst(puc_rst), // Main system reset
 
-    .smclk_en     (smclk_en), // SMCLK enable (from CPU)
+    .smclk_en(smclk_en),  // SMCLK enable (from CPU)
 
-    .per_addr     (per_addr), // Peripheral address
-    .per_dout     (per_dout), // Peripheral data output
-    .per_din      (per_din), // Peripheral data input
-    .per_en       (per_en), // Peripheral enable (high active)
-    .per_we       (per_we), // Peripheral write enable (high active)
+    .per_addr(per_addr),  // Peripheral address
+    .per_dout(per_dout),  // Peripheral data output
+    .per_din (per_din),   // Peripheral data input
+    .per_en  (per_en),    // Peripheral enable (high active)
+    .per_we  (per_we),    // Peripheral write enable (high active)
 
-    .irq_uart_rx  (irq_uart_rx), // UART receive interrupt
-    .irq_uart_tx  (irq_uart_tx), // UART transmit interrupt
-    .uart_rxd     (uart_rxd), // UART Data Receive (RXD)
-    .uart_txd     (uart_txd) // UART Data Transmit (TXD)
+    .irq_uart_rx(irq_uart_rx),  // UART receive interrupt
+    .irq_uart_tx(irq_uart_tx),  // UART transmit interrupt
+    .uart_rxd   (uart_rxd),     // UART Data Receive (RXD)
+    .uart_txd   (uart_txd)      // UART Data Transmit (TXD)
   );
 endmodule

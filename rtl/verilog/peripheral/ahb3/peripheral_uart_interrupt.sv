@@ -43,26 +43,25 @@
 module peripheral_uart_interrupt #(
   parameter TX_FIFO_DEPTH = 32,
   parameter RX_FIFO_DEPTH = 32
-)
-  (
-  input  logic                           clk_i,
-  input  logic                           rstn_i,
+) (
+  input logic clk_i,
+  input logic rstn_i,
 
   // registers
-  input  logic [                    2:0] IER_i, // interrupt enable register
-  input  logic                           RDA_i, // receiver data available
-  input  logic                           CTI_i, // character timeout indication
+  input logic [2:0] IER_i,  // interrupt enable register
+  input logic       RDA_i,  // receiver data available
+  input logic       CTI_i,  // character timeout indication
 
   // control logic
-  input  logic                           error_i,
-  input  logic [$clog2(RX_FIFO_DEPTH):0] rx_elements_i,
-  input  logic [$clog2(TX_FIFO_DEPTH):0] tx_elements_i,
-  input  logic [                    1:0] trigger_level_i,
+  input logic                           error_i,
+  input logic [$clog2(RX_FIFO_DEPTH):0] rx_elements_i,
+  input logic [$clog2(TX_FIFO_DEPTH):0] tx_elements_i,
+  input logic [                    1:0] trigger_level_i,
 
-  input  logic [                    3:0] clr_int_i, // one hot
+  input logic [3:0] clr_int_i,  // one hot
 
-  output logic                           interrupt_o,
-  output logic [                    3:0] IIR_o
+  output logic       interrupt_o,
+  output logic [3:0] IIR_o
 );
 
   //////////////////////////////////////////////////////////////////////////////
@@ -97,15 +96,14 @@ module peripheral_uart_interrupt #(
       if ($unsigned(rx_elements_i) == 14) begin
         trigger_level_reached = 1'b1;
       end
-      default : ;
+      default: ;
     endcase
   end
 
   always @(*) begin
     if (clr_int_i == 4'b0) begin
       iir_n = iir_q;
-    end
-    else begin
+    end else begin
       iir_n = iir_q & ~(clr_int_i);
     end
     // Receiver line status interrupt on: Overrun error, parity error, framing error or break interrupt
@@ -113,15 +111,18 @@ module peripheral_uart_interrupt #(
       iir_n = 4'b1100;
     end
     // Received data available or trigger level reached in FIFO mode
-    else if (IER_i[0] & (trigger_level_reached | RDA_i)) begin
+    else
+    if (IER_i[0] & (trigger_level_reached | RDA_i)) begin
       iir_n = 4'b1000;
     end
     // Character timeout indication
-    else if (IER_i[0] & CTI_i) begin
+    else
+    if (IER_i[0] & CTI_i) begin
       iir_n = 4'b1000;
     end
     // Transmitter holding register empty
-    else if (IER_i[1] & tx_elements_i == 0) begin
+    else
+    if (IER_i[1] & tx_elements_i == 0) begin
       iir_n = 4'b0100;
     end
   end
@@ -129,12 +130,11 @@ module peripheral_uart_interrupt #(
   always @(posedge clk_i, negedge rstn_i) begin
     if (~rstn_i) begin
       iir_q <= 4'b0001;
-    end
-    else begin
+    end else begin
       iir_q <= iir_n;
     end
   end
 
-  assign IIR_o = iir_q;
+  assign IIR_o       = iir_q;
   assign interrupt_o = ~iir_q[0];
 endmodule

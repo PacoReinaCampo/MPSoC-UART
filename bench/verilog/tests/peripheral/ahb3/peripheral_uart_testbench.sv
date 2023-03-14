@@ -46,11 +46,11 @@ module peripheral_uart_testbench;
   //
   // Constants
   //
-  parameter HADDR_SIZE     = 32;
-  parameter HDATA_SIZE     = 32;
+  parameter HADDR_SIZE = 32;
+  parameter HDATA_SIZE = 32;
   parameter APB_ADDR_WIDTH = 10;
   parameter APB_DATA_WIDTH = 8;
-  parameter SYNC_DEPTH     = 3;
+  parameter SYNC_DEPTH = 3;
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -85,8 +85,8 @@ module peripheral_uart_testbench;
   logic                       uart_PREADY;
   logic                       uart_PSLVERR;
 
-  logic                       uart_rx_i; // Receiver input
-  logic                       uart_tx_o; // Transmitter output
+  logic                       uart_rx_i;  // Receiver input
+  logic                       uart_tx_o;  // Transmitter output
 
   logic                       uart_event_o;
 
@@ -97,67 +97,65 @@ module peripheral_uart_testbench;
 
   //DUT AHB3
   peripheral_apb2ahb #(
-  .HADDR_SIZE ( HADDR_SIZE     ),
-  .HDATA_SIZE ( HDATA_SIZE     ),
-  .PADDR_SIZE ( APB_ADDR_WIDTH ),
-  .PDATA_SIZE ( APB_DATA_WIDTH ),
-  .SYNC_DEPTH ( SYNC_DEPTH     )
-  )
-  apb2ahb (
+    .HADDR_SIZE(HADDR_SIZE),
+    .HDATA_SIZE(HDATA_SIZE),
+    .PADDR_SIZE(APB_ADDR_WIDTH),
+    .PDATA_SIZE(APB_DATA_WIDTH),
+    .SYNC_DEPTH(SYNC_DEPTH)
+  ) apb2ahb (
     //AHB Slave Interface
-    .HRESETn   ( HRESETn ),
-    .HCLK      ( HCLK    ),
+    .HRESETn(HRESETn),
+    .HCLK   (HCLK),
 
-    .HSEL      ( mst_uart_HSEL      ),
-    .HADDR     ( mst_uart_HADDR     ),
-    .HWDATA    ( mst_uart_HWDATA    ),
-    .HRDATA    ( mst_uart_HRDATA    ),
-    .HWRITE    ( mst_uart_HWRITE    ),
-    .HSIZE     ( mst_uart_HSIZE     ),
-    .HBURST    ( mst_uart_HBURST    ),
-    .HPROT     ( mst_uart_HPROT     ),
-    .HTRANS    ( mst_uart_HTRANS    ),
-    .HMASTLOCK ( mst_uart_HMASTLOCK ),
-    .HREADYOUT ( mst_uart_HREADYOUT ),
-    .HREADY    ( mst_uart_HREADY    ),
-    .HRESP     ( mst_uart_HRESP     ),
+    .HSEL     (mst_uart_HSEL),
+    .HADDR    (mst_uart_HADDR),
+    .HWDATA   (mst_uart_HWDATA),
+    .HRDATA   (mst_uart_HRDATA),
+    .HWRITE   (mst_uart_HWRITE),
+    .HSIZE    (mst_uart_HSIZE),
+    .HBURST   (mst_uart_HBURST),
+    .HPROT    (mst_uart_HPROT),
+    .HTRANS   (mst_uart_HTRANS),
+    .HMASTLOCK(mst_uart_HMASTLOCK),
+    .HREADYOUT(mst_uart_HREADYOUT),
+    .HREADY   (mst_uart_HREADY),
+    .HRESP    (mst_uart_HRESP),
 
     //APB Master Interface
-    .PRESETn ( HRESETn ),
-    .PCLK    ( HCLK    ),
+    .PRESETn(HRESETn),
+    .PCLK   (HCLK),
 
-    .PSEL    ( uart_PSEL    ),
-    .PENABLE ( uart_PENABLE ),
-    .PPROT   (              ),
-    .PWRITE  ( uart_PWRITE  ),
-    .PSTRB   (              ),
-    .PADDR   ( uart_PADDR   ),
-    .PWDATA  ( uart_PWDATA  ),
-    .PRDATA  ( uart_PRDATA  ),
-    .PREADY  ( uart_PREADY  ),
-    .PSLVERR ( uart_PSLVERR )
+    .PSEL   (uart_PSEL),
+    .PENABLE(uart_PENABLE),
+    .PPROT  (),
+    .PWRITE (uart_PWRITE),
+    .PSTRB  (),
+    .PADDR  (uart_PADDR),
+    .PWDATA (uart_PWDATA),
+    .PRDATA (uart_PRDATA),
+    .PREADY (uart_PREADY),
+    .PSLVERR(uart_PSLVERR)
   );
 
   peripheral_uart_apb4 #(
-  .APB_ADDR_WIDTH ( APB_ADDR_WIDTH ),
-  .APB_DATA_WIDTH ( APB_DATA_WIDTH )
-  )
-  uart_apb4 (
-    .RSTN ( HRESETn ),
-    .CLK  ( HCLK    ),
+    .APB_ADDR_WIDTH(APB_ADDR_WIDTH),
+    .APB_DATA_WIDTH(APB_DATA_WIDTH)
+  ) uart_apb4 (
+    .RSTN(HRESETn),
+    .CLK (HCLK),
 
-    .PADDR   ( uart_PADDR   ),
-    .PWDATA  ( uart_PWDATA  ),
-    .PWRITE  ( uart_PWRITE  ),
-    .PSEL    ( uart_PSEL    ),
-    .PENABLE ( uart_PENABLE ),
-    .PRDATA  ( uart_PRDATA  ),
-    .PREADY  ( uart_PREADY  ),
-    .PSLVERR ( uart_PSLVERR ),
+    .PADDR  (uart_PADDR),
+    .PWDATA (uart_PWDATA),
+    .PWRITE (uart_PWRITE),
+    .PSEL   (uart_PSEL),
+    .PENABLE(uart_PENABLE),
+    .PRDATA (uart_PRDATA),
+    .PREADY (uart_PREADY),
+    .PSLVERR(uart_PSLVERR),
 
-    .rx_i ( uart_rx_i ),
-    .tx_o ( uart_tx_o ),
+    .rx_i(uart_rx_i),
+    .tx_o(uart_tx_o),
 
-    .event_o ( uart_event_o )
+    .event_o(uart_event_o)
   );
 endmodule

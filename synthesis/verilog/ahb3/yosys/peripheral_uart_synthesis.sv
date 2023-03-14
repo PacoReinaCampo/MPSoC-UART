@@ -41,16 +41,15 @@
  */
 
 module peripheral_uart_synthesis #(
-  parameter HADDR_SIZE =  8,
-  parameter HDATA_SIZE = 32,
-  parameter APB_ADDR_WIDTH =  8,
+  parameter HADDR_SIZE     = 8,
+  parameter HDATA_SIZE     = 32,
+  parameter APB_ADDR_WIDTH = 8,
   parameter APB_DATA_WIDTH = 32,
-  parameter SYNC_DEPTH =  3
-)
-  (
+  parameter SYNC_DEPTH     = 3
+) (
   //Common signals
-  input                         HRESETn,
-  input                         HCLK,
+  input HRESETn,
+  input HCLK,
 
   //UART AHB3
   input                         uart_HSEL,
@@ -83,8 +82,8 @@ module peripheral_uart_synthesis #(
   logic                       uart_PREADY;
   logic                       uart_PSLVERR;
 
-  logic                       uart_rx_i; // Receiver input
-  logic                       uart_tx_o; // Transmitter output
+  logic                       uart_rx_i;  // Receiver input
+  logic                       uart_tx_o;  // Transmitter output
 
   logic                       uart_event_o;
 
@@ -95,67 +94,65 @@ module peripheral_uart_synthesis #(
 
   //DUT AHB3
   peripheral_bridge_apb2ahb #(
-  .HADDR_SIZE ( HADDR_SIZE     ),
-  .HDATA_SIZE ( HDATA_SIZE     ),
-  .PADDR_SIZE ( APB_ADDR_WIDTH ),
-  .PDATA_SIZE ( APB_DATA_WIDTH ),
-  .SYNC_DEPTH ( SYNC_DEPTH     )
-  )
-  bridge_apb2ahb (
+    .HADDR_SIZE(HADDR_SIZE),
+    .HDATA_SIZE(HDATA_SIZE),
+    .PADDR_SIZE(APB_ADDR_WIDTH),
+    .PDATA_SIZE(APB_DATA_WIDTH),
+    .SYNC_DEPTH(SYNC_DEPTH)
+  ) bridge_apb2ahb (
     //AHB Slave Interface
-    .HRESETn   ( HRESETn ),
-    .HCLK      ( HCLK    ),
+    .HRESETn(HRESETn),
+    .HCLK   (HCLK),
 
-    .HSEL      ( uart_HSEL      ),
-    .HADDR     ( uart_HADDR     ),
-    .HWDATA    ( uart_HWDATA    ),
-    .HRDATA    ( uart_HRDATA    ),
-    .HWRITE    ( uart_HWRITE    ),
-    .HSIZE     ( uart_HSIZE     ),
-    .HBURST    ( uart_HBURST    ),
-    .HPROT     ( uart_HPROT     ),
-    .HTRANS    ( uart_HTRANS    ),
-    .HMASTLOCK ( uart_HMASTLOCK ),
-    .HREADYOUT ( uart_HREADYOUT ),
-    .HREADY    ( uart_HREADY    ),
-    .HRESP     ( uart_HRESP     ),
+    .HSEL     (uart_HSEL),
+    .HADDR    (uart_HADDR),
+    .HWDATA   (uart_HWDATA),
+    .HRDATA   (uart_HRDATA),
+    .HWRITE   (uart_HWRITE),
+    .HSIZE    (uart_HSIZE),
+    .HBURST   (uart_HBURST),
+    .HPROT    (uart_HPROT),
+    .HTRANS   (uart_HTRANS),
+    .HMASTLOCK(uart_HMASTLOCK),
+    .HREADYOUT(uart_HREADYOUT),
+    .HREADY   (uart_HREADY),
+    .HRESP    (uart_HRESP),
 
     //APB Master Interface
-    .PRESETn ( HRESETn ),
-    .PCLK    ( HCLK    ),
+    .PRESETn(HRESETn),
+    .PCLK   (HCLK),
 
-    .PSEL    ( uart_PSEL    ),
-    .PENABLE ( uart_PENABLE ),
-    .PPROT   (              ),
-    .PWRITE  ( uart_PWRITE  ),
-    .PSTRB   (              ),
-    .PADDR   ( uart_PADDR   ),
-    .PWDATA  ( uart_PWDATA  ),
-    .PRDATA  ( uart_PRDATA  ),
-    .PREADY  ( uart_PREADY  ),
-    .PSLVERR ( uart_PSLVERR )
+    .PSEL   (uart_PSEL),
+    .PENABLE(uart_PENABLE),
+    .PPROT  (),
+    .PWRITE (uart_PWRITE),
+    .PSTRB  (),
+    .PADDR  (uart_PADDR),
+    .PWDATA (uart_PWDATA),
+    .PRDATA (uart_PRDATA),
+    .PREADY (uart_PREADY),
+    .PSLVERR(uart_PSLVERR)
   );
 
   peripheral_apb4_uart #(
-  .APB_ADDR_WIDTH ( APB_ADDR_WIDTH ),
-  .APB_DATA_WIDTH ( APB_DATA_WIDTH )
-  )
-  apb4_uart (
-    .RSTN ( HRESETn ),
-    .CLK  ( HCLK    ),
+    .APB_ADDR_WIDTH(APB_ADDR_WIDTH),
+    .APB_DATA_WIDTH(APB_DATA_WIDTH)
+  ) apb4_uart (
+    .RSTN(HRESETn),
+    .CLK (HCLK),
 
-    .PADDR   ( uart_PADDR   ),
-    .PWDATA  ( uart_PWDATA  ),
-    .PWRITE  ( uart_PWRITE  ),
-    .PSEL    ( uart_PSEL    ),
-    .PENABLE ( uart_PENABLE ),
-    .PRDATA  ( uart_PRDATA  ),
-    .PREADY  ( uart_PREADY  ),
-    .PSLVERR ( uart_PSLVERR ),
+    .PADDR  (uart_PADDR),
+    .PWDATA (uart_PWDATA),
+    .PWRITE (uart_PWRITE),
+    .PSEL   (uart_PSEL),
+    .PENABLE(uart_PENABLE),
+    .PRDATA (uart_PRDATA),
+    .PREADY (uart_PREADY),
+    .PSLVERR(uart_PSLVERR),
 
-    .rx_i ( uart_rx_i ),
-    .tx_o ( uart_tx_o ),
+    .rx_i(uart_rx_i),
+    .tx_o(uart_tx_o),
 
-    .event_o ( uart_event_o )
+    .event_o(uart_event_o)
   );
 endmodule

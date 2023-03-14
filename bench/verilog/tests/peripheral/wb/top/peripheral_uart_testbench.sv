@@ -46,7 +46,7 @@ module peripheral_uart_testbench;
   //
   // Constants
   //
-  parameter SIM   = 0;
+  parameter SIM = 0;
   parameter DEBUG = 0;
 
   //////////////////////////////////////////////////////////////////////////////
@@ -55,34 +55,34 @@ module peripheral_uart_testbench;
   //
 
   //Common signals
-  wire                   rst;
-  wire                   clk;
+  wire        rst;
+  wire        clk;
 
   //UART WB
 
   // WISHBONE interface
-  logic  [2:0]           wb_adr_i;
-  logic  [7:0]           wb_dat_i;
-  logic  [7:0]           wb_dat_o;
-  logic                  wb_we_i;
-  logic                  wb_stb_i;
-  logic                  wb_cyc_i;
-  logic  [3:0]           wb_sel_i;
-  logic                  wb_ack_o;
-  logic                  int_o;
+  logic [2:0] wb_adr_i;
+  logic [7:0] wb_dat_i;
+  logic [7:0] wb_dat_o;
+  logic       wb_we_i;
+  logic       wb_stb_i;
+  logic       wb_cyc_i;
+  logic [3:0] wb_sel_i;
+  logic       wb_ack_o;
+  logic       int_o;
 
   // UART  signals
-  logic                  srx_pad_i;
-  logic                  stx_pad_o;
-  logic                  rts_pad_o;
-  logic                  cts_pad_i;
-  logic                  dtr_pad_o;
-  logic                  dsr_pad_i;
-  logic                  ri_pad_i;
-  logic                  dcd_pad_i;
+  logic       srx_pad_i;
+  logic       stx_pad_o;
+  logic       rts_pad_o;
+  logic       cts_pad_i;
+  logic       dtr_pad_o;
+  logic       dsr_pad_i;
+  logic       ri_pad_i;
+  logic       dcd_pad_i;
 
   // optional baudrate output
-  logic baud_o;
+  logic       baud_o;
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -91,35 +91,34 @@ module peripheral_uart_testbench;
 
   //DUT WB
   peripheral_uart_wb #(
-  .SIM   (SIM),
-  .DEBUG (DEBUG)
-  )
-  uart_wb (
-    .wb_clk_i (clk),
-    .wb_rst_i (rst),
+    .SIM  (SIM),
+    .DEBUG(DEBUG)
+  ) uart_wb (
+    .wb_clk_i(clk),
+    .wb_rst_i(rst),
 
     // WISHBONE interface
-    .wb_adr_i (wb_adr_i),
-    .wb_dat_i (wb_dat_i),
-    .wb_dat_o (wb_dat_o),
-    .wb_we_i  (wb_we_i),
-    .wb_stb_i (wb_stb_i),
-    .wb_cyc_i (wb_cyc_i),
-    .wb_sel_i (wb_sel_i),
-    .wb_ack_o (wb_ack_o),
-    .int_o    (int_o),
+    .wb_adr_i(wb_adr_i),
+    .wb_dat_i(wb_dat_i),
+    .wb_dat_o(wb_dat_o),
+    .wb_we_i (wb_we_i),
+    .wb_stb_i(wb_stb_i),
+    .wb_cyc_i(wb_cyc_i),
+    .wb_sel_i(wb_sel_i),
+    .wb_ack_o(wb_ack_o),
+    .int_o   (int_o),
 
     // UART  signals
-    .srx_pad_i (srx_pad_i),
-    .stx_pad_o (stx_pad_o),
-    .rts_pad_o (rts_pad_o),
-    .cts_pad_i (cts_pad_i),
-    .dtr_pad_o (dtr_pad_o),
-    .dsr_pad_i (dsr_pad_i),
-    .ri_pad_i  (ri_pad_i),
-    .dcd_pad_i (dcd_pad_i),
+    .srx_pad_i(srx_pad_i),
+    .stx_pad_o(stx_pad_o),
+    .rts_pad_o(rts_pad_o),
+    .cts_pad_i(cts_pad_i),
+    .dtr_pad_o(dtr_pad_o),
+    .dsr_pad_i(dsr_pad_i),
+    .ri_pad_i (ri_pad_i),
+    .dcd_pad_i(dcd_pad_i),
 
     // optional baudrate output
-    .baud_o (baud_o)
+    .baud_o(baud_o)
   );
 endmodule

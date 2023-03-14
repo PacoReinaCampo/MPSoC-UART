@@ -46,8 +46,7 @@ module peripheral_raminfr_wb #(
   parameter ADDR_WIDTH = 4,
   parameter DATA_WIDTH = 8,
   parameter DEPTH      = 16
-)
-  (
+) (
   input                   clk,
   input                   we,
   input  [ADDR_WIDTH-1:0] a,
@@ -61,7 +60,7 @@ module peripheral_raminfr_wb #(
   //
   // Variables
   //
-  reg   [DATA_WIDTH-1:0] ram [DEPTH-1:0];
+  reg [DATA_WIDTH-1:0] ram[DEPTH-1:0];
 
   //////////////////////////////////////////////////////////////////////////////
   //

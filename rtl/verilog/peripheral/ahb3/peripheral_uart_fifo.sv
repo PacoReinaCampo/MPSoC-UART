@@ -41,15 +41,14 @@
  */
 
 module peripheral_uart_fifo #(
-  parameter DATA_WIDTH = 32,
-  parameter BUFFER_DEPTH = 2,
+  parameter DATA_WIDTH       = 32,
+  parameter BUFFER_DEPTH     = 2,
   parameter LOG_BUFFER_DEPTH = $clog2(BUFFER_DEPTH)
-)
-  (
-  input  logic                      clk_i,
-  input  logic                      rstn_i,
+) (
+  input logic clk_i,
+  input logic rstn_i,
 
-  input  logic                      clr_i,
+  input logic clr_i,
 
   output logic [LOG_BUFFER_DEPTH:0] elements_o,
 
@@ -68,32 +67,30 @@ module peripheral_uart_fifo #(
   //
 
   // Internal data structures
-  logic [LOG_BUFFER_DEPTH-1:0]     pointer_in; // location to which we last wrote
-  logic [LOG_BUFFER_DEPTH-1:0]     pointer_out; // location from which we last sent
-  logic [LOG_BUFFER_DEPTH  :0]     elements; // number of elements in the buffer
-  logic [DATA_WIDTH      -1:0]     buffer [BUFFER_DEPTH-1:0];
+  logic   [LOG_BUFFER_DEPTH-1:0] pointer_in;  // location to which we last wrote
+  logic   [LOG_BUFFER_DEPTH-1:0] pointer_out;  // location from which we last sent
+  logic   [LOG_BUFFER_DEPTH : 0] elements;  // number of elements in the buffer
+  logic   [DATA_WIDTH      -1:0] buffer                                           [BUFFER_DEPTH-1:0];
 
-  logic                            full;
+  logic                          full;
 
-  integer                          i;
+  integer                        i;
 
   //////////////////////////////////////////////////////////////////////////////
   //
   // Module Body
   //
 
-  assign full = (elements == BUFFER_DEPTH);
+  assign full       = (elements == BUFFER_DEPTH);
   assign elements_o = elements;
 
-  always @(posedge clk_i, negedge rstn_i) begin: elements_sequential
+  always @(posedge clk_i, negedge rstn_i) begin : elements_sequential
     if (rstn_i == 1'b0) begin
       elements <= 0;
-    end
-    else begin
+    end else begin
       if (clr_i) begin
         elements <= 0;
-      end
-      else begin
+      end else begin
         // ------------------
         // Are we filling up?
         // ------------------
@@ -102,7 +99,8 @@ module peripheral_uart_fifo #(
           elements <= elements - 1;
         end
         // None out, one in
-        else if ((!valid_o || !ready_i) && valid_i && !full) begin
+        else
+        if ((!valid_o || !ready_i) && valid_i && !full) begin
           elements <= elements + 1;
         end
         // Else, either one out and one in, or none out and none in - stays unchanged
@@ -110,13 +108,12 @@ module peripheral_uart_fifo #(
     end
   end
 
-  always @(posedge clk_i, negedge rstn_i) begin: buffers_sequential
+  always @(posedge clk_i, negedge rstn_i) begin : buffers_sequential
     if (rstn_i == 1'b0) begin
-      for (i=0; i < BUFFER_DEPTH; i=i+1) begin
+      for (i = 0; i < BUFFER_DEPTH; i = i + 1) begin
         buffer[i] <= 0;
       end
-    end
-    else begin
+    end else begin
       // Update the memory
       if (valid_i && !full) begin
         buffer[pointer_in] <= data_i;
@@ -124,17 +121,15 @@ module peripheral_uart_fifo #(
     end
   end
 
-  always @(posedge clk_i, negedge rstn_i) begin: sequential
+  always @(posedge clk_i, negedge rstn_i) begin : sequential
     if (rstn_i == 1'b0) begin
       pointer_out <= 0;
       pointer_in  <= 0;
-    end
-    else begin
-      if(clr_i) begin
+    end else begin
+      if (clr_i) begin
         pointer_out <= 0;
         pointer_in  <= 0;
-      end
-      else begin
+      end else begin
         // ------------------------------------
         // Check what to do with the input side
         // ------------------------------------
@@ -142,8 +137,7 @@ module peripheral_uart_fifo #(
         if (valid_i && !full) begin
           if (pointer_in == $unsigned(BUFFER_DEPTH - 1)) begin
             pointer_in <= 0;
-          end
-          else begin
+          end else begin
             pointer_in <= pointer_in + 1;
           end
         end
@@ -156,8 +150,7 @@ module peripheral_uart_fifo #(
         if (ready_i && valid_o) begin
           if (pointer_out == $unsigned(BUFFER_DEPTH - 1)) begin
             pointer_out <= 0;
-          end
-          else begin
+          end else begin
             pointer_out <= pointer_out + 1;
           end
         end
