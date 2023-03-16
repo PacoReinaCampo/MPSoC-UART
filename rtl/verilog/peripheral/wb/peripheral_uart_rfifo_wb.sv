@@ -68,39 +68,42 @@ module peripheral_uart_rfifo_wb #(
   //
   // Variables
   //
-  wire [               7:0]                          data8_out;
+  wire [               7:0] data8_out;
 
   // flags FIFO
-  reg  [               2:0]                          fifo      [FIFO_DEPTH-1:0];
+  reg  [               2:0] fifo       [FIFO_DEPTH-1:0];
 
   // FIFO pointers
-  reg  [FIFO_POINTER_W-1:0]                          top;
-  reg  [FIFO_POINTER_W-1:0]                          bottom;
+  reg  [FIFO_POINTER_W-1:0] top;
+  reg  [FIFO_POINTER_W-1:0] bottom;
 
-  wire [FIFO_POINTER_W-1:0] top_plus_1 = top + 4'h1;
+  wire [FIFO_POINTER_W-1:0] top_plus_1;
 
-  wire [               2:0]                          word0;
-  wire [               2:0]                          word1;
-  wire [               2:0]                          word2;
-  wire [               2:0]                          word3;
-  wire [               2:0]                          word4;
-  wire [               2:0]                          word5;
-  wire [               2:0]                          word6;
-  wire [               2:0]                          word7;
+  wire [               2:0] word0;
+  wire [               2:0] word1;
+  wire [               2:0] word2;
+  wire [               2:0] word3;
+  wire [               2:0] word4;
+  wire [               2:0] word5;
+  wire [               2:0] word6;
+  wire [               2:0] word7;
 
-  wire [               2:0]                          word8;
-  wire [               2:0]                          word9;
-  wire [               2:0]                          word10;
-  wire [               2:0]                          word11;
-  wire [               2:0]                          word12;
-  wire [               2:0]                          word13;
-  wire [               2:0]                          word14;
-  wire [               2:0]                          word15;
+  wire [               2:0] word8;
+  wire [               2:0] word9;
+  wire [               2:0] word10;
+  wire [               2:0] word11;
+  wire [               2:0] word12;
+  wire [               2:0] word13;
+  wire [               2:0] word14;
+  wire [               2:0] word15;
 
   //////////////////////////////////////////////////////////////////////////////
   //
   // Module Body
   //
+
+  assign top_plus_1 = top + 4'h1;
+
   peripheral_raminfr_wb #(
     .ADDR_WIDTH(FIFO_POINTER_W),
     .DATA_WIDTH(8),

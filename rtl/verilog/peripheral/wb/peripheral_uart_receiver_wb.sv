@@ -84,37 +84,44 @@ module peripheral_uart_receiver_wb (
   //
   // Variables
   //
-  reg                                          [                    3:0]                                         rcounter16;
-  reg                                          [                    2:0]                                         rbit_counter;
-  reg                                          [                    7:0]                                         rshift;  // receiver shift register
-  reg                                                                                                            rparity;  // received parity
-  reg                                                                                                            rparity_error;
-  reg                                                                                                            rframing_error;  // framing error flag
-  reg                                                                                                            rparity_xor;
-  reg                                          [                    7:0]                                         counter_b;  // counts the 0 (low) signals
-  reg                                                                                                            rf_push_q;
+  reg  [                    3:0] rcounter16;
+  reg  [                    2:0] rbit_counter;
+  reg  [                    7:0] rshift;  // receiver shift register
+  reg                            rparity;  // received parity
+  reg                            rparity_error;
+  reg                            rframing_error;  // framing error flag
+  reg                            rparity_xor;
+  reg  [                    7:0] counter_b;  // counts the 0 (low) signals
+  reg                            rf_push_q;
 
   // RX FIFO signals
-  reg                                          [UART_FIFO_REC_WIDTH-1:0]                                         rf_data_in;
-  reg                                                                                                            rf_push;
+  reg  [UART_FIFO_REC_WIDTH-1:0] rf_data_in;
+  reg                            rf_push;
 
-  wire break_error = (counter_b == 0);
+  wire                           break_error;
 
-  wire rcounter16_eq_7 = (rcounter16 == 4'd7);
-  wire rcounter16_eq_0 = (rcounter16 == 4'd0);
+  wire                           rcounter16_eq_7;
+  wire                           rcounter16_eq_0;
 
-  wire                                         [                    3:0] rcounter16_minus_1 = rcounter16 - 3'd1;
+  wire [                    3:0] rcounter16_minus_1;
 
   // value to be set to timeout counter
-  reg                                          [                    9:0]                                         toc_value;
+  reg  [                    9:0] toc_value;
 
   // value to be set to break counter
-  wire                                         [                    7:0]                                         brc_value;
+  wire [                    7:0] brc_value;
 
   //////////////////////////////////////////////////////////////////////////////
   //
   // Module Body
   //
+
+  assign break_error        = (counter_b == 0);
+
+  assign rcounter16_eq_7    = (rcounter16 == 4'd7);
+  assign rcounter16_eq_0    = (rcounter16 == 4'd0);
+
+  assign rcounter16_minus_1 = rcounter16 - 3'd1;
 
   // RX FIFO instance
   peripheral_uart_rfifo_wb #(

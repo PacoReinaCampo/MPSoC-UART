@@ -69,15 +69,18 @@ module peripheral_uart_tfifo_wb #(
   //
 
   // FIFO pointers
-  reg  [FIFO_POINTER_W-1:0]                          top;
-  reg  [FIFO_POINTER_W-1:0]                          bottom;
+  reg  [FIFO_POINTER_W-1:0] top;
+  reg  [FIFO_POINTER_W-1:0] bottom;
 
-  wire [FIFO_POINTER_W-1:0] top_plus_1 = top + 4'd1;
+  wire [FIFO_POINTER_W-1:0] top_plus_1;
 
   //////////////////////////////////////////////////////////////////////////////
   //
   // Module Body
   //
+
+  assign top_plus_1 = top + 4'd1;
+
   peripheral_raminfr_wb #(
     .ADDR_WIDTH(FIFO_POINTER_W),
     .DATA_WIDTH(FIFO_WIDTH),
