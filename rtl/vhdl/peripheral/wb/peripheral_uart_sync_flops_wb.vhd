@@ -54,9 +54,9 @@ entity peripheral_uart_sync_flops_wb is
     INIT_VALUE : std_logic := '0'
     );
   port (
-    rst_i           : in  std_logic;  -- reset input
-    clk_i           : in  std_logic;  -- clock input
-    stage1_rst_i    : in  std_logic;  -- synchronous reset for stage 1 FF
+    rst_i           : in  std_logic;    -- reset input
+    clk_i           : in  std_logic;    -- clock input
+    stage1_rst_i    : in  std_logic;    -- synchronous reset for stage 1 FF
     stage1_clk_en_i : in  std_logic;  -- synchronous clock enable for stage 1 FF
     async_dat_i     : in  std_logic_vector(WIDTH-1 downto 0);  -- asynchronous data input
     sync_dat_o      : out std_logic_vector(WIDTH-1 downto 0)  -- synchronous data output

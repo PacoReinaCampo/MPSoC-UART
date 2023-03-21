@@ -134,7 +134,7 @@ begin
   ------------------------------------------------------------------------------
   -- Module Body
   ------------------------------------------------------------------------------
-  top_plus_1 <= std_logic_vector(unsigned(top)+to_unsigned(1,FIFO_POINTER_W));
+  top_plus_1 <= std_logic_vector(unsigned(top)+to_unsigned(1, FIFO_POINTER_W));
 
   rfifo : peripheral_raminfr_wb
     generic map (
@@ -264,7 +264,7 @@ begin
   word15 <= fifo(15);
 
   -- a 1 is returned if any of the error bits in the fifo is 1
-  error_bit <= reduce_or (word00(2 downto 0) or word01(2 downto 0) or word02(2 downto 0) or 
+  error_bit <= reduce_or (word00(2 downto 0) or word01(2 downto 0) or word02(2 downto 0) or
                           word03(2 downto 0) or word04(2 downto 0) or word05(2 downto 0) or
                           word06(2 downto 0) or word07(2 downto 0) or word08(2 downto 0) or
                           word09(2 downto 0) or word10(2 downto 0) or word11(2 downto 0) or

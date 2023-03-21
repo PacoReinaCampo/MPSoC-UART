@@ -41,24 +41,24 @@
  */
 
 module peripheral_uart_apb4 #(
-    parameter APB_ADDR_WIDTH = 12,  //APB slaves are 4KB by default
-    parameter APB_DATA_WIDTH = 32   //APB slaves are 4KB by default
+  parameter APB_ADDR_WIDTH = 12,  //APB slaves are 4KB by default
+  parameter APB_DATA_WIDTH = 32   //APB slaves are 4KB by default
 ) (
-    input  logic                      CLK,
-    input  logic                      RSTN,
-    input  logic [APB_ADDR_WIDTH-1:0] PADDR,
-    input  logic [APB_DATA_WIDTH-1:0] PWDATA,
-    input  logic                      PWRITE,
-    input  logic                      PSEL,
-    input  logic                      PENABLE,
-    output logic [APB_DATA_WIDTH-1:0] PRDATA,
-    output logic                      PREADY,
-    output logic                      PSLVERR,
+  input  logic                      CLK,
+  input  logic                      RSTN,
+  input  logic [APB_ADDR_WIDTH-1:0] PADDR,
+  input  logic [APB_DATA_WIDTH-1:0] PWDATA,
+  input  logic                      PWRITE,
+  input  logic                      PSEL,
+  input  logic                      PENABLE,
+  output logic [APB_DATA_WIDTH-1:0] PRDATA,
+  output logic                      PREADY,
+  output logic                      PSLVERR,
 
-    input  logic rx_i,  // Receiver input
-    output logic tx_o,  // Transmitter output
+  input  logic rx_i,  // Receiver input
+  output logic tx_o,  // Transmitter output
 
-    output logic event_o  // interrupt/event output
+  output logic event_o  // interrupt/event output
 );
 
   //////////////////////////////////////////////////////////////////////////////
@@ -118,98 +118,98 @@ module peripheral_uart_apb4 #(
 
   // TODO: check that stop bits are really not necessary here
   peripheral_uart_rx peripheral_uart_rx_i (
-      .clk_i          (CLK),
-      .rstn_i         (RSTN),
-      .rx_i           (rx_i),
-      .cfg_en_i       (1'b1),
-      .cfg_div_i      ({regs_q[DLM+'d8], regs_q[DLL+'d8]}),
-      .cfg_parity_en_i(regs_q[LCR][3]),
-      .cfg_bits_i     (regs_q[LCR][1:0]),
-      .busy_o         (),
-      .err_o          (parity_error),
-      .err_clr_i      (1'b1),
-      .rx_data_o      (rx_data),
-      .rx_valid_o     (rx_valid),
-      .rx_ready_i     (rx_ready)
+    .clk_i          (CLK),
+    .rstn_i         (RSTN),
+    .rx_i           (rx_i),
+    .cfg_en_i       (1'b1),
+    .cfg_div_i      ({regs_q[DLM+'d8], regs_q[DLL+'d8]}),
+    .cfg_parity_en_i(regs_q[LCR][3]),
+    .cfg_bits_i     (regs_q[LCR][1:0]),
+    .busy_o         (),
+    .err_o          (parity_error),
+    .err_clr_i      (1'b1),
+    .rx_data_o      (rx_data),
+    .rx_valid_o     (rx_valid),
+    .rx_ready_i     (rx_ready)
   );
 
   peripheral_uart_tx peripheral_uart_tx_i (
-      .clk_i          (CLK),
-      .rstn_i         (RSTN),
-      .tx_o           (tx_o),
-      .busy_o         (),
-      .cfg_en_i       (1'b1),
-      .cfg_div_i      ({regs_q[DLM+'d8], regs_q[DLL+'d8]}),
-      .cfg_parity_en_i(regs_q[LCR][3]),
-      .cfg_bits_i     (regs_q[LCR][1:0]),
-      .cfg_stop_bits_i(regs_q[LCR][2]),
+    .clk_i          (CLK),
+    .rstn_i         (RSTN),
+    .tx_o           (tx_o),
+    .busy_o         (),
+    .cfg_en_i       (1'b1),
+    .cfg_div_i      ({regs_q[DLM+'d8], regs_q[DLL+'d8]}),
+    .cfg_parity_en_i(regs_q[LCR][3]),
+    .cfg_bits_i     (regs_q[LCR][1:0]),
+    .cfg_stop_bits_i(regs_q[LCR][2]),
 
-      .tx_data_i (tx_data),
-      .tx_valid_i(tx_valid),
-      .tx_ready_o(tx_ready)
+    .tx_data_i (tx_data),
+    .tx_valid_i(tx_valid),
+    .tx_ready_o(tx_ready)
   );
 
   peripheral_uart_fifo #(
-      .DATA_WIDTH  (9),
-      .BUFFER_DEPTH(RX_FIFO_DEPTH)
+    .DATA_WIDTH  (9),
+    .BUFFER_DEPTH(RX_FIFO_DEPTH)
   ) uart_rx_fifo_i (
-      .clk_i (CLK),
-      .rstn_i(RSTN),
+    .clk_i (CLK),
+    .rstn_i(RSTN),
 
-      .clr_i(rx_fifo_clr_q),
+    .clr_i(rx_fifo_clr_q),
 
-      .elements_o(rx_elements),
+    .elements_o(rx_elements),
 
-      .data_o (fifo_rx_data),
-      .valid_o(fifo_rx_valid),
-      .ready_i(fifo_rx_ready),
+    .data_o (fifo_rx_data),
+    .valid_o(fifo_rx_valid),
+    .ready_i(fifo_rx_ready),
 
-      .valid_i(rx_valid),
-      .data_i ({parity_error, rx_data}),
-      .ready_o(rx_ready)
+    .valid_i(rx_valid),
+    .data_i ({parity_error, rx_data}),
+    .ready_o(rx_ready)
   );
 
   peripheral_uart_fifo #(
-      .DATA_WIDTH  (8),
-      .BUFFER_DEPTH(TX_FIFO_DEPTH)
+    .DATA_WIDTH  (8),
+    .BUFFER_DEPTH(TX_FIFO_DEPTH)
   ) uart_tx_fifo_i (
-      .clk_i (CLK),
-      .rstn_i(RSTN),
+    .clk_i (CLK),
+    .rstn_i(RSTN),
 
-      .clr_i(tx_fifo_clr_q),
+    .clr_i(tx_fifo_clr_q),
 
-      .elements_o(tx_elements),
+    .elements_o(tx_elements),
 
-      .data_o (tx_data),
-      .valid_o(tx_valid),
-      .ready_i(tx_ready),
+    .data_o (tx_data),
+    .valid_o(tx_valid),
+    .ready_i(tx_ready),
 
-      .valid_i(fifo_tx_valid),
-      .data_i (fifo_tx_data),
-      // not needed since we are getting the status via the fifo population
-      .ready_o()
+    .valid_i(fifo_tx_valid),
+    .data_i (fifo_tx_data),
+    // not needed since we are getting the status via the fifo population
+    .ready_o()
   );
 
   peripheral_uart_interrupt #(
-      .TX_FIFO_DEPTH(TX_FIFO_DEPTH),
-      .RX_FIFO_DEPTH(RX_FIFO_DEPTH)
+    .TX_FIFO_DEPTH(TX_FIFO_DEPTH),
+    .RX_FIFO_DEPTH(RX_FIFO_DEPTH)
   ) peripheral_uart_interrupt_i (
-      .clk_i (CLK),
-      .rstn_i(RSTN),
+    .clk_i (CLK),
+    .rstn_i(RSTN),
 
-      .IER_i(regs_q[IER][2:0]),  // interrupt enable register
-      .RDA_i(regs_n[LSR][5]),    // receiver data available
-      .CTI_i(1'b0),              // character timeout indication
+    .IER_i(regs_q[IER][2:0]),  // interrupt enable register
+    .RDA_i(regs_n[LSR][5]),    // receiver data available
+    .CTI_i(1'b0),              // character timeout indication
 
-      .error_i        (regs_n[LSR][2]),
-      .rx_elements_i  (rx_elements),
-      .tx_elements_i  (tx_elements),
-      .trigger_level_i(trigger_level_q),
+    .error_i        (regs_n[LSR][2]),
+    .rx_elements_i  (rx_elements),
+    .tx_elements_i  (tx_elements),
+    .trigger_level_i(trigger_level_q),
 
-      .clr_int_i(clr_int),  // one hot
+    .clr_int_i(clr_int),  // one hot
 
-      .interrupt_o(event_o),
-      .IIR_o      (IIR_o)
+    .interrupt_o(event_o),
+    .IIR_o      (IIR_o)
   );
 
   // UART Registers
@@ -245,7 +245,7 @@ module peripheral_uart_apb4 #(
             regs_n[IER] = PWDATA[7:0];
           end
         end
-        LCR: regs_n[LCR] = PWDATA[7:0];
+        LCR:     regs_n[LCR] = PWDATA[7:0];
         FCR: begin  // write only register, fifo control register
           rx_fifo_clr_n   = PWDATA[1];
           tx_fifo_clr_n   = PWDATA[2];
@@ -269,16 +269,17 @@ module peripheral_uart_apb4 #(
             PRDATA = {24'b0, regs_q[DLL+'d8]};
           end else begin
             fifo_rx_ready = 1'b1;
-            PRDATA = {24'b0, fifo_rx_data[7:0]};
-            clr_int = 4'b1000;  // clear Received Data Available interrupt
+            PRDATA        = {24'b0, fifo_rx_data[7:0]};
+            clr_int       = 4'b1000;  // clear Received Data Available interrupt
           end
         end
         LSR: begin  // Line Status Register
           PRDATA  = {24'b0, regs_q[LSR]};
           clr_int = 4'b1100;  // clear parrity interrupt error
         end
-        LCR:  // Line Control Register
-        PRDATA = {24'b0, regs_q[LCR]};
+        LCR: begin  // Line Control Register
+          PRDATA = {24'b0, regs_q[LCR]};
+        end
         IER: begin  // either IER or DLM
           if (regs_q[LCR][7]) begin  // Divisor Latch Access Bit (DLAB)
             PRDATA = {24'b0, regs_q[DLM+'d8]};
@@ -321,6 +322,6 @@ module peripheral_uart_apb4 #(
   assign register_adr = {PADDR[2:0]};
   // APB logic: we are always ready to capture the data into our regs
   // not supporting transfare failure
-  assign PREADY = 1'b1;
-  assign PSLVERR = 1'b0;
+  assign PREADY       = 1'b1;
+  assign PSLVERR      = 1'b0;
 endmodule

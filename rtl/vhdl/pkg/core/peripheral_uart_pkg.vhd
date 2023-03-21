@@ -89,12 +89,12 @@ package peripheral_uart_pkg is
   constant UART_FC_14 : std_logic_vector(1 downto 0) := "11";
 
   -- Line Control register bits
-  constant UART_LC_SB : integer := 2;     -- stop bits
-  constant UART_LC_PE : integer := 3;     -- parity enable
-  constant UART_LC_EP : integer := 4;     -- even parity
-  constant UART_LC_SP : integer := 5;     -- stick parity
-  constant UART_LC_BC : integer := 6;     -- Break control
-  constant UART_LC_DL : integer := 7;     -- Divisor Latch access bit
+  constant UART_LC_SB : integer := 2;   -- stop bits
+  constant UART_LC_PE : integer := 3;   -- parity enable
+  constant UART_LC_EP : integer := 4;   -- even parity
+  constant UART_LC_SP : integer := 5;   -- stick parity
+  constant UART_LC_BC : integer := 6;   -- Break control
+  constant UART_LC_DL : integer := 7;   -- Divisor Latch access bit
 
   -- Modem Control register bits
   constant UART_MC_DTR  : integer := 0;

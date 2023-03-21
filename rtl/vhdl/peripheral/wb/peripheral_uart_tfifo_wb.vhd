@@ -143,13 +143,13 @@ begin
           when "10" =>
             -- overrun condition
             if (unsigned(count_o) < to_unsigned(FIFO_DEPTH, FIFO_COUNTER_W)) then
-              top   <= top_plus_1;
+              top     <= top_plus_1;
               count_o <= std_logic_vector(unsigned(count_o)+"00001");
             end if;
           when "01" =>
             if (unsigned(count_o) > to_unsigned(0, FIFO_COUNTER_W)) then
-              bottom <= std_logic_vector(unsigned(bottom)+"0001");
-              count_o  <= std_logic_vector(unsigned(count_o)-"00001");
+              bottom  <= std_logic_vector(unsigned(bottom)+"0001");
+              count_o <= std_logic_vector(unsigned(count_o)-"00001");
             end if;
           when "11" =>
             bottom <= std_logic_vector(unsigned(bottom)+"0001");

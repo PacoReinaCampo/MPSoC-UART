@@ -52,8 +52,8 @@ use work.peripheral_ahb3_pkg.all;
 
 entity peripheral_uart_apb4 is
   generic (
-    APB_ADDR_WIDTH : integer := 12;  --APB slaves are 4KB by default
-    APB_DATA_WIDTH : integer := 32   --APB slaves are 4KB by default
+    APB_ADDR_WIDTH : integer := 12;     --APB slaves are 4KB by default
+    APB_DATA_WIDTH : integer := 32      --APB slaves are 4KB by default
     );
   port (
     CLK     : in  std_logic;
@@ -67,10 +67,10 @@ entity peripheral_uart_apb4 is
     PREADY  : out std_logic;
     PSLVERR : out std_logic;
 
-    rx_i : in  std_logic;  -- Receiver input
-    tx_o : out std_logic;  -- Transmitter output
+    rx_i : in  std_logic;               -- Receiver input
+    tx_o : out std_logic;               -- Transmitter output
 
-    event_o : out std_logic  -- interrupt/event output
+    event_o : out std_logic             -- interrupt/event output
     );
 end peripheral_uart_apb4;
 
@@ -373,7 +373,7 @@ begin
     -- parity error on receiving part has occured
     regs_n(LSR)(2)  <= fifo_rx_data(8);  -- parity error is detected when element is retrieved
     -- tx status register
-    regs_n(LSR)(5)  <= not reduce_or(tx_elements);               -- fifo is empty
+    regs_n(LSR)(5)  <= not reduce_or(tx_elements);  -- fifo is empty
     regs_n(LSR)(6)  <= tx_ready and not reduce_or(tx_elements);  -- shift register and fifo are empty
     if (PSEL = '1' and PENABLE = '1' and PWRITE = '1') then
       case ((register_adr)) is
@@ -420,30 +420,30 @@ begin
           -- either RBR or DLL
           -- Divisor Latch Access Bit (DLAB)
           if (regs_q(LCR)(7) = '1') then
-            PRDATA <= (std_logic_vector(to_unsigned(0,APB_DATA_WIDTH-8)) & regs_q(DLL+8));
+            PRDATA <= (std_logic_vector(to_unsigned(0, APB_DATA_WIDTH-8)) & regs_q(DLL+8));
           else
             fifo_rx_ready <= '1';
-            PRDATA        <= (std_logic_vector(to_unsigned(0,APB_DATA_WIDTH-8)) & fifo_rx_data(7 downto 0));
+            PRDATA        <= (std_logic_vector(to_unsigned(0, APB_DATA_WIDTH-8)) & fifo_rx_data(7 downto 0));
             clr_int       <= "1000";  -- clear Received Data Available interrupt
           end if;
         when HLSR =>
           -- Line Status Register
-          PRDATA  <= (std_logic_vector(to_unsigned(0,APB_DATA_WIDTH-8)) & regs_q(LSR));
+          PRDATA  <= (std_logic_vector(to_unsigned(0, APB_DATA_WIDTH-8)) & regs_q(LSR));
           clr_int <= "1100";            -- clear parrity interrupt error
         when HLCR =>
           -- Line Control Register
-          PRDATA <= (std_logic_vector(to_unsigned(0,APB_DATA_WIDTH-8)) & regs_q(LCR));
+          PRDATA <= (std_logic_vector(to_unsigned(0, APB_DATA_WIDTH-8)) & regs_q(LCR));
         when HIER =>
           -- either IER or DLM
           -- Divisor Latch Access Bit (DLAB)
           if (regs_q(LCR)(7) = '1') then
-            PRDATA <= (std_logic_vector(to_unsigned(0,APB_DATA_WIDTH-8)) & regs_q(DLM+8));
+            PRDATA <= (std_logic_vector(to_unsigned(0, APB_DATA_WIDTH-8)) & regs_q(DLM+8));
           else
-            PRDATA <= (std_logic_vector(to_unsigned(0,APB_DATA_WIDTH-8)) & regs_q(IER));
+            PRDATA <= (std_logic_vector(to_unsigned(0, APB_DATA_WIDTH-8)) & regs_q(IER));
           end if;
         when HIIR =>
           -- interrupt identification register read only
-          PRDATA  <= (std_logic_vector(to_unsigned(0,APB_DATA_WIDTH-8)) & "0110" & IIR_o);
+          PRDATA  <= (std_logic_vector(to_unsigned(0, APB_DATA_WIDTH-8)) & "0110" & IIR_o);
           clr_int <= "0100";  -- clear Transmitter Holding Register Empty
         when others =>
           null;

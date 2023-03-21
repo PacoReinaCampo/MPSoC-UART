@@ -64,10 +64,10 @@ architecture rtl of peripheral_uart_testbench is
 
   component peripheral_uart_bb
     port (
-      mclk     : in  std_logic;
-      puc_rst  : in  std_logic;
+      mclk    : in std_logic;
+      puc_rst : in std_logic;
 
-      smclk_en : in  std_logic;
+      smclk_en : in std_logic;
 
       uart_rxd : in  std_logic;
       uart_txd : out std_logic;
@@ -80,14 +80,14 @@ architecture rtl of peripheral_uart_testbench is
       per_we   : in  std_logic_vector (1 downto 0);
       per_addr : in  std_logic_vector (13 downto 0);
       per_din  : in  std_logic_vector (15 downto 0)
-    );
+      );
   end component;
 
   ------------------------------------------------------------------------------
   -- Variables
   ------------------------------------------------------------------------------
-  signal mclk     : std_logic;
-  signal puc_rst  : std_logic;
+  signal mclk    : std_logic;
+  signal puc_rst : std_logic;
 
   signal smclk_en : std_logic;
 
@@ -102,7 +102,7 @@ architecture rtl of peripheral_uart_testbench is
   signal per_we   : std_logic_vector (1 downto 0);
   signal per_addr : std_logic_vector (13 downto 0);
   signal per_din  : std_logic_vector (15 downto 0);
-	
+
 begin
 
   ------------------------------------------------------------------------------
@@ -112,8 +112,8 @@ begin
   --DUT BB
   uart_bb : peripheral_uart_bb
     port map (
-      mclk     => mclk,
-      puc_rst  => puc_rst,
+      mclk    => mclk,
+      puc_rst => puc_rst,
 
       smclk_en => smclk_en,
 
@@ -128,5 +128,5 @@ begin
       per_we   => per_we,
       per_addr => per_addr,
       per_din  => per_din
-    );
+      );
 end rtl;

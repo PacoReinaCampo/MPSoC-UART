@@ -210,7 +210,7 @@ begin
             end if;
           when sr_rec_start =>
             rf_push <= '0';
-            if (rcounter16_eq_7 = '1') then   -- check the pulse
+            if (rcounter16_eq_7 = '1') then    -- check the pulse
               if (srx_pad_i = '1') then    -- no start bit
                 rstate_o <= sr_idle;
               else                      -- start bit detected
@@ -244,7 +244,7 @@ begin
             if (rcounter16_eq_0 = '1') then
               rstate_o <= sr_end_bit;
             end if;
-            if (rcounter16_eq_7 = '1') then   -- read the bit
+            if (rcounter16_eq_7 = '1') then    -- read the bit
               case ((lcr(1 downto 0))) is  --`UART_LC_BITS*/            -- number of bits in a word
                 when "00" =>
                   rshift(4 downto 0) <= (srx_pad_i & rshift(4 downto 1));

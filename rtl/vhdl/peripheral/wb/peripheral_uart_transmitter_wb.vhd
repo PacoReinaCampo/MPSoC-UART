@@ -249,7 +249,7 @@ begin
             else
               counter <= std_logic_vector(unsigned(counter)-"00001");
             end if;
-            stx_o_tmp <= bit_out;       -- set output pin
+            stx_o_tmp <= bit_out;                 -- set output pin
           when s_send_parity =>
             if (reduce_nor(counter) = '1') then
               counter <= "01111";
@@ -284,7 +284,7 @@ begin
             -- should never get here
             tstate_o <= s_idle;
         end case;
-      else                              -- end if enable
+      else                                        -- end if enable
         -- tf_pop must be 1 cycle width
         tf_pop <= '0';
       end if;

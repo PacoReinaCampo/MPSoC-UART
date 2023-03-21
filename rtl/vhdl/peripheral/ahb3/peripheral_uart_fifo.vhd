@@ -55,7 +55,7 @@ entity peripheral_uart_fifo is
     DATA_WIDTH       : integer := 32;
     BUFFER_DEPTH     : integer := 2;
     LOG_BUFFER_DEPTH : integer := 4
-  );
+    );
   port (
     clk_i  : in std_logic;
     rstn_i : in std_logic;

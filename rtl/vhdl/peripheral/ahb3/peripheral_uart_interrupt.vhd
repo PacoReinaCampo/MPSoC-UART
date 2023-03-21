@@ -51,7 +51,7 @@ entity peripheral_uart_interrupt is
   generic (
     TX_FIFO_DEPTH : integer := 32;
     RX_FIFO_DEPTH : integer := 32
-  );
+    );
   port (
     clk_i  : in std_logic;
     rstn_i : in std_logic;

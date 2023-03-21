@@ -145,8 +145,8 @@ architecture rtl of peripheral_uart_wb is
   signal wb_dat8_i  : std_logic_vector(7 downto 0);  -- 8-bit internal data input
   signal wb_dat8_o  : std_logic_vector(7 downto 0);  -- 8-bit internal data output output
   signal wb_adr_int : std_logic_vector(2 downto 0);
-  signal we_o       : std_logic;  -- Write enable for registers
-  signal re_o       : std_logic;  -- Read enable for registers
+  signal we_o       : std_logic;        -- Write enable for registers
+  signal re_o       : std_logic;        -- Read enable for registers
 
   signal modem_inputs : std_logic_vector(3 downto 0);
 
@@ -182,16 +182,16 @@ begin
       SIM => SIM
       )
     port map (
-      clk          => wb_clk_i,
-      wb_rst_i     => wb_rst_i,
-      wb_addr_i    => wb_adr_int,
-      wb_dat_i     => wb_dat8_i,
-      wb_dat_o     => wb_dat8_o,
-      wb_we_i      => we_o,
-      wb_re_i      => re_o,
+      clk       => wb_clk_i,
+      wb_rst_i  => wb_rst_i,
+      wb_addr_i => wb_adr_int,
+      wb_dat_i  => wb_dat8_i,
+      wb_dat_o  => wb_dat8_o,
+      wb_we_i   => we_o,
+      wb_re_i   => re_o,
 
-      stx_pad_o    => stx_pad_o,
-      srx_pad_i    => srx_pad_i,
+      stx_pad_o => stx_pad_o,
+      srx_pad_i => srx_pad_i,
 
       modem_inputs => modem_inputs,
       rts_pad_o    => rts_pad_o,

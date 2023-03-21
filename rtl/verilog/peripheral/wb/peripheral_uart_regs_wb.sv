@@ -373,8 +373,9 @@ module peripheral_wb_uart_regs #(
 
   always @(posedge clk or posedge wb_rst_i) begin
     if (wb_rst_i) lsr0r <= 0;
-    else lsr0r <= (rf_count==1 && rf_pop && !rf_push_pulse || rx_reset) ? 1'b0 : // deassert condition
-    lsr0r || (lsr0 && ~lsr0_d); // set on rise of lsr0 and keep asserted until deasserted 
+    else
+      lsr0r <= (rf_count == 1 && rf_pop && !rf_push_pulse || rx_reset) ? 1'b0 :  // deassert condition
+      lsr0r || (lsr0 && ~lsr0_d);  // set on rise of lsr0 and keep asserted until deasserted 
   end
 
   // lsr bit 1 (receiver overrun)
@@ -611,8 +612,8 @@ module peripheral_wb_uart_regs #(
     else if (rls_int_pnd) begin  // interrupt is pending
       iir[3:1]        <= UART_II_RLS;  // set identification register to correct value
       iir[UART_II_IP] <= 1'b0;  // and clear the IIR bit 0 (interrupt pending)
-    end else // the sequence of conditions determines priority of interrupt identification
-      if (rda_int) begin
+    end else  // the sequence of conditions determines priority of interrupt identification
+    if (rda_int) begin
       iir[3:1]        <= UART_II_RDA;
       iir[UART_II_IP] <= 1'b0;
     end else if (ti_int_pnd) begin

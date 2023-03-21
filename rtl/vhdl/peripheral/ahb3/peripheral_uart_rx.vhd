@@ -164,9 +164,9 @@ begin
           when "00" =>
             reg_data_next <= ("000" & reg_rx_sync(2) & reg_data(4 downto 1));
           when "01" =>
-            reg_data_next <= ("00"  & reg_rx_sync(2) & reg_data(5 downto 1));
+            reg_data_next <= ("00" & reg_rx_sync(2) & reg_data(5 downto 1));
           when "10" =>
-            reg_data_next <= ('0'   & reg_rx_sync(2) & reg_data(6 downto 1));
+            reg_data_next <= ('0' & reg_rx_sync(2) & reg_data(6 downto 1));
           when "11" =>
             reg_data_next <= (reg_rx_sync(2) & reg_data(7 downto 1));
           when others =>

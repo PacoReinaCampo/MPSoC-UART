@@ -169,8 +169,8 @@ architecture rtl of peripheral_uart_regs_wb is
   signal rx_reset      : std_logic;
   signal tx_reset      : std_logic;
 
-  signal dlab     : std_logic;  -- divisor latch access bit
-  signal loopback : std_logic;  -- loopback bit (MCR bit 4)
+  signal dlab     : std_logic;          -- divisor latch access bit
+  signal loopback : std_logic;          -- loopback bit (MCR bit 4)
 
   signal cts_pad_i, dsr_pad_i, ri_pad_i, dcd_pad_i : std_logic;  -- modem status bits
 
@@ -179,18 +179,18 @@ architecture rtl of peripheral_uart_regs_wb is
 
   -- LSR bits wires and regs
   signal lsr      : std_logic_vector(7 downto 0);
-  signal lsr_mask : std_logic;  -- lsr_mask
+  signal lsr_mask : std_logic;          -- lsr_mask
 
   signal lsr0, lsr1, lsr2, lsr3, lsr4, lsr5, lsr6, lsr7 : std_logic;
 
   signal lsr0r, lsr1r, lsr2r, lsr3r, lsr4r, lsr5r, lsr6r, lsr7r : std_logic;
 
   -- Interrupt signals
-  signal rls_int  : std_logic;  -- receiver line status interrupt
-  signal rda_int  : std_logic;  -- receiver data available interrupt
-  signal ti_int   : std_logic;  -- timeout indicator interrupt
+  signal rls_int  : std_logic;          -- receiver line status interrupt
+  signal rda_int  : std_logic;          -- receiver data available interrupt
+  signal ti_int   : std_logic;          -- timeout indicator interrupt
   signal thre_int : std_logic;  -- transmitter holding register empty interrupt
-  signal ms_int   : std_logic;  -- modem status interrupt
+  signal ms_int   : std_logic;          -- modem status interrupt
 
   -- FIFO signals
   signal tf_push       : std_logic;

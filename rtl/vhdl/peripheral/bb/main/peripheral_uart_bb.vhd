@@ -99,7 +99,7 @@ architecture rtl of peripheral_uart_bb is
   constant DATA_RXC : integer := to_integer(unsigned(DATA_RXB));
 
   --0.4.        Register one-hot decoder utilities
-  constant DEC_SZ_U   : integer                                   := 2**DEC_WD_U;
+  constant DEC_SZ_U   : integer                                  := 2**DEC_WD_U;
   constant BASE_REG_U : std_logic_vector (DEC_SZ_U - 1 downto 0) := std_logic_vector(to_unsigned(1, DEC_SZ_U));
 
   --0.5.        Register one-hot decoder
@@ -260,17 +260,17 @@ begin
 
     --1.3.      Register address decode
     reg_dec_u <= (CTRL_D and (0 to DEC_SZ_U - 1 => to_stdlogic(reg_addr_u =
-                                                             std_logic_vector(unsigned(CTRLB) srl 1)))) or
+                                                               std_logic_vector(unsigned(CTRLB) srl 1)))) or
                  (STATUS_D and (0 to DEC_SZ_U - 1 => to_stdlogic(reg_addr_u =
-                                                               std_logic_vector(unsigned(STATUSB) srl 1)))) or
+                                                                 std_logic_vector(unsigned(STATUSB) srl 1)))) or
                  (BAUD_LO_D and (0 to DEC_SZ_U - 1 => to_stdlogic(reg_addr_u =
-                                                                std_logic_vector(unsigned(BAUD_LOB) srl 1)))) or
+                                                                  std_logic_vector(unsigned(BAUD_LOB) srl 1)))) or
                  (BAUD_HI_D and (0 to DEC_SZ_U - 1 => to_stdlogic(reg_addr_u =
-                                                                std_logic_vector(unsigned(BAUD_HIB) srl 1)))) or
+                                                                  std_logic_vector(unsigned(BAUD_HIB) srl 1)))) or
                  (DATA_TX_D and (0 to DEC_SZ_U - 1 => to_stdlogic(reg_addr_u =
-                                                                std_logic_vector(unsigned(DATA_TXB) srl 1)))) or
+                                                                  std_logic_vector(unsigned(DATA_TXB) srl 1)))) or
                  (DATA_RX_D and (0 to DEC_SZ_U - 1 => to_stdlogic(reg_addr_u =
-                                                                std_logic_vector(unsigned(DATA_RXB) srl 1))));
+                                                                  std_logic_vector(unsigned(DATA_RXB) srl 1))));
 
     --1.4.      Read/Write probes
     reg_hi_write_u <= per_we(0) and reg_sel_u;
@@ -433,22 +433,22 @@ begin
   begin
     --3.1.      Data output mux
     ctrl_rd <= std_logic_vector((X"00" & (unsigned(ctrl) and (0 to 7 => reg_rd_u(CTRLC))))
-                                 sll to_integer((0 to 3 => CTRLB (0)) and to_unsigned(8, 4)));
+                                sll to_integer((0 to 3               => CTRLB (0)) and to_unsigned(8, 4)));
 
     status_rd <= std_logic_vector((X"00" & (unsigned(status_u) and (0 to 7 => reg_rd_u(STATUSC))))
-                                   sll to_integer((0 to 3 => STATUSB (0)) and to_unsigned(8, 4)));
+                                  sll to_integer((0 to 3                   => STATUSB (0)) and to_unsigned(8, 4)));
 
     baud_lo_rd <= std_logic_vector((X"00" & (unsigned(baud_lo) and (0 to 7 => reg_rd_u(BAUD_LOC))))
-                                    sll to_integer((0 to 3 => BAUD_LOB (0)) and to_unsigned(8, 4)));
+                                   sll to_integer((0 to 3                  => BAUD_LOB (0)) and to_unsigned(8, 4)));
 
     baud_hi_rd <= std_logic_vector((X"00" & (unsigned(baud_hi) and (0 to 7 => reg_rd_u(BAUD_HIC))))
-                                    sll to_integer((0 to 3 => BAUD_HIB (0)) and to_unsigned(8, 4)));
+                                   sll to_integer((0 to 3                  => BAUD_HIB (0)) and to_unsigned(8, 4)));
 
     data_tx_rd <= std_logic_vector((X"00" & (unsigned(data_tx) and (0 to 7 => reg_rd_u(DATA_TXC))))
-                                    sll to_integer((0 to 3 => DATA_TXB (0)) and to_unsigned(8, 4)));
+                                   sll to_integer((0 to 3                  => DATA_TXB (0)) and to_unsigned(8, 4)));
 
     data_rx_rd <= std_logic_vector((X"00" & (unsigned(data_rx) and (0 to 7 => reg_rd_u(DATA_RXC))))
-                                    sll to_integer((0 to 3 => DATA_RXB (0)) and to_unsigned(8, 4)));
+                                   sll to_integer((0 to 3                  => DATA_RXB (0)) and to_unsigned(8, 4)));
 
 
     per_dout <= ctrl_rd or status_rd or baud_lo_rd or baud_hi_rd or data_tx_rd or data_rx_rd;
@@ -488,8 +488,8 @@ begin
     zero_buf_u_1 <= '0' & rxd_buf_u(1);
 
     rxd_maj_cnt <= std_logic_vector(unsigned(zero_sync) +
-                                     unsigned(zero_buf_u_0) +
-                                     unsigned(zero_buf_u_1));
+                                    unsigned(zero_buf_u_0) +
+                                    unsigned(zero_buf_u_1));
 
     rxd_maj_nxt_u <= to_stdlogic(rxd_maj_cnt >= "10");
 

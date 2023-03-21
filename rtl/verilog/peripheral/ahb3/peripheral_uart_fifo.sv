@@ -97,10 +97,8 @@ module peripheral_uart_fifo #(
         // One out, none in
         if (ready_i && valid_o && (!valid_i || full)) begin
           elements <= elements - 1;
-        end
-        // None out, one in
-        else
-        if ((!valid_o || !ready_i) && valid_i && !full) begin
+        end  // None out, one in
+        else if ((!valid_o || !ready_i) && valid_i && !full) begin
           elements <= elements + 1;
         end
         // Else, either one out and one in, or none out and none in - stays unchanged

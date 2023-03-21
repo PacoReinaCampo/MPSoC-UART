@@ -99,8 +99,8 @@ architecture rtl of peripheral_uart_testbench is
 
   component peripheral_uart_apb4
     generic (
-      APB_ADDR_WIDTH : integer := 12;  --APB slaves are 4KB by default
-      APB_DATA_WIDTH : integer := 32  --APB slaves are 4KB by default
+      APB_ADDR_WIDTH : integer := 12;   --APB slaves are 4KB by default
+      APB_DATA_WIDTH : integer := 32    --APB slaves are 4KB by default
       );
     port (
       CLK     : in  std_logic;
@@ -114,10 +114,10 @@ architecture rtl of peripheral_uart_testbench is
       PREADY  : out std_logic;
       PSLVERR : out std_logic;
 
-      rx_i : in  std_logic;  -- Receiver input
-      tx_o : out std_logic;  -- Transmitter output
+      rx_i : in  std_logic;             -- Receiver input
+      tx_o : out std_logic;             -- Transmitter output
 
-      event_o : out std_logic  -- interrupt/event output
+      event_o : out std_logic           -- interrupt/event output
       );
   end component;
 

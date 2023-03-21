@@ -109,20 +109,14 @@ module peripheral_uart_interrupt #(
     // Receiver line status interrupt on: Overrun error, parity error, framing error or break interrupt
     if (IER_i[2] & error_i) begin
       iir_n = 4'b1100;
-    end
-    // Received data available or trigger level reached in FIFO mode
-    else
-    if (IER_i[0] & (trigger_level_reached | RDA_i)) begin
+    end  // Received data available or trigger level reached in FIFO mode
+    else if (IER_i[0] & (trigger_level_reached | RDA_i)) begin
       iir_n = 4'b1000;
-    end
-    // Character timeout indication
-    else
-    if (IER_i[0] & CTI_i) begin
+    end  // Character timeout indication
+    else if (IER_i[0] & CTI_i) begin
       iir_n = 4'b1000;
-    end
-    // Transmitter holding register empty
-    else
-    if (IER_i[1] & tx_elements_i == 0) begin
+    end  // Transmitter holding register empty
+    else if (IER_i[1] & tx_elements_i == 0) begin
       iir_n = 4'b0100;
     end
   end
