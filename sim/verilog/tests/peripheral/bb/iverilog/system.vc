@@ -42,9 +42,9 @@
 ##                                                                               ##
 ###################################################################################
 
-+incdir+../../../../../../rtl/verilog/pkg/peripheral/ahb3
++incdir+../../../../../../rtl/verilog/code/pkg/peripheral/ahb3
 
-../../../../../../rtl/verilog/peripheral/bb/fuse/peripheral_sync_cell.sv
-../../../../../../rtl/verilog/peripheral/bb/main/peripheral_uart_bb.sv
+../../../../../../rtl/verilog/code/peripheral/bb/fuse/peripheral_sync_cell.sv
+../../../../../../rtl/verilog/code/peripheral/bb/main/peripheral_uart_bb.sv
 
-../../../../../../bench/verilog/tests/peripheral/bb/peripheral_uart_testbench.sv
+../../../../../../bench/verilog/code/tests/peripheral/bb/peripheral_uart_testbench.sv

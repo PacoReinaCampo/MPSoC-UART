@@ -42,9 +42,9 @@
 ##                                                                               ##
 ###################################################################################
 
-../../../../../../rtl/vhdl/pkg/peripheral/bb/vhdl_pkg.vhd
+../../../../../../rtl/vhdl/code/pkg/peripheral/bb/vhdl_pkg.vhd
 
-../../../../../../rtl/vhdl/peripheral/bb/fuse/peripheral_sync_cell.vhd
-../../../../../../rtl/vhdl/peripheral/bb/main/peripheral_uart_bb.vhd
+../../../../../../rtl/vhdl/code/peripheral/bb/fuse/peripheral_sync_cell.vhd
+../../../../../../rtl/vhdl/code/peripheral/bb/main/peripheral_uart_bb.vhd
 
-../../../../../../bench/vhdl/tests/peripheral/bb/peripheral_uart_testbench.vhd
+../../../../../../bench/vhdl/code/tests/peripheral/bb/peripheral_uart_testbench.vhd

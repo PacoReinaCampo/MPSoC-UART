@@ -42,11 +42,11 @@
 //                                                                               //
 ///////////////////////////////////////////////////////////////////////////////////
 
-sv work ../../../../../../rtl/verilog/ahb3/core/mpsoc_bridge_apb2ahb.sv
-sv work ../../../../../../rtl/verilog/ahb3/core/mpsoc_apb4_uart.sv
-sv work ../../../../../../rtl/verilog/ahb3/core/mpsoc_uart_fifo.sv
-sv work ../../../../../../rtl/verilog/ahb3/core/mpsoc_uart_interrupt.sv
-sv work ../../../../../../rtl/verilog/ahb3/core/mpsoc_uart_rx.sv
-sv work ../../../../../../rtl/verilog/ahb3/core/mpsoc_uart_tx.sv
+sv work ../../../../../../rtl/verilog/code/ahb3/core/mpsoc_bridge_apb2ahb.sv
+sv work ../../../../../../rtl/verilog/code/ahb3/core/mpsoc_apb4_uart.sv
+sv work ../../../../../../rtl/verilog/code/ahb3/core/mpsoc_uart_fifo.sv
+sv work ../../../../../../rtl/verilog/code/ahb3/core/mpsoc_uart_interrupt.sv
+sv work ../../../../../../rtl/verilog/code/ahb3/core/mpsoc_uart_rx.sv
+sv work ../../../../../../rtl/verilog/code/ahb3/core/mpsoc_uart_tx.sv
 
-sv work ../../../../../../bench/verilog/tests/core/ahb3/mpsoc_uart_testbench.sv
+sv work ../../../../../../bench/verilog/code/tests/core/ahb3/mpsoc_uart_testbench.sv

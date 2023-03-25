@@ -1,4 +1,4 @@
-verilog
+code
 ├── peripheral
 │   ├── ahb3
 │   │   ├── peripheral_apb2ahb.sv
