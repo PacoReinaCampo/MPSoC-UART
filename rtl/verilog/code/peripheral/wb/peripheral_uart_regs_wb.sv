@@ -47,7 +47,7 @@ import peripheral_wb_pkg::*;
 // UART_DL1 = 7:0;
 // UART_DL2 = 15:8;
 
-module peripheral_wb_uart_regs #(
+module peripheral_uart_regs_wb #(
   parameter SIM = 0
 ) (
   input            clk,
