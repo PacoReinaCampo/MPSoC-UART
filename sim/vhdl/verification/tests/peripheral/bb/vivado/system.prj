@@ -42,9 +42,9 @@
 //                                                                               //
 ///////////////////////////////////////////////////////////////////////////////////
 
-vhdl2008 work ../../../../../../../rtl/vhdl/code/bb/pkg/msp430_pkg.vhd
+vhdl2008 work ../../../../../../../rtl/vhdl/code/pkg/core/vhdl_pkg.vhd
 
-vhdl2008 work ../../../../../../../rtl/vhdl/code/bb/core/fuse/msp430_sync_cell.vhd
-vhdl2008 work ../../../../../../../rtl/vhdl/code/bb/core/main/msp430_uart.vhd
+vhdl2008 work ../../../../../../../rtl/vhdl/code/peripheral/bb/fuse/peripheral_sync_cell.vhd
+vhdl2008 work ../../../../../../../rtl/vhdl/code/peripheral/bb/main/peripheral_uart_bb.vhd
 
-vhdl2008 work ../../../../../../../bench/vhdl/code/tests/core/wb/mpsoc_uart_testbench.vhd
+vhdl2008 work ../../../../../../../bench/vhdl/code/tests/peripheral/bb/peripheral_uart_testbench.vhd
