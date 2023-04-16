@@ -94,7 +94,7 @@ set_property PACKAGE_PIN Y4  [get_ports {cts_pad_i}];  # "JC2_P"
 set_property PACKAGE_PIN T6  [get_ports {dtr_pad_o}];  # "JC3_N"
 set_property PACKAGE_PIN R6  [get_ports {dsr_pad_i}];  # "JC3_P"
 set_property PACKAGE_PIN U4  [get_ports {ri_pad_i}];  # "JC4_N"
-#set_property PACKAGE_PIN T4  [get_ports {dcd_pad_i}];  # "JC4_P"
+set_property PACKAGE_PIN T4  [get_ports {dcd_pad_i}];  # "JC4_P"
 
 # ----------------------------------------------------------------------------
 # JD Pmod - Bank 13

@@ -42,21 +42,24 @@
 ##                                                                               ##
 ###################################################################################
 
-read_verilog -sv ../../../../rtl/verilog/wb/core/mpsoc_wb_raminfr.sv
-read_verilog -sv ../../../../rtl/verilog/wb/core/mpsoc_wb_uart.sv
-read_verilog -sv ../../../../rtl/verilog/wb/core/mpsoc_wb_uart_peripheral_bridge.sv
-read_verilog -sv ../../../../rtl/verilog/wb/core/mpsoc_wb_uart_receiver.sv
-read_verilog -sv ../../../../rtl/verilog/wb/core/mpsoc_wb_uart_regs.sv
-read_verilog -sv ../../../../rtl/verilog/wb/core/mpsoc_wb_uart_rfifo.sv
-read_verilog -sv ../../../../rtl/verilog/wb/core/mpsoc_wb_uart_sync_flops.sv
-read_verilog -sv ../../../../rtl/verilog/wb/core/mpsoc_wb_uart_tfifo.sv
-read_verilog -sv ../../../../rtl/verilog/wb/core/mpsoc_wb_uart_transmitter.sv
+read_verilog -sv ../../../../rtl/verilog/code/pkg/core/peripheral_uart_pkg.sv
+read_verilog -sv ../../../../rtl/verilog/code/pkg/peripheral/wb/peripheral_wb_pkg.sv
 
-read_verilog -sv mpsoc_uart_synthesis.sv
+read_verilog -sv ../../../../rtl/verilog/code/peripheral/wb/peripheral_raminfr_wb.sv
+read_verilog -sv ../../../../rtl/verilog/code/peripheral/wb/peripheral_uart_bridge_wb.sv
+read_verilog -sv ../../../../rtl/verilog/code/peripheral/wb/peripheral_uart_receiver_wb.sv
+read_verilog -sv ../../../../rtl/verilog/code/peripheral/wb/peripheral_uart_regs_wb.sv
+read_verilog -sv ../../../../rtl/verilog/code/peripheral/wb/peripheral_uart_rfifo_wb.sv
+read_verilog -sv ../../../../rtl/verilog/code/peripheral/wb/peripheral_uart_sync_flops_wb.sv
+read_verilog -sv ../../../../rtl/verilog/code/peripheral/wb/peripheral_uart_tfifo_wb.sv
+read_verilog -sv ../../../../rtl/verilog/code/peripheral/wb/peripheral_uart_transmitter_wb.sv
+read_verilog -sv ../../../../rtl/verilog/code/peripheral/wb/peripheral_uart_wb.sv
+
+read_verilog -sv peripheral_uart_synthesis.sv
 
 read_xdc system.xdc
 
-synth_design -part xc7z020-clg484-1 -include_dirs ../../../../rtl/verilog/wb/pkg -top mpsoc_uart_synthesis
+synth_design -part xc7z020-clg484-1 -top peripheral_uart_synthesis
 
 opt_design
 place_design

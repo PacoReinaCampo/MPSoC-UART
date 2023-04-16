@@ -83,7 +83,7 @@ architecture rtl of peripheral_uart_synthesis is
   -- Components
   ------------------------------------------------------------------------------
 
-  component peripheral_bridge_apb2ahb
+  component peripheral_apb2ahb
     generic (
       HADDR_SIZE : integer := 32;
       HDATA_SIZE : integer := 32;
@@ -125,7 +125,7 @@ architecture rtl of peripheral_uart_synthesis is
       );
   end component;
 
-  component peripheral_apb4_uart
+  component peripheral_uart_apb4
     generic (
       APB_ADDR_WIDTH : integer := 12;  --APB slaves are 4KB by default
       APB_DATA_WIDTH : integer := 32  --APB slaves are 4KB by default
@@ -172,8 +172,8 @@ begin
   -- Module Body
   ------------------------------------------------------------------------------
 
-  --DUT AHB3
-  bridge_apb2ahb : peripheral_bridge_apb2ahb
+  -- DUT AHB3
+  bridge_apb2ahb : peripheral_apb2ahb
     generic map (
       HADDR_SIZE => HADDR_SIZE,
       HDATA_SIZE => HDATA_SIZE,
@@ -216,7 +216,7 @@ begin
       PSLVERR => uart_PSLVERR
       );
 
-  apb4_uart : peripheral_apb4_uart
+  uart_apb4 : peripheral_uart_apb4
     generic map (
       APB_ADDR_WIDTH => APB_ADDR_WIDTH,
       APB_DATA_WIDTH => APB_DATA_WIDTH

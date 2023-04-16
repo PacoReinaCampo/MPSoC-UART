@@ -42,14 +42,14 @@
 ##                                                                               ##
 ###################################################################################
 
-read_verilog -sv ../../../../rtl/verilog/bb/core/fuse/msp430_sync_cell.sv
-read_verilog -sv ../../../../rtl/verilog/bb/core/main/msp430_uart.sv
+read_verilog -sv ../../../../rtl/verilog/code/peripheral/bb/fuse/peripheral_sync_cell.sv
+read_verilog -sv ../../../../rtl/verilog/code/peripheral/bb/main/peripheral_uart_bb.sv
 
-read_verilog -sv mpsoc_uart_synthesis.sv
+read_verilog -sv peripheral_uart_synthesis.sv
 
 read_xdc system.xdc
 
-synth_design -part xc7z020-clg484-1 -top mpsoc_uart_synthesis
+synth_design -part xc7z020-clg484-1 -top peripheral_uart_synthesis
 
 opt_design
 place_design

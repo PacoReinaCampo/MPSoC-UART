@@ -42,23 +42,25 @@
 ##                                                                               ##
 ###################################################################################
 
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/wb/pkg/mpsoc_uart_wb_pkg.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/pkg/core/peripheral_uart_pkg.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/pkg/core/vhdl_pkg.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/pkg/peripheral/wb/peripheral_wb_pkg.vhd
 
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/wb/core/mpsoc_wb_raminfr.vhd
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/wb/core/mpsoc_wb_uart.vhd
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/wb/core/mpsoc_wb_uart_peripheral_bridge.vhd
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/wb/core/mpsoc_wb_uart_receiver.vhd
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/wb/core/mpsoc_wb_uart_regs.vhd
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/wb/core/mpsoc_wb_uart_rfifo.vhd
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/wb/core/mpsoc_wb_uart_sync_flops.vhd
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/wb/core/mpsoc_wb_uart_tfifo.vhd
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/wb/core/mpsoc_wb_uart_transmitter.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/wb/peripheral_raminfr_wb.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/wb/peripheral_uart_peripheral_bridge_wb.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/wb/peripheral_uart_receiver_wb.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/wb/peripheral_uart_regs_wb.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/wb/peripheral_uart_rfifo_wb.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/wb/peripheral_uart_sync_flops_wb.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/wb/peripheral_uart_tfifo_wb.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/wb/peripheral_uart_transmitter_wb.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/wb/peripheral_uart_wb.vhd
 
-read_vhdl -vhdl2008 mpsoc_uart_synthesis.vhd
+read_vhdl -vhdl2008 peripheral_uart_synthesis.vhd
 
 read_xdc system.xdc
 
-synth_design -part xc7z020-clg484-1 -top mpsoc_uart_synthesis
+synth_design -part xc7z020-clg484-1 -top peripheral_uart_synthesis
 
 opt_design
 place_design

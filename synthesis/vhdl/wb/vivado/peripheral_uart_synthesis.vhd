@@ -87,7 +87,7 @@ architecture rtl of peripheral_uart_synthesis is
   ------------------------------------------------------------------------------
   -- Components
   ------------------------------------------------------------------------------
-  component peripheral_wb_uart
+  component peripheral_uart_wb
     generic (
       SIM   : integer := 0;
       DEBUG : integer := 0
@@ -127,8 +127,8 @@ begin
   -- Module Body
   ------------------------------------------------------------------------------
 
-  --DUT WB
-  wb_uart : peripheral_wb_uart
+  -- DUT WB
+  uart_wb : peripheral_uart_wb
     generic map (
       SIM   => SIM,
       DEBUG => DEBUG

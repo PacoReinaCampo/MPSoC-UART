@@ -42,20 +42,22 @@
 ##                                                                               ##
 ###################################################################################
 
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/ahb3/pkg/mpsoc_uart_ahb3_pkg.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/pkg/core/peripheral_uart_pkg.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/pkg/core/vhdl_pkg.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/pkg/peripheral/ahb3/peripheral_ahb3_pkg.vhd
 
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/ahb3/core/mpsoc_bridge_apb2ahb.vhd
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/ahb3/core/mpsoc_apb4_uart.vhd
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/ahb3/core/mpsoc_uart_fifo.vhd
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/ahb3/core/mpsoc_uart_interrupt.vhd
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/ahb3/core/mpsoc_uart_rx.vhd
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/ahb3/core/mpsoc_uart_tx.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/ahb3/peripheral_apb2ahb.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/ahb3/peripheral_uart_apb4.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/ahb3/peripheral_uart_fifo.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/ahb3/peripheral_uart_interrupt.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/ahb3/peripheral_uart_rx.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/ahb3/peripheral_uart_tx.vhd
 
-read_vhdl -vhdl2008 mpsoc_uart_synthesis.vhd
+read_vhdl -vhdl2008 peripheral_uart_synthesis.vhd
 
 read_xdc system.xdc
 
-synth_design -part xc7z020-clg484-1 -top mpsoc_uart_synthesis
+synth_design -part xc7z020-clg484-1 -top peripheral_uart_synthesis
 
 opt_design
 place_design

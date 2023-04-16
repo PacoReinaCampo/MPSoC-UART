@@ -77,11 +77,11 @@ module peripheral_uart_synthesis #(
   // Module Body
   //
 
-  //DUT WB
-  peripheral_wb_uart #(
+  // DUT WB
+  peripheral_uart_wb #(
     .SIM  (SIM),
     .DEBUG(DEBUG)
-  ) wb_uart (
+  ) uart_wb (
     .wb_clk_i(clk),
     .wb_rst_i(rst),
 

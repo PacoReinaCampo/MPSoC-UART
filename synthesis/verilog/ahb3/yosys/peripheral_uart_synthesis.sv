@@ -11,7 +11,7 @@
 //                                                                            //
 //              MPSoC-RISCV CPU                                               //
 //              Universal Asynchronous Receiver-Transmitter                   //
-//              Wishbone Bus Interface                                        //
+//              AMBA3 AHB-Lite Bus Interface                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -92,8 +92,8 @@ module peripheral_uart_synthesis #(
   // Module Body
   //
 
-  //DUT AHB3
-  peripheral_bridge_apb2ahb #(
+  // DUT AHB3
+  peripheral_apb2ahb #(
     .HADDR_SIZE(HADDR_SIZE),
     .HDATA_SIZE(HDATA_SIZE),
     .PADDR_SIZE(APB_ADDR_WIDTH),
@@ -134,10 +134,10 @@ module peripheral_uart_synthesis #(
     .PSLVERR(uart_PSLVERR)
   );
 
-  peripheral_apb4_uart #(
+  peripheral_uart_apb4 #(
     .APB_ADDR_WIDTH(APB_ADDR_WIDTH),
     .APB_DATA_WIDTH(APB_DATA_WIDTH)
-  ) apb4_uart (
+  ) uart_apb4 (
     .RSTN(HRESETn),
     .CLK (HCLK),
 

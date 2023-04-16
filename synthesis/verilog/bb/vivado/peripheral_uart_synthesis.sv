@@ -63,8 +63,8 @@ module peripheral_uart_synthesis (
   // Module Body
   //
 
-  //DUT BB
-  bb_uart uart (
+  // DUT BB
+  peripheral_uart_bb uart_bb (
     .mclk   (mclk),    // Main system clock
     .puc_rst(puc_rst), // Main system reset
 

@@ -80,7 +80,7 @@ architecture rtl of peripheral_uart_synthesis is
   -- Components
   ------------------------------------------------------------------------------
 
-  component bb_uart
+  component peripheral_uart_bb
     port (
       mclk     : in  std_logic;
       puc_rst  : in  std_logic;
@@ -107,8 +107,8 @@ begin
   -- Module Body
   ------------------------------------------------------------------------------
 
-  --DUT BB
-  uart : bb_uart
+  -- DUT BB
+  uart_bb : peripheral_uart_bb
     port map (
       mclk     => mclk,
       puc_rst  => puc_rst,

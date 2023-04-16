@@ -43,19 +43,20 @@
 ###################################################################################
 
 # read design
-verilog_defaults -add -I ../../../../rtl/verilog/ahb3/pkg
+read_verilog -sv ../../../../rtl/verilog/code/pkg/core/peripheral_uart_pkg.sv
+read_verilog -sv ../../../../rtl/verilog/code/pkg/peripheral/ahb3/peripheral_ahb3_pkg.sv
 
-read_verilog -sv ../../../../rtl/verilog/ahb3/core/mpsoc_bridge_apb2ahb.sv
-read_verilog -sv ../../../../rtl/verilog/ahb3/core/mpsoc_apb4_uart.sv
-read_verilog -sv ../../../../rtl/verilog/ahb3/core/mpsoc_uart_fifo.sv
-read_verilog -sv ../../../../rtl/verilog/ahb3/core/mpsoc_uart_interrupt.sv
-read_verilog -sv ../../../../rtl/verilog/ahb3/core/mpsoc_uart_rx.sv
-read_verilog -sv ../../../../rtl/verilog/ahb3/core/mpsoc_uart_tx.sv
+read_verilog -sv ../../../../rtl/verilog/code/peripheral/ahb3/peripheral_apb2ahb.sv
+read_verilog -sv ../../../../rtl/verilog/code/peripheral/ahb3/peripheral_uart_apb4.sv
+read_verilog -sv ../../../../rtl/verilog/code/peripheral/ahb3/peripheral_uart_fifo.sv
+read_verilog -sv ../../../../rtl/verilog/code/peripheral/ahb3/peripheral_uart_interrupt.sv
+read_verilog -sv ../../../../rtl/verilog/code/peripheral/ahb3/peripheral_uart_rx.sv
+read_verilog -sv ../../../../rtl/verilog/code/peripheral/ahb3/peripheral_uart_tx.sv
 
-read_verilog -sv mpsoc_uart_synthesis.sv
+read_verilog -sv peripheral_uart_synthesis.sv
 
 # elaborate design hierarchy
-hierarchy -check -top mpsoc_uart_synthesis
+hierarchy -check -top peripheral_uart_synthesis
 
 # improve design
 proc; opt; fsm; opt; memory; opt
