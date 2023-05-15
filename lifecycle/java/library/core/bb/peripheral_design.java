@@ -42,7 +42,9 @@
 //                                                                               //
 ///////////////////////////////////////////////////////////////////////////////////
 
-class ScalarArithmetic {
+package library.core.bb
+
+class peripheral_design {
   static double ntm_scalar_adder(double data_a_in, double data_b_in) {
     double data_out;
  

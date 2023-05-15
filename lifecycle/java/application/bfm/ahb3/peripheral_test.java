@@ -42,8 +42,22 @@
 //                                                                               //
 ///////////////////////////////////////////////////////////////////////////////////
 
-class HelloWorld {
+import library.bfm.ahb3.peripheral_design;
+
+class peripheral_test {
   public static void main(String[] args) {
-    System.out.println("Hello, World!"); 
+
+    double data_a_in = 1.0;
+    double data_b_in = 1.0;
+
+    double data_out;
+
+    double data_out = peripheral_design.ntm_scalar_adder(data_a_in, data_b_in);
+
+    double data_out = peripheral_design.ntm_scalar_subtractor(data_a_in, data_b_in);
+
+    double data_out = peripheral_design.ntm_scalar_multiplier(data_a_in, data_b_in);
+
+    double data_out = peripheral_design.ntm_scalar_divider(data_a_in, data_b_in);
   }
 }
