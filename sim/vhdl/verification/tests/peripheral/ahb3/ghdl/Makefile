@@ -57,8 +57,8 @@ build:
 	ghdl -a --std=08 ../../../../../../../bench/vhdl/code/tests/peripheral/ahb3/peripheral_uart_testbench.vhd
 
 simulate:
-	ghdl -m --std=08 peripheral_uart_testbench
-	ghdl -r --std=08 peripheral_uart_testbench --ieee-asserts=disable-at-0 --disp-tree=inst > peripheral_uart_testbench.tree
+	ghdl -e --std=08 peripheral_uart_testbench
+	ghdl -r --std=08 peripheral_uart_testbench --ieee-asserts=disable-at-0 --vcd=peripheral_uart_testbench.vcd --wave=system.ghw --stop-time=1ms
 
 clean:
-	rm -f *.cf *.tree
+	rm -f *.cf *.vcd *.ghw
