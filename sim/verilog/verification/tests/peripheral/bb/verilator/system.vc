@@ -42,16 +42,7 @@
 //                                                                               //
 ///////////////////////////////////////////////////////////////////////////////////
 
-+incdir+../../../../../../../rtl/verilog/code/pkg/peripheral/ahb3
+../../../../../../../rtl/verilog/code/peripheral/bb/fuse/peripheral_sync_cell.sv
+../../../../../../../rtl/verilog/code/peripheral/bb/main/peripheral_uart_bb.sv
 
-../../../../../../../rtl/verilog/code/peripheral/wb/peripheral_raminfr_wb.sv
-../../../../../../../rtl/verilog/code/peripheral/wb/peripheral_uart_wb.sv
-../../../../../../../rtl/verilog/code/peripheral/wb/peripheral_uart_peripheral_bridge_wb.sv
-../../../../../../../rtl/verilog/code/peripheral/wb/peripheral_uart_receiver_wb.sv
-../../../../../../../rtl/verilog/code/peripheral/wb/peripheral_uart_regs_wb.sv
-../../../../../../../rtl/verilog/code/peripheral/wb/peripheral_uart_rfifo_wb.sv
-../../../../../../../rtl/verilog/code/peripheral/wb/peripheral_uart_sync_flops_wb.sv
-../../../../../../../rtl/verilog/code/peripheral/wb/peripheral_uart_tfifo_wb.sv
-../../../../../../../rtl/verilog/code/peripheral/wb/peripheral_uart_transmitter_wb.sv
-
-../../../../../../../bench/verilog/code/tests/peripheral/wb/main/peripheral_uart_testbench.sv
+../../../../../../../bench/verilog/code/tests/peripheral/bb/peripheral_uart_testbench.sv

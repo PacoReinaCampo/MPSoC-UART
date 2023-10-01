@@ -42,7 +42,7 @@
 ##                                                                               ##
 ###################################################################################
 
-+incdir+../../../../../../../rtl/verilog/code/pkg/peripheral/ahb3
+../../../../../../../rtl/verilog/code/pkg/peripheral/ahb3/peripheral_ahb3_pkg.sv
 
 ../../../../../../../rtl/verilog/code/peripheral/ahb3/peripheral_apb2ahb.sv
 ../../../../../../../rtl/verilog/code/peripheral/ahb3/peripheral_uart_apb4.sv
