@@ -45,5 +45,7 @@
 @echo off
 call ../../../../../../../settings64_verilator.bat
 
-verilator -Wno-lint --cc -f system.vc --top-module peripheral_uart_testbench
+verilator -Wno-lint -Wno-UNOPTFLAT -Wno-COMBDLY --cc -f system.vc --top-module peripheral_uart_testbench
+make -C obj_dir -j -f Vperipheral_uart_testbench.mk Vperipheral_uart_testbench
+obj_dir/Vperipheral_uart_testbench
 pause
