@@ -45,12 +45,7 @@
 all: build simulate
 
 build:
-	ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/pkg/core/vhdl_pkg.vhd
-
-	ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/peripheral/bb/fuse/peripheral_sync_cell.vhd
-	ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/peripheral/bb/main/peripheral_uart_bb.vhd
-
-	ghdl -a --std=08 ../../../../../../../bench/vhdl/code/tests/peripheral/bb/peripheral_uart_testbench.vhd
+	sh system.s
 
 simulate:
 	ghdl -e --std=08 peripheral_uart_testbench
