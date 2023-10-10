@@ -51,4 +51,6 @@
 ../../../../../../../rtl/verilog/code/peripheral/ahb3/peripheral_uart_rx.sv
 ../../../../../../../rtl/verilog/code/peripheral/ahb3/peripheral_uart_tx.sv
 
+../../../../../../../bench/verilog/code/tests/peripheral/ahb3/peripheral_bfm_ahb3.sv
+../../../../../../../bench/verilog/code/tests/peripheral/ahb3/peripheral_bfm_master_ahb3.sv
 ../../../../../../../bench/verilog/code/tests/peripheral/ahb3/peripheral_uart_testbench.sv
