@@ -42,9 +42,7 @@
 //                                                                               //
 ///////////////////////////////////////////////////////////////////////////////////
 
-sv work ../../../../../../../rtl/verilog/code/bb/core/fuse/msp430_sync_cell.sv
-sv work ../../../../../../../rtl/verilog/code/bb/core/main/msp430_uart.sv
+sv work ../../../../../../../rtl/verilog/code/peripheral/bb/fuse/peripheral_sync_cell.sv
+sv work ../../../../../../../rtl/verilog/code/peripheral/bb/main/peripheral_uart_bb.sv
 
-sv work ../../../../../../../bench/verilog/code/tests/core/bb/mpsoc_uart_testbench.sv
-
-
+sv work ../../../../../../../bench/verilog/code/tests/peripheral/bb/peripheral_uart_testbench.sv
