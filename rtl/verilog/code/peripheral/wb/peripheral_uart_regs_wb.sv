@@ -87,7 +87,7 @@ module peripheral_uart_regs_wb #(
   reg         start_dlc;  // activate dlc on writing to UART_DL1
   reg         lsr_mask_d;  // delay for lsr_mask condition
   reg         msi_reset;  // reset MSR 4 lower bits indicator
-  //reg                     three_clear; // THRE interrupt clear flag
+  // reg                     three_clear; // THRE interrupt clear flag
   reg  [15:0] dlc;  // 32-bit divisor latch counter
 
   reg  [ 3:0] trigger_level;  // trigger level of the receiver FIFO

@@ -41,8 +41,8 @@
  */
 
 module peripheral_uart_apb4 #(
-  parameter APB_ADDR_WIDTH = 12,  //APB slaves are 4KB by default
-  parameter APB_DATA_WIDTH = 32   //APB slaves are 4KB by default
+  parameter APB_ADDR_WIDTH = 12,  // APB slaves are 4KB by default
+  parameter APB_DATA_WIDTH = 32   // APB slaves are 4KB by default
 ) (
   input  logic                      CLK,
   input  logic                      RSTN,
@@ -116,7 +116,7 @@ module peripheral_uart_apb4 #(
   // Module Body
   //
 
-  // TODO: check that stop bits are really not necessary here
+  // TO-DO: check that stop bits are really not necessary here
   peripheral_uart_rx peripheral_uart_rx_i (
     .clk_i          (CLK),
     .rstn_i         (RSTN),

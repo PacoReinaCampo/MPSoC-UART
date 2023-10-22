@@ -51,9 +51,9 @@ module peripheral_uart_bridge_wb (
   input       wb_stb_i,
   input       wb_cyc_i,
   input [3:0] wb_sel_i,
-  input [2:0] wb_adr_i,  //WISHBONE address line
+  input [2:0] wb_adr_i,  // WISHBONE address line
 
-  input      [ 7:0] wb_dat_i,    //input WISHBONE bus 
+  input      [ 7:0] wb_dat_i,    // input WISHBONE bus 
   output reg [ 7:0] wb_dat_o,
   output     [ 2:0] wb_adr_int,  // internal signal for address bus
   input      [ 7:0] wb_dat8_o,   // internal 8 bit output to be put into wb_dat_o
@@ -117,8 +117,8 @@ module peripheral_uart_bridge_wb (
         end
       endcase
 
-  assign we_o = wb_we_is & wb_stb_is & wb_cyc_is & wre;  //WE for registers  
-  assign re_o = ~wb_we_is & wb_stb_is & wb_cyc_is & wre;  //RE for registers  
+  assign we_o = wb_we_is & wb_stb_is & wb_cyc_is & wre;  // WE for registers  
+  assign re_o = ~wb_we_is & wb_stb_is & wb_cyc_is & wre;  // RE for registers  
 
   // Sample input signals
   always @(posedge clk or posedge wb_rst_i) begin

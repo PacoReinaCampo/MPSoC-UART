@@ -250,7 +250,7 @@ module peripheral_uart_receiver_wb (
           rcounter16 <= rcounter16_minus_1;
         end
         sr_push: begin
-          //$display($time, ": received: %b", rf_data_in);
+          // $display($time, ": received: %b", rf_data_in);
           if (srx_pad_i | break_error) begin
             if (break_error) rf_data_in <= {8'b0, 3'b100};  // break input (empty character) to receiver FIFO
             else rf_data_in <= {rshift, 1'b0, rparity_error, rframing_error};

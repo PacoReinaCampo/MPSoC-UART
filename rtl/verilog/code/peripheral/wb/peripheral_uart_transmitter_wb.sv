@@ -55,7 +55,7 @@ module peripheral_uart_transmitter_wb #(
   input      [                    7:0] wb_dat_i,
   input                                enable,
   input                                tx_reset,
-  input                                lsr_mask,   //reset of fifo
+  input                                lsr_mask,   // reset of fifo
   output                               stx_pad_o,
   output reg [                    2:0] tstate,
   output     [UART_FIFO_COUNTER_W-1:0] tf_count

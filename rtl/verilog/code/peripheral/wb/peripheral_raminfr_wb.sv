@@ -41,7 +41,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-//Following is the Verilog code for a dual-port RAM with asynchronous read. 
+// Following is the Verilog code for a dual-port RAM with asynchronous read. 
 module peripheral_raminfr_wb #(
   parameter ADDR_WIDTH = 4,
   parameter DATA_WIDTH = 8,
@@ -53,7 +53,7 @@ module peripheral_raminfr_wb #(
   input  [ADDR_WIDTH-1:0] dpra,
   input  [DATA_WIDTH-1:0] di,
   output [DATA_WIDTH-1:0] dpo
-  //output [DATA_WIDTH-1:0] spo,
+  // output [DATA_WIDTH-1:0] spo,
 );
 
   //////////////////////////////////////////////////////////////////////////////

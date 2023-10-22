@@ -65,9 +65,9 @@ module peripheral_uart_bb (
   input        uart_rxd   // UART Data Receive (RXD)
 );
 
-  //=============================================================================
+  // =============================================================================
   // 1)  PARAMETER DECLARATION
-  //=============================================================================
+  // =============================================================================
 
   // Register base address (must be aligned to decoder bit width)
   parameter [14:0] BASE_ADDR = 15'h0080;
@@ -95,9 +95,9 @@ module peripheral_uart_bb (
   parameter [DEC_SZ-1:0] DATA_TX_D = (BASE_REG << DATA_TX);
   parameter [DEC_SZ-1:0] DATA_RX_D = (BASE_REG << DATA_RX);
 
-  //============================================================================
+  // ============================================================================
   // 2)  REGISTER DECODER
-  //============================================================================
+  // ============================================================================
 
   // Local register selection
   wire reg_sel;
@@ -137,12 +137,12 @@ module peripheral_uart_bb (
   assign reg_lo_wr = reg_dec & {DEC_SZ{reg_lo_write}};
   assign reg_rd    = reg_dec & {DEC_SZ{reg_read}};
 
-  //============================================================================
+  // ============================================================================
   // 3) REGISTERS
-  //============================================================================
+  // ============================================================================
 
   // CTRL Register
-  //-----------------
+  // -----------------
   reg  [7:0] ctrl;
 
   wire       ctrl_wr;
@@ -171,7 +171,7 @@ module peripheral_uart_bb (
   assign ctrl_en           = ctrl[0];
 
   // STATUS Register
-  //-----------------
+  // -----------------
   wire [7:0] status;
 
   reg        status_tx_empty_pnd;
@@ -231,7 +231,7 @@ module peripheral_uart_bb (
   assign status = {status_tx_empty_pnd, status_tx_pnd, status_rx_ovflw_pnd, status_rx_pnd, status_tx_full, status_tx_busy, 1'b0, status_rx_busy};
 
   // BAUD_LO Register
-  //-----------------
+  // -----------------
   reg  [7:0] baud_lo;
 
   wire       baud_lo_wr;
@@ -246,7 +246,7 @@ module peripheral_uart_bb (
   end
 
   // BAUD_HI Register
-  //-----------------
+  // -----------------
   reg  [7:0] baud_hi;
 
   wire       baud_hi_wr;
@@ -265,7 +265,7 @@ module peripheral_uart_bb (
   assign baudrate = {baud_hi, baud_lo};
 
   // DATA_TX Register
-  //-----------------
+  // -----------------
   reg  [7:0] data_tx;
 
   wire       data_tx_wr;
@@ -280,7 +280,7 @@ module peripheral_uart_bb (
   end
 
   // DATA_RX Register
-  //-----------------
+  // -----------------
   reg [7:0] data_rx;
 
   reg [7:0] rxfer_buf;
@@ -290,9 +290,9 @@ module peripheral_uart_bb (
     else if (status_rx_pnd_set) data_rx <= rxfer_buf;
   end
 
-  //============================================================================
+  // ============================================================================
   // 4) DATA OUTPUT GENERATION
-  //============================================================================
+  // ============================================================================
 
   // Data output mux
   wire [15:0] ctrl_rd;
@@ -311,20 +311,20 @@ module peripheral_uart_bb (
 
   assign per_dout   = ctrl_rd | status_rd | baud_lo_rd | baud_hi_rd | data_tx_rd | data_rx_rd;
 
-  //=============================================================================
+  // =============================================================================
   // 5)  UART CLOCK SELECTION
-  //=============================================================================
+  // =============================================================================
 
   wire uclk_en;
 
   assign uclk_en = ctrl_smclk_sel ? smclk_en : 1'b1;
 
-  //=============================================================================
+  // =============================================================================
   // 5)  UART RECEIVE LINE SYNCHRONIZTION & FILTERING
-  //=============================================================================
+  // =============================================================================
 
   // Synchronize RXD input
-  //--------------------------------
+  // --------------------------------
   wire uart_rxd_sync_n;
 
   peripheral_sync_cell sync_cell_uart_rxd (
@@ -339,7 +339,7 @@ module peripheral_uart_bb (
   assign uart_rxd_sync = ~uart_rxd_sync_n;
 
   // RXD input buffer
-  //--------------------------------
+  // --------------------------------
   reg [1:0] rxd_buf;
   always @(posedge mclk or posedge puc_rst) begin
     if (puc_rst) rxd_buf <= 2'h3;
@@ -347,7 +347,7 @@ module peripheral_uart_bb (
   end
 
   // Majority decision
-  //------------------------
+  // ------------------------
   reg        rxd_maj;
 
   wire [1:0] rxd_maj_cnt;
@@ -367,12 +367,12 @@ module peripheral_uart_bb (
   assign rxd_s  = rxd_maj;
   assign rxd_fe = rxd_maj & ~rxd_maj_nxt;
 
-  //=============================================================================
+  // =============================================================================
   // 6)  UART RECEIVE
-  //=============================================================================
+  // =============================================================================
 
   // RX Transfer counter
-  //------------------------
+  // ------------------------
   reg  [ 3:0] rxfer_bit;
   reg  [15:0] rxfer_cnt;
 
@@ -405,7 +405,7 @@ module peripheral_uart_bb (
   end
 
   // Receive buffer
-  //-------------------------
+  // -------------------------
   wire [7:0] rxfer_buf_nxt;
 
   assign rxfer_buf_nxt = {rxd_s, rxfer_buf[7:1]};
@@ -419,7 +419,7 @@ module peripheral_uart_bb (
   end
 
   // Status flags
-  //-------------------------
+  // -------------------------
 
   // Edge detection required for the case when
   // the transmit base clock is SMCLK
@@ -433,12 +433,12 @@ module peripheral_uart_bb (
   assign status_rx_ovflw_pnd_set = status_rx_pnd_set & status_rx_pnd;
   assign status_rx_busy          = (rxfer_bit != 4'h0);
 
-  //============================================================================
+  // ============================================================================
   // 5) UART TRANSMIT
-  //============================================================================
+  // ============================================================================
 
   // TX Transfer start detection
-  //-----------------------------
+  // -----------------------------
   reg  txfer_triggered;
   wire txfer_start;
 
@@ -449,7 +449,7 @@ module peripheral_uart_bb (
   end
 
   // TX Transfer counter
-  //------------------------
+  // ------------------------
   reg  [ 3:0] txfer_bit;
   reg  [15:0] txfer_cnt;
 
@@ -482,7 +482,7 @@ module peripheral_uart_bb (
   end
 
   // Transmit buffer
-  //-------------------------
+  // -------------------------
   reg  [8:0] txfer_buf;
 
   wire [8:0] txfer_buf_nxt;
@@ -501,7 +501,7 @@ module peripheral_uart_bb (
   assign uart_txd = txfer_buf[0];
 
   // Status flags
-  //-------------------------
+  // -------------------------
 
   // Edge detection required for the case when
   // the transmit base clock is SMCLK
@@ -516,9 +516,9 @@ module peripheral_uart_bb (
   assign status_tx_busy          = (txfer_bit != 4'h0) | txfer_triggered;
   assign status_tx_full          = status_tx_busy & txfer_triggered;
 
-  //============================================================================
+  // ============================================================================
   // 6) INTERRUPTS
-  //============================================================================
+  // ============================================================================
 
   // Receive interrupt can be generated with the completion of a received byte
   // or an overflow occures.
