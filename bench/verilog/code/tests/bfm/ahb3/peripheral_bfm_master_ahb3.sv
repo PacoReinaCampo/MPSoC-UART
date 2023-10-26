@@ -9,8 +9,8 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              Peripheral-GPIO for MPSoC                                     //
-//              General Purpose Input Output for MPSoC                        //
+//              Peripheral-BFM for MPSoC                                      //
+//              Bus Functional Model for MPSoC                                //
 //              AMBA3 AHB-Lite Bus Interface                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -132,7 +132,13 @@ module peripheral_bfm_master_ahb3 #(
     do @(posedge HCLK); while (!HREADY);
   endtask : wait4hready
 
-  task automatic ahb_cmd(input [HADDR_SIZE-1:0] addr, input [2:0] size, input [2:0] burst, input rw, input int beats);
+  task automatic ahb_cmd(
+    input [HADDR_SIZE-1:0] addr,
+    input [2:0] size,
+    input [2:0] burst,
+    input rw,
+    input int beats
+  );
     wait4hready();
     HSEL      <= 1'b1;
     HADDR     <= addr;
@@ -150,7 +156,15 @@ module peripheral_bfm_master_ahb3 #(
     end
   endtask : ahb_cmd
 
-  task automatic ahb_data(input [HADDR_SIZE-1:0] address, input [2:0] size, input [2:0] burst, input rw, input int beats, ref [HDATA_SIZE-1:0] data[]);
+  task automatic ahb_data(
+    input [HADDR_SIZE-1:0] address,
+    input [2:0] size,
+    input [2:0] burst,
+    input rw,
+    input int beats,
+    ref [HDATA_SIZE-1:0] data[]
+  );
+
     logic [(HDATA_SIZE+7)/8 -1:0] byte_offset;
     logic [HDATA_SIZE       -1:0] data_copy[], tmp_var;
 

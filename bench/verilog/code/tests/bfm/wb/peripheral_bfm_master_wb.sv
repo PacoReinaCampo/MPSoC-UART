@@ -9,8 +9,8 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              MPSoC-RISCV CPU                                               //
-//              Master Slave Interface                                        //
+//              Peripheral-BFM for MPSoC                                      //
+//              Bus Functional Model for MPSoC                                //
 //              Wishbone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////

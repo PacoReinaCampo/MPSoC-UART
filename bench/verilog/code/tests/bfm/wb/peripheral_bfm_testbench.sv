@@ -9,8 +9,8 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              MPSoC-RISCV CPU                                               //
-//              Master Slave Interface                                        //
+//              Peripheral-BFM for MPSoC                                      //
+//              Bus Functional Model for MPSoC                                //
 //              Wishbone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -128,9 +128,17 @@ module peripheral_bfm_testbench;
 
   initial begin
     //Grab CLI parameters
-    if ($value$plusargs("transactions=%d", TRANSACTIONS)) master.set_transactions(TRANSACTIONS);
-    if ($value$plusargs("subtransactions=%d", SUBTRANSACTIONS)) master.set_subtransactions(SUBTRANSACTIONS);
-    if ($value$plusargs("seed=%d", SEED)) master.SEED = SEED;
+    if ($value$plusargs("transactions=%d", TRANSACTIONS)) begin
+      master.set_transactions(TRANSACTIONS);
+    end
+
+    if ($value$plusargs("subtransactions=%d", SUBTRANSACTIONS)) begin
+      master.set_subtransactions(SUBTRANSACTIONS);
+    end
+
+    if ($value$plusargs("seed=%d", SEED)) begin
+      master.SEED = SEED;
+    end
 
     master.display_settings;
     master.run;

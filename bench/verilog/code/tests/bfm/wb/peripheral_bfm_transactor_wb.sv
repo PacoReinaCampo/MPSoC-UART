@@ -9,8 +9,8 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              MPSoC-RISCV CPU                                               //
-//              Master Slave Interface                                        //
+//              Peripheral-BFM for MPSoC                                      //
+//              Bus Functional Model for MPSoC                                //
 //              Wishbone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -197,7 +197,9 @@ module peripheral_bfm_transactor_wb #(
     input integer in;
     begin
       in = in - 1;
-      for (clog2 = 0; in > 0; clog2 = clog2 + 1) in = in >> 1;
+      for (clog2 = 0; in > 0; clog2 = clog2 + 1) begin
+        in = in >> 1;
+      end
     end
   endfunction
 `endif
@@ -277,7 +279,7 @@ module peripheral_bfm_transactor_wb #(
         CTI_INC_BURST:   cnt_cti_inc_burst = cnt_cti_inc_burst + 1;
         default:         cnt_cti_invalid = cnt_cti_invalid + 1;
       endcase  // case (cti)
-      if (cti === CTI_INC_BURST)
+      if (cti === CTI_INC_BURST) begin
         case (bte)
           BTE_LINEAR:  cnt_bte_linear = cnt_bte_linear + 1;
           BTE_WRAP_4:  cnt_bte_wrap_4 = cnt_bte_wrap_4 + 1;
@@ -285,6 +287,7 @@ module peripheral_bfm_transactor_wb #(
           BTE_WRAP_16: cnt_bte_wrap_16 = cnt_bte_wrap_16 + 1;
           default:     $display("Invalid BTE %2b", bte);
         endcase  // case (bte)
+      end
     end
   endtask
 
@@ -314,8 +317,11 @@ module peripheral_bfm_transactor_wb #(
     begin
       if (VERBOSE > 0) begin
         $write("  Subtransaction %0d.%0d ", transaction, subtransaction);
-        if (wr) $write("(Write)");
-        else $write("(Read) ");
+        if (wr) begin
+          $write("(Write)");
+        end else begin
+          $write("(Read) ");
+        end
         $display(": Start Address: %h, Cycle Type: %b, Burst Type: %b, Burst Length: %0d", address, cycle_type, burst_type, burst_length);
       end
     end
@@ -395,13 +401,18 @@ module peripheral_bfm_transactor_wb #(
       err     = 0;
 
       for (transaction = 1; transaction <= TRANSACTIONS; transaction = transaction + 1) begin
-        if (VERBOSE > 0) $display("%m : Transaction: %0d/%0d", transaction, TRANSACTIONS);
-        else if (!(transaction % (SUBTRANSACTIONS / 10))) $display("%m : Transaction: %0d/%0d", transaction, TRANSACTIONS);
+        if (VERBOSE > 0) begin
+          $display("%m : Transaction: %0d/%0d", transaction, TRANSACTIONS);
+        end else if (!(transaction % (SUBTRANSACTIONS / 10))) begin
+          $display("%m : Transaction: %0d/%0d", transaction, TRANSACTIONS);
+        end
 
         // Generate the random value for the number of wait states. This will
         // be used for all of this transaction
         bfm.wait_states = {$random(SEED)} % (MAX_WAIT_STATES + 1);
-        if (VERBOSE > 2) $display("  Number of Wait States for Transaction %0d is %0d", transaction, bfm.wait_states);
+        if (VERBOSE > 2) begin
+          $display("  Number of Wait States for Transaction %0d is %0d", transaction, bfm.wait_states);
+        end
 
         //If running in segment mode, cap mem_high/mem_low to a segment
         if (NUM_SEGMENTS > 0) begin
@@ -423,7 +434,9 @@ module peripheral_bfm_transactor_wb #(
         end
 
         // Write Transaction
-        if (VERBOSE > 0) $display("  Transaction %0d Initialisation (Write): Start Address: %h, Burst Length: %0d", transaction, t_address, MAX_BURST_LEN);
+        if (VERBOSE > 0) begin
+          $display("  Transaction %0d Initialisation (Write): Start Address: %h, Burst Length: %0d", transaction, t_address, MAX_BURST_LEN);
+        end
 
         // Fill Write Array then Send the Write Transaction
         fill_wdata_array(MAX_BURST_LEN);
@@ -431,40 +444,48 @@ module peripheral_bfm_transactor_wb #(
         update_stats(cycle_type, burst_type, burst_length);
 
         // Read data can be read back from wishbone memory.
-        if (VERBOSE > 0) $display("  Transaction %0d Initialisation (Read): Start Address: %h, Burst Length: %0d", transaction, t_address, MAX_BURST_LEN);
+        if (VERBOSE > 0) begin
+          $display("  Transaction %0d Initialisation (Read): Start Address: %h, Burst Length: %0d", transaction, t_address, MAX_BURST_LEN);
+        end
+
         bfm.read_burst_comp(t_address, t_address, {DW / 8{1'b1}}, CTI_INC_BURST, BTE_LINEAR, MAX_BURST_LEN, err);
         update_stats(cycle_type, burst_type, burst_length);
 
-        if (VERBOSE > 0) $display("Transaction %0d initialisation ok (Start Address: %h, Cycle Type: %b, Burst Type: %b, Burst Length: %0d)", transaction, t_address, CTI_INC_BURST, BTE_LINEAR, MAX_BURST_LEN);
+        if (VERBOSE > 0) begin
+          $display("Transaction %0d initialisation ok (Start Address: %h, Cycle Type: %b, Burst Type: %b, Burst Length: %0d)", transaction, t_address, CTI_INC_BURST, BTE_LINEAR, MAX_BURST_LEN);
+        end
 
         // Start subtransaction loop.
         for (subtransaction = 1; subtransaction <= SUBTRANSACTIONS; subtransaction = subtransaction + 1) begin
-
           // Transaction Type: 0=Read, 1=Write
-          st_type                                            = {$random(SEED)} % 2;
+          st_type = {$random(SEED)} % 2;
 
           {st_address, cycle_type, burst_type, burst_length} = gen_cycle_params(t_adr_low, t_adr_high);
 
           display_subtransaction(st_address, cycle_type, burst_type, burst_length, st_type);
 
           if (~st_type) begin
-
             // Send Read Transaction
             bfm.read_burst_comp(t_address, st_address, {DW / 8{1'b1}}, cycle_type, burst_type, burst_length, err);
           end else begin
             // Fill Write Array then Send the Write Transaction
             fill_wdata_array(burst_length);
             bfm.write_burst(t_address, st_address, {DW / 8{1'b1}}, cycle_type, burst_type, burst_length, err);
-
           end  // if (st_type)
+
           update_stats(cycle_type, burst_type, burst_length);
         end  // for (subtransaction=0;...
 
         // Final consistency check...
-        if (VERBOSE > 0) $display("Transaction %0d Buffer Consistency Check: Start Address: %h, Burst Length: %0d", transaction, t_address, MAX_BURST_LEN);
+        if (VERBOSE > 0) begin
+          $display("Transaction %0d Buffer Consistency Check: Start Address: %h, Burst Length: %0d", transaction, t_address, MAX_BURST_LEN);
+        end
+
         bfm.read_burst_comp(t_address, t_address, 4'hf, CTI_INC_BURST, BTE_LINEAR, MAX_BURST_LEN, err);
 
-        if (VERBOSE > 0) $display("Transaction %0d Completed Successfully", transaction);
+        if (VERBOSE > 0) begin
+          $display("Transaction %0d Completed Successfully", transaction);
+        end
 
         // Clear Buffer Data before next transaction
         bfm.clear_buffer_data;
@@ -487,6 +508,7 @@ module peripheral_bfm_transactor_wb #(
       $display("         Incrementing Address Burst Cycle Probability : %0d", INCR_BURST_PROB);
       $finish(1);
     end
+
     if (AUTORUN) begin
       display_settings;
       run;

@@ -9,8 +9,8 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              Peripheral-GPIO for MPSoC                                     //
-//              General Purpose Input Output for MPSoC                        //
+//              Peripheral-BFM for MPSoC                                      //
+//              Bus Functional Model for MPSoC                                //
 //              AMBA4 APB-Lite Bus Interface                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -206,8 +206,13 @@ module peripheral_bfm_apb4 #(
   endtask : finish_text
 
   task check(input string name, input [PDATA_SIZE-1:0] actual, expected);
-    if (VERBOSE > 2) $display("Checking %s for %b==%b", name, actual, expected);
-    if (actual !== expected) error_msg(name, actual, expected);
+    if (VERBOSE > 2) begin
+      $display("Checking %s for %b==%b", name, actual, expected);
+    end
+
+    if (actual !== expected) begin
+      error_msg(name, actual, expected);
+    end
   endtask : check
 
   task error_msg(input string name, input [PDATA_SIZE-1:0] actual, expected);
@@ -294,7 +299,10 @@ module peripheral_bfm_apb4 #(
 
     //basic output
     for (int run = 0; run < runs; run++) begin
-      if (VERBOSE > 0) $display("Random IO test Run=%0d", run);
+      if (VERBOSE > 0) begin
+        $display("Random IO test Run=%0d", run);
+      end
+
       mode   = $random;
       dir    = $random;
       d      = $random;
@@ -310,11 +318,17 @@ module peripheral_bfm_apb4 #(
       check($sformatf("INPUT   (%0d %0d %0d %0d)", run, mode, dir, d), readdata, gpio_i);
 
       //check gpio_o
-      for (int b = 0; b < PDATA_SIZE; b++) expected[b] = mode[b] ? 1'b0 : d[b];
+      for (int b = 0; b < PDATA_SIZE; b++) begin
+        expected[b] = mode[b] ? 1'b0 : d[b];
+      end
+
       check($sformatf("GPIO_O  (%0d %0d %0d %0d)", run, mode, dir, d), gpio_o, expected);
 
       //check gpio_oe
-      for (int b = 0; b < PDATA_SIZE; b++) expected[b] = mode[b] ? dir[b] & ~d[b] : dir[b];
+      for (int b = 0; b < PDATA_SIZE; b++) begin
+        expected[b] = mode[b] ? dir[b] & ~d[b] : dir[b];
+      end
+
       check($sformatf("GPIO_OE (%0d %0d %0d %0d)", run, mode, dir, d), gpio_oe, expected);
     end  //next run
   endtask : test_io_random
@@ -375,7 +389,9 @@ module peripheral_bfm_apb4 #(
     bfm_master_apb4.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
     for (int run = 0; run < runs; run++) begin
-      if (VERBOSE > 0) $display("  Trigger Level-Low test run=%0d", run);
+      if (VERBOSE > 0) begin
+        $display("  Trigger Level-Low test run=%0d", run);
+      end
 
       //clear STATUS register
       bfm_master_apb4.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
@@ -417,7 +433,9 @@ module peripheral_bfm_apb4 #(
     bfm_master_apb4.write(LVL1, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
     for (int run = 0; run < runs; run++) begin
-      if (VERBOSE > 0) $display("  Trigger Level-High test run=%0d", run);
+      if (VERBOSE > 0) begin
+        $display("  Trigger Level-High test run=%0d", run);
+      end
 
       //clear STATUS register
       bfm_master_apb4.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
@@ -456,7 +474,9 @@ module peripheral_bfm_apb4 #(
     bfm_master_apb4.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
 
     for (int run = 0; run < runs; run++) begin
-      if (VERBOSE > 0) $display("  Trigger Level-Random test run=%0d", run);
+      if (VERBOSE > 0) begin
+        $display("  Trigger Level-Random test run=%0d", run);
+      end
 
       //disable LVL0
       bfm_master_apb4.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
@@ -510,7 +530,9 @@ module peripheral_bfm_apb4 #(
     bfm_master_apb4.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
     for (int run = 0; run < runs; run++) begin
-      if (VERBOSE > 0) $display("  Trigger Falling-Edge test run=%0d", run);
+      if (VERBOSE > 0) begin
+        $display("  Trigger Falling-Edge test run=%0d", run);
+      end
 
       //drive 1st data onto gpio_i
       gpio_data0 = $random;
@@ -558,7 +580,9 @@ module peripheral_bfm_apb4 #(
     bfm_master_apb4.write(LVL1, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
     for (int run = 0; run < runs; run++) begin
-      if (VERBOSE > 0) $display("  Trigger Rising-Edge test run=%0d", run);
+      if (VERBOSE > 0) begin
+        $display("  Trigger Rising-Edge test run=%0d", run);
+      end
 
       //drive 1st data onto gpio_i
       gpio_data0 = $random;
@@ -605,7 +629,9 @@ module peripheral_bfm_apb4 #(
     bfm_master_apb4.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
     for (int run = 0; run < runs; run++) begin
-      if (VERBOSE > 0) $display("  Trigger Random-Edge test run=%0d", run);
+      if (VERBOSE > 0) begin
+        $display("  Trigger Random-Edge test run=%0d", run);
+      end
 
       //randomize trigger edge(s)
       lvl0 = $random;

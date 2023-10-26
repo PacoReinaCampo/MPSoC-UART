@@ -9,8 +9,8 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              Peripheral-GPIO for MPSoC                                     //
-//              General Purpose Input Output for MPSoC                        //
+//              Peripheral-BFM for MPSoC                                      //
+//              Bus Functional Model for MPSoC                                //
 //              AMBA4 APB-Lite Bus Interface                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -59,7 +59,9 @@ module peripheral_bfm_master_apb4 #(
   input                         PSLVERR
 );
 
-  always @(negedge PRESETn) reset();
+  always @(negedge PRESETn) begin
+    reset();
+  end
 
   //////////////////////////////////////////////////////////////////////////////
   //
