@@ -295,16 +295,28 @@ module peripheral_timer_ahb3 #(
                 enabled      <= 1'b1;
                 prescale_wr  <= 1'b1;
               end
-              RESERVED: ;
-              IENABLE:  ienable_wr <= gen_wval(ienable_rd, HWDATA, ahb_be);
-              IPENDING: ;
-              TIME:     time_reg[31:0] <= gen_wval(time_reg[31:0], HWDATA, ahb_be);
-              TIME_MSB: time_reg[63:32] <= gen_wval(time_reg[63:32], HWDATA, ahb_be);
+              RESERVED: begin
+              end
+              IENABLE:  begin
+                ienable_wr <= gen_wval(ienable_rd, HWDATA, ahb_be);
+              end
+              IPENDING: begin
+              end
+              TIME: begin
+                time_reg[31:0] <= gen_wval(time_reg[31:0], HWDATA, ahb_be);
+              end
+              TIME_MSB: begin
+                time_reg[63:32] <= gen_wval(time_reg[63:32], HWDATA, ahb_be);
+              end
               default: begin  //all other addresses are considered 'timecmp'
                 //write timecmp register
                 case (ahb_waddr[2])
-                  1'b0: timecmp_reg[timer_idx(ahb_waddr, TIMECMP)][31:0] <= gen_wval(timecmp_reg[timer_idx(ahb_waddr, TIMECMP)][31:0], HWDATA, ahb_be);
-                  1'b1: timecmp_reg[timer_idx(ahb_waddr, TIMECMP)][63:32] <= gen_wval(timecmp_reg[timer_idx(ahb_waddr, TIMECMP)][63:32], HWDATA, ahb_be);
+                  1'b0: begin
+                    timecmp_reg[timer_idx(ahb_waddr, TIMECMP)][31:0] <= gen_wval(timecmp_reg[timer_idx(ahb_waddr, TIMECMP)][31:0], HWDATA, ahb_be);
+                  end
+                  1'b1: begin
+                    timecmp_reg[timer_idx(ahb_waddr, TIMECMP)][63:32] <= gen_wval(timecmp_reg[timer_idx(ahb_waddr, TIMECMP)][63:32], HWDATA, ahb_be);
+                  end
                 endcase
 
                 //a write to timecmp also clears the interrupt-pending bit

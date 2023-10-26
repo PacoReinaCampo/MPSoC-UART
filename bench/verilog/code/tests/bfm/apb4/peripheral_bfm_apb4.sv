@@ -205,7 +205,11 @@ module peripheral_bfm_apb4 #(
     end
   endtask : finish_text
 
-  task check(input string name, input [PDATA_SIZE-1:0] actual, expected);
+  task check(
+    input string name,
+    input [PDATA_SIZE-1:0] actual,
+    input [PDATA_SIZE-1:0] expected
+  );
     if (VERBOSE > 2) begin
       $display("Checking %s for %b==%b", name, actual, expected);
     end
@@ -215,7 +219,11 @@ module peripheral_bfm_apb4 #(
     end
   endtask : check
 
-  task error_msg(input string name, input [PDATA_SIZE-1:0] actual, expected);
+  task error_msg(
+    input string name,
+    input [PDATA_SIZE-1:0] actual,
+    input [PDATA_SIZE-1:0] expected
+  );
     errors++;
     $display("ERROR  : Incorrect %s value. Expected: %b, received: %b @%0t", name, expected, actual, $time);
   endtask : error_msg
@@ -288,7 +296,9 @@ module peripheral_bfm_apb4 #(
   endtask : test_io_basic
 
   //Random IO tests
-  task test_io_random(input int runs = 10000);
+  task test_io_random(
+    input int runs = 10000
+  );
     logic [PDATA_SIZE-1:0] mode;
     logic [PDATA_SIZE-1:0] dir;
     logic [PDATA_SIZE-1:0] d;
@@ -371,7 +381,9 @@ module peripheral_bfm_apb4 #(
   endtask : test_clear_status
 
   //Trigger Level Low test
-  task test_trigger_level_low(input int runs = 1 << PDATA_SIZE);
+  task test_trigger_level_low(
+    input int runs = 1 << PDATA_SIZE
+  );
     logic [PDATA_SIZE-1:0] gpio_data, readdata;
 
     $display("Trigger Level-Low test ...");
@@ -414,7 +426,9 @@ module peripheral_bfm_apb4 #(
   endtask : test_trigger_level_low
 
   //Trigger Level High test
-  task test_trigger_level_high(input int runs = 1 << PDATA_SIZE);
+  task test_trigger_level_high(
+    input int runs = 1 << PDATA_SIZE
+  );
     logic [PDATA_SIZE-1:0] gpio_data;
     logic [PDATA_SIZE-1:0] readdata;
 
@@ -458,7 +472,9 @@ module peripheral_bfm_apb4 #(
   endtask : test_trigger_level_high
 
   //Trigger Level Random test
-  task test_trigger_level_random(input int runs = 10000);
+  task test_trigger_level_random(
+    input int runs = 10000
+  );
     logic [PDATA_SIZE-1:0] lvl0;
     logic [PDATA_SIZE-1:0] lvl1;
     logic [PDATA_SIZE-1:0] gpio_data;
@@ -515,7 +531,9 @@ module peripheral_bfm_apb4 #(
   endtask : test_trigger_level_random
 
   //Trigger Falling Edge test
-  task test_trigger_edge_fall(input int runs = 4 * 1 << PDATA_SIZE);
+  task test_trigger_edge_fall(
+    input int runs = 4 * 1 << PDATA_SIZE
+  );
     logic [PDATA_SIZE-1:0] gpio_data0, gpio_data1, readdata, expected;
 
     $display("Trigger Falling-Edge test ...");
@@ -565,7 +583,9 @@ module peripheral_bfm_apb4 #(
   endtask : test_trigger_edge_fall
 
   //Trigger Rising Edge test
-  task test_trigger_edge_rise(input int runs = 4 * 1 << PDATA_SIZE);
+  task test_trigger_edge_rise(
+    input int runs = 4 * 1 << PDATA_SIZE
+  );
     logic [PDATA_SIZE-1:0] gpio_data0, gpio_data1, readdata, expected;
 
     $display("Trigger Rising-Edge test ...");
@@ -615,7 +635,9 @@ module peripheral_bfm_apb4 #(
   endtask : test_trigger_edge_rise
 
   //Trigger Rising Random test
-  task test_trigger_edge_random(input int runs = 40000);
+  task test_trigger_edge_random(
+    input int runs = 40000
+  );
     logic [PDATA_SIZE-1:0] gpio_data0;
     logic [PDATA_SIZE-1:0] gpio_data1;
     logic [PDATA_SIZE-1:0] lvl0;
