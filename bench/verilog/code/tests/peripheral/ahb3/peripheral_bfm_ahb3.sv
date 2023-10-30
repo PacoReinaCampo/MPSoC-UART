@@ -230,7 +230,9 @@ module peripheral_bfm_ahb3 #(
         end else begin
           wbuffer[n] = new[4];
           rbuffer[n] = new[4];
-          for (int i = 0; i < 4; i++) wbuffer[n][i] = $random & 'hff;
+          for (int i = 0; i < 4; i++) begin
+            wbuffer[n][i] = $random & 'hff;
+          end
         end
       end
 
@@ -267,8 +269,11 @@ module peripheral_bfm_ahb3 #(
         end
       end
 
-      if (error) $display("FAILED");
-      else $display("OK");
+      if (error) begin
+        $display("FAILED");
+      end else begin
+        $display("OK");
+      end
     end
 
     //reset registers to all '0'

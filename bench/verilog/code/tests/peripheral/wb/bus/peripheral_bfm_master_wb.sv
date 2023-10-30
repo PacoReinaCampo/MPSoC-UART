@@ -332,7 +332,9 @@ module peripheral_bfm_master_wb #(
       end
 
       @(posedge wb_clk_i);
-      while (wb_ack_i !== 1'b1) @(posedge wb_clk_i);
+      while (wb_ack_i !== 1'b1) begin
+        @(posedge wb_clk_i);
+      end
       data = wb_dat_i;
     end
   endtask  // while
