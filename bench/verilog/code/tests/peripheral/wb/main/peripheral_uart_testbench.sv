@@ -98,7 +98,7 @@ module peripheral_uart_testbench;
     .wb_ack_i(wb_ack),
     .wb_err_i(1'b0),
     .wb_rty_i(1'b0),
-    //Test Control
+    // Test Control
     .done    (done)
   );
 

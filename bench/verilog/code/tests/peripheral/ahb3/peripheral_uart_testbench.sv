@@ -57,11 +57,11 @@ module peripheral_uart_testbench;
   // Variables
   //
 
-  //Common signals
+  // Common signals
   wire                        HRESETn;
   wire                        HCLK;
 
-  //UART AHB3
+  // UART AHB3
   wire                        mst_uart_HSEL;
   wire  [HADDR_SIZE     -1:0] mst_uart_HADDR;
   wire  [HDATA_SIZE     -1:0] mst_uart_HWDATA;
@@ -95,7 +95,7 @@ module peripheral_uart_testbench;
   // Module Body
   //
 
-  //DUT AHB3
+  // DUT AHB3
   peripheral_apb2ahb #(
     .HADDR_SIZE(HADDR_SIZE),
     .HDATA_SIZE(HDATA_SIZE),
@@ -103,7 +103,7 @@ module peripheral_uart_testbench;
     .PDATA_SIZE(APB_DATA_WIDTH),
     .SYNC_DEPTH(SYNC_DEPTH)
   ) apb2ahb (
-    //AHB Slave Interface
+    // AHB Slave Interface
     .HRESETn(HRESETn),
     .HCLK   (HCLK),
 
@@ -121,7 +121,7 @@ module peripheral_uart_testbench;
     .HREADY   (mst_uart_HREADY),
     .HRESP    (mst_uart_HRESP),
 
-    //APB Master Interface
+    // APB Master Interface
     .PRESETn(HRESETn),
     .PCLK   (HCLK),
 

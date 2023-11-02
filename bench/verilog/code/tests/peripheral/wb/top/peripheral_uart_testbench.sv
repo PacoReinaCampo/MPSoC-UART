@@ -54,11 +54,11 @@ module peripheral_uart_testbench;
   // Variables
   //
 
-  //Common signals
+  // Common signals
   wire        rst;
   wire        clk;
 
-  //UART WB
+  // UART WB
 
   // WISHBONE interface
   logic [2:0] wb_adr_i;
@@ -89,7 +89,7 @@ module peripheral_uart_testbench;
   // Module Body
   //
 
-  //DUT WB
+  // DUT WB
   peripheral_uart_wb #(
     .SIM  (SIM),
     .DEBUG(DEBUG)

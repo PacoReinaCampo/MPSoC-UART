@@ -67,7 +67,7 @@ module peripheral_uart_testbench;
   // Module Body
   //
 
-  //DUT BB
+  // DUT BB
   peripheral_uart_bb uart_bb (
     .mclk   (mclk),    // Main system clock
     .puc_rst(puc_rst), // Main system reset

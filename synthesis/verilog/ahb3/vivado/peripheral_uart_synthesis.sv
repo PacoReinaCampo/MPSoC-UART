@@ -47,11 +47,11 @@ module peripheral_uart_synthesis #(
   parameter APB_DATA_WIDTH = 32,
   parameter SYNC_DEPTH     = 3
 ) (
-  //Common signals
+  // Common signals
   input HRESETn,
   input HCLK,
 
-  //UART AHB3
+  // UART AHB3
   input                         uart_HSEL,
   input      [HADDR_SIZE  -1:0] uart_HADDR,
   input      [HDATA_SIZE  -1:0] uart_HWDATA,
@@ -72,7 +72,7 @@ module peripheral_uart_synthesis #(
   // Variables
   //
 
-  //Common signals
+  // Common signals
   logic [APB_ADDR_WIDTH -1:0] uart_PADDR;
   logic [APB_DATA_WIDTH -1:0] uart_PWDATA;
   logic                       uart_PWRITE;
@@ -100,7 +100,7 @@ module peripheral_uart_synthesis #(
     .PDATA_SIZE(APB_DATA_WIDTH),
     .SYNC_DEPTH(SYNC_DEPTH)
   ) bridge_apb2ahb (
-    //AHB Slave Interface
+    // AHB Slave Interface
     .HRESETn(HRESETn),
     .HCLK   (HCLK),
 
@@ -118,7 +118,7 @@ module peripheral_uart_synthesis #(
     .HREADY   (uart_HREADY),
     .HRESP    (uart_HRESP),
 
-    //APB Master Interface
+    // APB Master Interface
     .PRESETn(HRESETn),
     .PCLK   (HCLK),
 
