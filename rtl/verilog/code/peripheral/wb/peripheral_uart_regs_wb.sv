@@ -69,9 +69,8 @@ module peripheral_uart_regs_wb #(
 );
 
   //////////////////////////////////////////////////////////////////////////////
-  //
   // Variables
-  //
+  //////////////////////////////////////////////////////////////////////////////
   reg         enable;
 
   wire        srx_pad;
@@ -131,9 +130,8 @@ module peripheral_uart_regs_wb #(
   reg  [                    7:0] block_value;  // One character length minus stop bit
 
   //////////////////////////////////////////////////////////////////////////////
-  //
   // Module Body
-  //
+  //////////////////////////////////////////////////////////////////////////////
   assign baud_o                                      = enable;  // baud_o is actually the enable signal
   assign lsr[7:0]                                    = {lsr7r, lsr6r, lsr5r, lsr4r, lsr3r, lsr2r, lsr1r, lsr0r};
 

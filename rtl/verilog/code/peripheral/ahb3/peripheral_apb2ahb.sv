@@ -82,9 +82,8 @@ module peripheral_apb2ahb #(
 );
 
   //////////////////////////////////////////////////////////////////////////////
-  //
   // Constants
-  //
+  //////////////////////////////////////////////////////////////////////////////
   localparam ST_AHB_IDLE = 2'b00, ST_AHB_TRANSFER = 2'b01, ST_AHB_ERROR = 2'b10;
 
   localparam ST_APB_IDLE = 2'b00, ST_APB_SETUP = 2'b01, ST_APB_TRANSFER = 2'b10;
@@ -97,9 +96,8 @@ module peripheral_apb2ahb #(
   localparam SYNC_DEPTH_CHK = SYNC_DEPTH > SYNC_DEPTH_MIN ? SYNC_DEPTH : SYNC_DEPTH_MIN;
 
   //////////////////////////////////////////////////////////////////////////////
-  //
   // Variables
-  //
+  //////////////////////////////////////////////////////////////////////////////
 
   logic                      ahb_treq;  // transfer request from AHB Statemachine
   logic                      treq_toggle;  // toggle-signal-version
@@ -231,9 +229,8 @@ module peripheral_apb2ahb #(
   endfunction  // pstrb
 
   //////////////////////////////////////////////////////////////////////////////
-  //
   // Module Body
-  //
+  //////////////////////////////////////////////////////////////////////////////
 
   // AHB Statemachine
   always @(posedge HCLK, negedge HRESETn) begin
