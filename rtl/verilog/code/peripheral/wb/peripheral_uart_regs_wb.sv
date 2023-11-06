@@ -218,10 +218,13 @@ module peripheral_uart_regs_wb #(
 
   // rf_pop signal handling
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) rf_pop <= 0;
-    else if (rf_pop)  // restore the signal to 0 after one clock cycle
+    if (wb_rst_i) begin
       rf_pop <= 0;
-    else if (wb_re_i && wb_addr_i == UART_REG_RB && !dlab) rf_pop <= 1;  // advance read pointer
+    end else if (rf_pop) begin  // restore the signal to 0 after one clock cycle
+      rf_pop <= 0;
+    end else if (wb_re_i && wb_addr_i == UART_REG_RB && !dlab) begin
+      rf_pop <= 1;  // advance read pointer
+    end
   end
 
   wire lsr_mask_condition;
@@ -238,9 +241,11 @@ module peripheral_uart_regs_wb #(
 
   // lsr_mask_d delayed signal handling
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) lsr_mask_d <= 0;
-    else  // reset bits in the Line Status Register
+    if (wb_rst_i) begin
+      lsr_mask_d <= 0;
+    end else begin  // reset bits in the Line Status Register
       lsr_mask_d <= lsr_mask_condition;
+    end
   end
 
   // lsr_mask is rise detected
@@ -248,17 +253,24 @@ module peripheral_uart_regs_wb #(
 
   // msi_reset signal handling
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) msi_reset <= 1;
-    else if (msi_reset) msi_reset <= 0;
-    else if (msr_read) msi_reset <= 1;  // reset bits in Modem Status Register
+    if (wb_rst_i) begin
+      msi_reset <= 1;
+    end else if (msi_reset) begin
+      msi_reset <= 0;
+    end else if (msr_read) begin
+      msi_reset <= 1;  // reset bits in Modem Status Register
+    end
   end
 
   //   WRITES AND RESETS
 
   // Line Control Register
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) lcr <= 8'b00000011;  // 8n1 setting
-    else if (wb_we_i && wb_addr_i == UART_REG_LC) lcr <= wb_dat_i;
+    if (wb_rst_i) begin
+      lcr <= 8'b00000011;  // 8n1 setting
+    end else if (wb_we_i && wb_addr_i == UART_REG_LC) begin
+      lcr <= wb_dat_i;
+    end
   end
 
   // Interrupt Enable Register or UART_DL2
@@ -267,10 +279,13 @@ module peripheral_uart_regs_wb #(
       ier      <= 4'b0000;  // no interrupts after reset
 
       dl[15:8] <= 8'b0;
-    end else if (wb_we_i && wb_addr_i == UART_REG_IE)
+    end else if (wb_we_i && wb_addr_i == UART_REG_IE) begin
       if (dlab) begin
         dl[15:8] <= wb_dat_i;
-      end else ier <= wb_dat_i[3:0];  // ier uses only 4 lsb
+      end else begin
+        ier <= wb_dat_i[3:0];  // ier uses only 4 lsb
+      end
+    end
   end
 
   // FIFO Control Register and rx_reset, tx_reset signals
@@ -291,15 +306,21 @@ module peripheral_uart_regs_wb #(
 
   // Modem Control Register
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) mcr <= 5'b0;
-    else if (wb_we_i && wb_addr_i == UART_REG_MC) mcr <= wb_dat_i[4:0];
+    if (wb_rst_i) begin
+      mcr <= 5'b0;
+    end else if (wb_we_i && wb_addr_i == UART_REG_MC) begin
+      mcr <= wb_dat_i[4:0];
+    end
   end
 
   // Scratch register
   // Line Control Register
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) scratch <= 0;  // 8n1 setting
-    else if (wb_we_i && wb_addr_i == UART_REG_SR) scratch <= wb_dat_i;
+    if (wb_rst_i) begin
+      scratch <= 0;  // 8n1 setting
+    end else if (wb_we_i && wb_addr_i == UART_REG_SR) begin
+      scratch <= wb_dat_i;
+    end
   end
 
   // TX_FIFO or UART_DL1
@@ -309,7 +330,7 @@ module peripheral_uart_regs_wb #(
 
       tf_push   <= 1'b0;
       start_dlc <= 1'b0;
-    end else if (wb_we_i && wb_addr_i == UART_REG_TR)
+    end else if (wb_we_i && wb_addr_i == UART_REG_TR) begin
       if (dlab) begin
         dl[7:0]   <= wb_dat_i;
 
@@ -319,20 +340,21 @@ module peripheral_uart_regs_wb #(
         tf_push   <= 1'b1;
         start_dlc <= 1'b0;
       end  // else: !if(dlab)
-    else begin
+    end else begin
       start_dlc <= 1'b0;
       tf_push   <= 1'b0;
     end  // else: !if(dlab)
   end
 
   // Receiver FIFO trigger level selection logic (asynchronous mux)
-  always @(fcr)
+  always @(fcr) begin
     case (fcr[1:0])
       2'b00: trigger_level = 1;
       2'b01: trigger_level = 4;
       2'b10: trigger_level = 8;
       2'b11: trigger_level = 14;
     endcase  // case(fcr[1:0])
+  end
 
   //  STATUS REGISTERS
 
@@ -365,125 +387,179 @@ module peripheral_uart_regs_wb #(
   reg lsr0_d;
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) lsr0_d <= 0;
-    else lsr0_d <= lsr0;
+    if (wb_rst_i) begin
+      lsr0_d <= 0;
+    end else begin
+      lsr0_d <= lsr0;
+    end
   end
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) lsr0r <= 0;
-    else
+    if (wb_rst_i) begin
+      lsr0r <= 0;
+    end else begin
       lsr0r <= (rf_count == 1 && rf_pop && !rf_push_pulse || rx_reset) ? 1'b0 :  // deassert condition
-      lsr0r || (lsr0 && ~lsr0_d);  // set on rise of lsr0 and keep asserted until deasserted 
+      lsr0r || (lsr0 && ~lsr0_d);  // set on rise of lsr0 and keep asserted until deasserted
+    end
   end
 
   // lsr bit 1 (receiver overrun)
   reg lsr1_d;  // delayed
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) lsr1_d <= 0;
-    else lsr1_d <= lsr1;
+    if (wb_rst_i) begin
+      lsr1_d <= 0;
+    end else begin
+      lsr1_d <= lsr1;
+    end
   end
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) lsr1r <= 0;
-    else lsr1r <= lsr_mask ? 1'b0 : lsr1r || (lsr1 && ~lsr1_d);  // set on rise
+    if (wb_rst_i) begin
+      lsr1r <= 0;
+    end else begin
+      lsr1r <= lsr_mask ? 1'b0 : lsr1r || (lsr1 && ~lsr1_d);  // set on rise
+    end
   end
 
   // lsr bit 2 (parity error)
   reg lsr2_d;  // delayed
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) lsr2_d <= 0;
-    else lsr2_d <= lsr2;
+    if (wb_rst_i) begin
+      lsr2_d <= 0;
+    end else begin
+      lsr2_d <= lsr2;
+    end
   end
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) lsr2r <= 0;
-    else lsr2r <= lsr_mask ? 1'b0 : lsr2r || (lsr2 && ~lsr2_d);  // set on rise
+    if (wb_rst_i) begin
+      lsr2r <= 0;
+    end else begin
+      lsr2r <= lsr_mask ? 1'b0 : lsr2r || (lsr2 && ~lsr2_d);  // set on rise
+    end
   end
 
   // lsr bit 3 (framing error)
   reg lsr3_d;  // delayed
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) lsr3_d <= 0;
-    else lsr3_d <= lsr3;
+    if (wb_rst_i) begin
+      lsr3_d <= 0;
+    end else begin
+      lsr3_d <= lsr3;
+    end
   end
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) lsr3r <= 0;
-    else lsr3r <= lsr_mask ? 1'b0 : lsr3r || (lsr3 && ~lsr3_d);  // set on rise
+    if (wb_rst_i) begin
+      lsr3r <= 0;
+    end else begin
+      lsr3r <= lsr_mask ? 1'b0 : lsr3r || (lsr3 && ~lsr3_d);  // set on rise
+    end
   end
 
   // lsr bit 4 (break indicator)
   reg lsr4_d;  // delayed
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) lsr4_d <= 0;
-    else lsr4_d <= lsr4;
+    if (wb_rst_i) begin
+      lsr4_d <= 0;
+    end else begin
+      lsr4_d <= lsr4;
+    end
   end
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) lsr4r <= 0;
-    else lsr4r <= lsr_mask ? 1'b0 : lsr4r || (lsr4 && ~lsr4_d);
+    if (wb_rst_i) begin
+      lsr4r <= 0;
+    end else begin
+      lsr4r <= lsr_mask ? 1'b0 : lsr4r || (lsr4 && ~lsr4_d);
+    end
   end
 
   // lsr bit 5 (transmitter fifo is empty)
   reg lsr5_d;
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) lsr5_d <= 1;
-    else lsr5_d <= lsr5;
+    if (wb_rst_i) begin
+      lsr5_d <= 1;
+    end else begin
+      lsr5_d <= lsr5;
+    end
   end
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) lsr5r <= 1;
-    else lsr5r <= (fifo_write) ? 1'b0 : lsr5r || (lsr5 && ~lsr5_d);
+    if (wb_rst_i) begin
+      lsr5r <= 1;
+    end else begin
+      lsr5r <= (fifo_write) ? 1'b0 : lsr5r || (lsr5 && ~lsr5_d);
+    end
   end
 
   // lsr bit 6 (transmitter empty indicator)
   reg lsr6_d;
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) lsr6_d <= 1;
-    else lsr6_d <= lsr6;
+    if (wb_rst_i) begin
+      lsr6_d <= 1;
+    end else begin
+      lsr6_d <= lsr6;
+    end
   end
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) lsr6r <= 1;
-    else lsr6r <= (fifo_write) ? 1'b0 : lsr6r || (lsr6 && ~lsr6_d);
+    if (wb_rst_i) begin
+      lsr6r <= 1;
+    end else begin
+      lsr6r <= (fifo_write) ? 1'b0 : lsr6r || (lsr6 && ~lsr6_d);
+    end
   end
 
   // lsr bit 7 (error in fifo)
   reg lsr7_d;
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) lsr7_d <= 0;
-    else lsr7_d <= lsr7;
+    if (wb_rst_i) begin
+      lsr7_d <= 0;
+    end else begin
+      lsr7_d <= lsr7;
+    end
   end
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) lsr7r <= 0;
-    else lsr7r <= lsr_mask ? 1'b0 : lsr7r || (lsr7 && ~lsr7_d);
+    if (wb_rst_i) begin
+      lsr7r <= 0;
+    end else begin
+      lsr7r <= lsr_mask ? 1'b0 : lsr7r || (lsr7 && ~lsr7_d);
+    end
   end
 
   // Frequency divider
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) dlc <= 0;
-    else if (start_dlc | ~(|dlc)) dlc <= dl - 16'd1;  // preset counter
-    else dlc <= dlc - 16'd1;  // decrement counter
+    if (wb_rst_i) begin
+      dlc <= 0;
+    end else if (start_dlc | ~(|dlc)) begin
+      dlc <= dl - 16'd1;  // preset counter
+    end else begin
+      dlc <= dlc - 16'd1;  // decrement counter
+    end
   end
 
   // Enable signal generation logic
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) enable <= 1'b0;
-    else if (|dl & ~(|dlc))  // dl>0 & dlc==0
+    if (wb_rst_i) begin
+      enable <= 1'b0;
+    end else if (|dl & ~(|dlc)) begin  // dl>0 & dlc==0
       enable <= 1'b1;
-    else enable <= 1'b0;
+    end else begin
+      enable <= 1'b0;
+    end
   end
 
   // Delaying THRE status for one character cycle after a character is written to an empty fifo.
-  always @(lcr)
+  always @(lcr) begin
     case (lcr[3:0])
       4'b0000:                            block_value = 95;  // 6 bits
       4'b0100:                            block_value = 103;  // 6.5 bits
@@ -494,14 +570,17 @@ module peripheral_uart_regs_wb #(
       4'b0111, 4'b1011, 4'b1110:          block_value = 159;  // 10 bits
       4'b1111:                            block_value = 175;  // 11 bits
     endcase  // case(lcr[3:0])
+  end
 
   // Counting time of one character minus stop bit
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) block_cnt <= 8'd0;
-    else if (lsr5r & fifo_write)  // THRE bit set & write to fifo occured
+    if (wb_rst_i) begin
+      block_cnt <= 8'd0;
+    end else if (lsr5r & fifo_write) begin  // THRE bit set & write to fifo occured
       block_cnt <= SIM ? 8'd1 : block_value;
-    else if (enable & block_cnt != 8'b0)  // only work on enable times
+    end else if (enable & block_cnt != 8'b0) begin  // only work on enable times
       block_cnt <= block_cnt - 8'd1;  // decrement break counter
+    end
   end  // always of break condition detection
 
   // Generating THRE status enable signal
@@ -522,28 +601,43 @@ module peripheral_uart_regs_wb #(
 
   // delay lines
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) rls_int_d <= 0;
-    else rls_int_d <= rls_int;
+    if (wb_rst_i) begin
+      rls_int_d <= 0;
+    end else begin
+      rls_int_d <= rls_int;
+    end
   end
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) rda_int_d <= 0;
-    else rda_int_d <= rda_int;
+    if (wb_rst_i) begin
+      rda_int_d <= 0;
+    end else begin
+      rda_int_d <= rda_int;
+    end
   end
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) thre_int_d <= 0;
-    else thre_int_d <= thre_int;
+    if (wb_rst_i) begin
+      thre_int_d <= 0;
+    end else begin
+      thre_int_d <= thre_int;
+    end
   end
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) ms_int_d <= 0;
-    else ms_int_d <= ms_int;
+    if (wb_rst_i) begin
+      ms_int_d <= 0;
+    end else begin
+      ms_int_d <= ms_int;
+    end
   end
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) ti_int_d <= 0;
-    else ti_int_d <= ti_int;
+    if (wb_rst_i) begin
+      ti_int_d <= 0;
+    end else begin
+      ti_int_d <= ti_int;
+    end
   end
 
   // rise detection signals
@@ -568,64 +662,82 @@ module peripheral_uart_regs_wb #(
 
   // interrupt pending flags assignments
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) rls_int_pnd <= 0;
-    else
+    if (wb_rst_i) begin
+      rls_int_pnd <= 0;
+    end else begin
       rls_int_pnd <= lsr_mask ? 1'b0 :  // reset condition
       rls_int_rise ? 1'b1 :  // latch condition
       rls_int_pnd && ier[UART_IE_RLS];  // default operation: remove if masked
+    end
   end
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) rda_int_pnd <= 0;
-    else
+    if (wb_rst_i) begin
+      rda_int_pnd <= 0;
+    end else begin
       rda_int_pnd <= ((rf_count == {1'b0, trigger_level}) && fifo_read) ? 1'b0 :  // reset condition
       rda_int_rise ? 1'b1 :  // latch condition
       rda_int_pnd && ier[UART_IE_RDA];  // default operation: remove if masked
+    end
   end
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) thre_int_pnd <= 0;
-    else thre_int_pnd <= fifo_write || (iir_read & ~iir[UART_II_IP] & iir[3:1] == UART_II_THRE) ? 1'b0 : thre_int_rise ? 1'b1 : thre_int_pnd && ier[UART_IE_THRE];
+    if (wb_rst_i) begin
+      thre_int_pnd <= 0;
+    end else begin
+      thre_int_pnd <= fifo_write || (iir_read & ~iir[UART_II_IP] & iir[3:1] == UART_II_THRE) ? 1'b0 : thre_int_rise ? 1'b1 : thre_int_pnd && ier[UART_IE_THRE];
+    end
   end
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) ms_int_pnd <= 0;
-    else ms_int_pnd <= msr_read ? 1'b0 : ms_int_rise ? 1'b1 : ms_int_pnd && ier[UART_IE_MS];
+    if (wb_rst_i) begin
+      ms_int_pnd <= 0;
+    end else begin
+      ms_int_pnd <= msr_read ? 1'b0 : ms_int_rise ? 1'b1 : ms_int_pnd && ier[UART_IE_MS];
+    end
   end
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) ti_int_pnd <= 0;
-    else ti_int_pnd <= fifo_read ? 1'b0 : ti_int_rise ? 1'b1 : ti_int_pnd && ier[UART_IE_RDA];
+    if (wb_rst_i) begin
+      ti_int_pnd <= 0;
+    end else begin
+      ti_int_pnd <= fifo_read ? 1'b0 : ti_int_rise ? 1'b1 : ti_int_pnd && ier[UART_IE_RDA];
+    end
   end  // end of pending flags
 
   // INT_O logic
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) int_o <= 1'b0;
-    else int_o <= rls_int_pnd ? ~lsr_mask : rda_int_pnd ? 1'b1 : ti_int_pnd ? ~fifo_read : thre_int_pnd ? !(fifo_write & iir_read) : ms_int_pnd ? ~msr_read : 1'd0;  // if no interrupt are pending
+    if (wb_rst_i) begin
+      int_o <= 1'b0;
+    end else begin
+      int_o <= rls_int_pnd ? ~lsr_mask : rda_int_pnd ? 1'b1 : ti_int_pnd ? ~fifo_read : thre_int_pnd ? !(fifo_write & iir_read) : ms_int_pnd ? ~msr_read : 1'd0;  // if no interrupt are pending
+    end
   end
 
   // Interrupt Identification register
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) iir <= 1;
-    else if (rls_int_pnd) begin  // interrupt is pending
+    if (wb_rst_i) begin
+      iir <= 1;
+    end else if (rls_int_pnd) begin  // interrupt is pending
       iir[3:1]        <= UART_II_RLS;  // set identification register to correct value
       iir[UART_II_IP] <= 1'b0;  // and clear the IIR bit 0 (interrupt pending)
-    end else  // the sequence of conditions determines priority of interrupt identification
-    if (rda_int) begin
-      iir[3:1]        <= UART_II_RDA;
-      iir[UART_II_IP] <= 1'b0;
-    end else if (ti_int_pnd) begin
-      iir[3:1]        <= UART_II_TI;
-      iir[UART_II_IP] <= 1'b0;
-    end else if (thre_int_pnd) begin
-      iir[3:1]        <= UART_II_THRE;
-      iir[UART_II_IP] <= 1'b0;
-    end else if (ms_int_pnd) begin
-      iir[3:1]        <= UART_II_MS;
-      iir[UART_II_IP] <= 1'b0;
-    end else begin  // no interrupt is pending
-      iir[3:1]        <= 0;
-      iir[UART_II_IP] <= 1'b1;
+    end else begin  // the sequence of conditions determines priority of interrupt identification
+      if (rda_int) begin
+        iir[3:1]        <= UART_II_RDA;
+        iir[UART_II_IP] <= 1'b0;
+      end else if (ti_int_pnd) begin
+        iir[3:1]        <= UART_II_TI;
+        iir[UART_II_IP] <= 1'b0;
+      end else if (thre_int_pnd) begin
+        iir[3:1]        <= UART_II_THRE;
+        iir[UART_II_IP] <= 1'b0;
+      end else if (ms_int_pnd) begin
+        iir[3:1]        <= UART_II_MS;
+        iir[UART_II_IP] <= 1'b0;
+      end else begin  // no interrupt is pending
+        iir[3:1]        <= 0;
+        iir[UART_II_IP] <= 1'b1;
+      end
     end
   end
 endmodule

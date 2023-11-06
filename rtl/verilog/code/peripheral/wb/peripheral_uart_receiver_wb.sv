@@ -164,11 +164,13 @@ module peripheral_uart_receiver_wb (
         end
         sr_rec_start: begin
           rf_push <= 1'b0;
-          if (rcounter16_eq_7)  // check the pulse
-            if (srx_pad_i == 1'b1)  // no start bit
+          if (rcounter16_eq_7) begin  // check the pulse
+            if (srx_pad_i == 1'b1) begin  // no start bit
               rstate <= sr_idle;
-            else  // start bit detected
+            end else begin  // start bit detected
               rstate <= sr_rec_prepare;
+            end
+          end
           rcounter16 <= rcounter16_minus_1;
         end
         sr_rec_prepare: begin
@@ -182,11 +184,15 @@ module peripheral_uart_receiver_wb (
             rstate     <= sr_rec_bit;
             rcounter16 <= 4'b1110;
             rshift     <= 0;
-          end else rstate <= sr_rec_prepare;
+          end else begin
+            rstate <= sr_rec_prepare;
+          end
           rcounter16 <= rcounter16_minus_1;
         end
         sr_rec_bit: begin
-          if (rcounter16_eq_0) rstate <= sr_end_bit;
+          if (rcounter16_eq_0) begin
+            rstate <= sr_end_bit;
+          end
           if (rcounter16_eq_7)  // read the bit
             case (lcr[  /*UART_LC_BITS*/ 1:0])  // number of bits in a word
               2'b00: rshift[4:0] <= {srx_pad_i, rshift[4:1]};
@@ -197,14 +203,14 @@ module peripheral_uart_receiver_wb (
           rcounter16 <= rcounter16_minus_1;
         end
         sr_end_bit: begin
-          if (rbit_counter == 3'b0)  // no more bits in word
-            if (lcr[UART_LC_PE])  // choose state based on parity
+          if (rbit_counter == 3'b0) begin  // no more bits in word
+            if (lcr[UART_LC_PE]) begin  // choose state based on parity
               rstate <= sr_rec_parity;
-            else begin
+            end else begin
               rstate        <= sr_rec_stop;
               rparity_error <= 1'b0;  // no parity - no error :)
             end
-          else begin  // else we have more bits to read
+          end else begin  // else we have more bits to read
             rstate       <= sr_rec_bit;
             rbit_counter <= rbit_counter - 3'd1;
           end
@@ -238,7 +244,9 @@ module peripheral_uart_receiver_wb (
         if (rcounter16_eq_0) begin
           rstate     <= sr_rec_stop;
           rcounter16 <= 4'b1110;
-        end else rcounter16 <= rcounter16_minus_1;
+        end else begin
+          rcounter16 <= rcounter16_minus_1;
+        end
         sr_rec_stop: begin
           if (rcounter16_eq_7) begin  // read the parity
             rframing_error <= !srx_pad_i;  // no framing error if input is 1 (stop bit)
@@ -249,8 +257,11 @@ module peripheral_uart_receiver_wb (
         sr_push: begin
           // $display($time, ": received: %b", rf_data_in);
           if (srx_pad_i | break_error) begin
-            if (break_error) rf_data_in <= {8'b0, 3'b100};  // break input (empty character) to receiver FIFO
-            else rf_data_in <= {rshift, 1'b0, rparity_error, rframing_error};
+            if (break_error) begin
+              rf_data_in <= {8'b0, 3'b100};  // break input (empty character) to receiver FIFO
+            end else begin
+              rf_data_in <= {rshift, 1'b0, rparity_error, rframing_error};
+            end
             rf_push <= 1'b1;
             rstate  <= sr_idle;
           end else if (~rframing_error) begin  // There's always a framing before break_error -> wait for break or srx_pad_i
@@ -260,14 +271,19 @@ module peripheral_uart_receiver_wb (
             rstate     <= sr_rec_start;
           end
         end
-        default: rstate <= sr_idle;
+        default: begin
+          rstate <= sr_idle;
+        end
       endcase
     end  // if (enable)
   end  // always of receiver
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) rf_push_q <= 0;
-    else rf_push_q <= rf_push;
+    if (wb_rst_i) begin
+      rf_push_q <= 0;
+    end else begin
+      rf_push_q <= rf_push;
+    end
   end
 
   assign rf_push_pulse = rf_push & ~rf_push_q;
@@ -288,18 +304,23 @@ module peripheral_uart_receiver_wb (
   assign brc_value = toc_value[9:2];  // the same as timeout but 1 insead of 4 character times
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) counter_b <= 8'd159;
-    else if (srx_pad_i) counter_b <= brc_value;  // character time length - 1
-    else if (enable & counter_b != 8'b0)  // only work on enable times  break not reached.
+    if (wb_rst_i) begin
+      counter_b <= 8'd159;
+    end else if (srx_pad_i) begin
+      counter_b <= brc_value;  // character time length - 1
+    end else if (enable & counter_b != 8'b0) begin  // only work on enable times  break not reached.
       counter_b <= counter_b - 8'd1;  // decrement break counter
+    end
   end  // always of break condition detection
 
   // Timeout condition detection
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) counter_t <= 10'd639;  // 10 bits for the default 8N1
-    else if (rf_push_pulse || rf_pop || rf_count == 0)  // counter is reset when RX FIFO is empty, accessed or above trigger level
+    if (wb_rst_i) begin
+      counter_t <= 10'd639;  // 10 bits for the default 8N1
+    end else if (rf_push_pulse || rf_pop || rf_count == 0) begin  // counter is reset when RX FIFO is empty, accessed or above trigger level
       counter_t <= toc_value;
-    else if (enable && counter_t != 10'b0)  // we don't want to underflow
+    end else if (enable && counter_t != 10'b0) begin  // we don't want to underflow
       counter_t <= counter_t - 10'd1;
+    end
   end
 endmodule

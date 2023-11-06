@@ -81,12 +81,12 @@ module peripheral_uart_bridge_wb (
   //////////////////////////////////////////////////////////////////////////////
   // Module Body
   //////////////////////////////////////////////////////////////////////////////
-  always @(posedge clk or posedge wb_rst_i)
+  always @(posedge clk or posedge wb_rst_i) begin
     if (wb_rst_i) begin
       wb_ack_o <= 1'b0;
       wbstate  <= 0;
       wre      <= 1'b1;
-    end else
+    end else begin
       case (wbstate)
         0: begin
           if (wb_stb_is & wb_cyc_is) begin
@@ -114,6 +114,8 @@ module peripheral_uart_bridge_wb (
           wre      <= 1;
         end
       endcase
+    end
+  end
 
   assign we_o = wb_we_is & wb_stb_is & wb_cyc_is & wre;  // WE for registers  
   assign re_o = ~wb_we_is & wb_stb_is & wb_cyc_is & wre;  // RE for registers  
@@ -136,8 +138,11 @@ module peripheral_uart_bridge_wb (
   end
 
   always @(posedge clk or posedge wb_rst_i) begin
-    if (wb_rst_i) wb_dat_o <= 0;
-    else wb_dat_o <= wb_dat8_o;
+    if (wb_rst_i) begin
+      wb_dat_o <= 0;
+    end else begin
+      wb_dat_o <= wb_dat8_o;
+    end
   end
 
   always @(wb_dat_is) begin

@@ -133,9 +133,8 @@ module peripheral_apb2ahb #(
   logic [               9:0] apb_beat_data_offset;
 
   //////////////////////////////////////////////////////////////////////////////
-  //
   // Tasks
-  //
+  //////////////////////////////////////////////////////////////////////////////
 
   task ahb_no_transfer;
     ahb_fsm   <= ST_AHB_IDLE;
@@ -153,9 +152,8 @@ module peripheral_apb2ahb #(
   endtask  // ahb_prep_transfer
 
   //////////////////////////////////////////////////////////////////////////////
-  //
   // Functions
-  //
+  //////////////////////////////////////////////////////////////////////////////
 
   function [6:0] apb_beats;
     input [2:0] hsize;
@@ -307,33 +305,47 @@ module peripheral_apb2ahb #(
   end
 
   always @(posedge HCLK) begin
-    if (latch_ahb_hwdata) ahb_hwdata <= HWDATA;
+    if (latch_ahb_hwdata) begin
+      ahb_hwdata <= HWDATA;
+    end
   end
 
   // Clock domain crossing ...
 
   // AHB -> APB
   always @(posedge HCLK, negedge HRESETn) begin
-    if (!HRESETn) treq_toggle <= 1'b0;
-    else if (ahb_treq) treq_toggle <= ~treq_toggle;
+    if (!HRESETn) begin
+      treq_toggle <= 1'b0;
+    end else if (ahb_treq) begin
+      treq_toggle <= ~treq_toggle;
+    end
   end
 
   always @(posedge PCLK, negedge PRESETn) begin
-    if (!PRESETn) treq_sync <= 'h0;
-    else treq_sync <= {treq_sync[SYNC_DEPTH-2:0], treq_toggle};
+    if (!PRESETn) begin
+      treq_sync <= 'h0;
+    end else begin
+      treq_sync <= {treq_sync[SYNC_DEPTH-2:0], treq_toggle};
+    end
   end
 
   assign apb_treq_strb = treq_sync[SYNC_DEPTH-1] ^ treq_sync[SYNC_DEPTH-2];
 
   // APB -> AHB
   always @(posedge PCLK, negedge PRESETn) begin
-    if (!PRESETn) tack_toggle <= 1'b0;
-    else if (apb_tack) tack_toggle <= ~tack_toggle;
+    if (!PRESETn) begin
+      tack_toggle <= 1'b0;
+    end else if (apb_tack) begin
+      tack_toggle <= ~tack_toggle;
+    end
   end
 
   always @(posedge HCLK, negedge HRESETn) begin
-    if (!HRESETn) tack_sync <= 'h0;
-    else tack_sync <= {tack_sync[SYNC_DEPTH-2:0], tack_toggle};
+    if (!HRESETn) begin
+      tack_sync <= 'h0;
+    end else begin
+      tack_sync <= {tack_sync[SYNC_DEPTH-2:0], tack_toggle};
+    end
   end
 
   assign ahb_tack_strb = tack_sync[SYNC_DEPTH-1] ^ tack_sync[SYNC_DEPTH-2];

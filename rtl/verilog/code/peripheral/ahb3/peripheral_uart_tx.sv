@@ -156,8 +156,11 @@ module peripheral_uart_tx (
         tx_o       = 1'b1;
         baudgen_en = 1'b1;
         if (bit_done) begin
-          if (cfg_stop_bits_i) NS = STOP_BIT_LAST;
-          else NS = IDLE;
+          if (cfg_stop_bits_i) begin
+            NS = STOP_BIT_LAST;
+          end else begin
+            NS = IDLE;
+          end
         end
       end
       STOP_BIT_LAST: begin
@@ -185,8 +188,11 @@ module peripheral_uart_tx (
         reg_data <= reg_data_next;
       end
       reg_bit_count <= reg_bit_count_next;
-      if (cfg_en_i) CS <= NS;
-      else CS <= IDLE;
+      if (cfg_en_i) begin
+        CS <= NS;
+      end else begin
+        CS <= IDLE;
+      end
     end
   end
 

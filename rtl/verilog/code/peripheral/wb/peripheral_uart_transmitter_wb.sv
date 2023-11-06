@@ -160,8 +160,9 @@ module peripheral_uart_transmitter_wb #(
         end
         s_send_start: begin
           tf_pop <= 1'b0;
-          if (~|counter) counter <= 5'b01111;
-          else if (counter == 5'b00001) begin
+          if (~|counter) begin
+            counter <= 5'b01111;
+          end else if (counter == 5'b00001) begin
             counter <= 0;
             tstate  <= s_send_byte;
           end else counter <= counter - 5'd1;
@@ -173,8 +174,9 @@ module peripheral_uart_transmitter_wb #(
           end
         end
         s_send_byte: begin
-          if (~|counter) counter <= 5'b01111;
-          else if (counter == 5'b00001) begin
+          if (~|counter) begin
+            counter <= 5'b01111;
+          end else if (counter == 5'b00001) begin
             if (bit_counter > 3'b0) begin
               bit_counter               <= bit_counter - 3'd1;
               {shift_out[5:0], bit_out} <= {shift_out[6:1], shift_out[0]};
@@ -193,15 +195,20 @@ module peripheral_uart_transmitter_wb #(
               tstate <= s_send_parity;
             end
             counter <= 0;
-          end else counter <= counter - 5'd1;
+          end else begin
+            counter <= counter - 5'd1;
+          end
           stx_o_tmp <= bit_out;  // set output pin
         end
         s_send_parity: begin
-          if (~|counter) counter <= 5'b01111;
-          else if (counter == 5'b00001) begin
+          if (~|counter) begin
+            counter <= 5'b01111;
+          end else if (counter == 5'b00001) begin
             counter <= 5'd0;
             tstate  <= s_send_stop;
-          end else counter <= counter - 5'd1;
+          end else begin
+            counter <= counter - 5'd1;
+          end
           stx_o_tmp <= bit_out;
         end
         s_send_stop: begin
@@ -216,14 +223,19 @@ module peripheral_uart_transmitter_wb #(
           end else if (counter == 5'b00001) begin
             counter <= 0;
             tstate  <= s_idle;
-          end else counter <= counter - 5'd1;
+          end else begin
+            counter <= counter - 5'd1;
+          end
           stx_o_tmp <= 1'b1;
         end
-        default:  // should never get here
-        tstate <= s_idle;
+        default: begin  // should never get here
+          tstate <= s_idle;
+        end
       endcase
-    end // end if enable
-    else tf_pop <= 1'b0;  // tf_pop must be 1 cycle width
+    // end if enable
+    end else begin
+      tf_pop <= 1'b0;  // tf_pop must be 1 cycle width
+    end
   end  // transmitter logic
 
   assign stx_pad_o = lcr[UART_LC_BC] ? 1'b0 : stx_o_tmp;  // Break condition

@@ -67,14 +67,21 @@ module peripheral_uart_sync_flops_wb #(
 
   // first stage
   always @(posedge clk_i or posedge rst_i) begin
-    if (rst_i) flop_0 <= {WIDTH{INIT_VALUE}};
-    else flop_0 <= async_dat_i;
+    if (rst_i) begin
+      flop_0 <= {WIDTH{INIT_VALUE}};
+    end else begin
+      flop_0 <= async_dat_i;
+    end
   end
 
   // second stage
   always @(posedge clk_i or posedge rst_i) begin
-    if (rst_i) sync_dat_o <= {WIDTH{INIT_VALUE}};
-    else if (stage1_rst_i) sync_dat_o <= {WIDTH{INIT_VALUE}};
-    else if (stage1_clk_en_i) sync_dat_o <= flop_0;
+    if (rst_i) begin
+      sync_dat_o <= {WIDTH{INIT_VALUE}};
+    end else if (stage1_rst_i) begin
+      sync_dat_o <= {WIDTH{INIT_VALUE}};
+    end else if (stage1_clk_en_i) begin
+      sync_dat_o <= flop_0;
+    end
   end
 endmodule

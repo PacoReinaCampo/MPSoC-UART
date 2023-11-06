@@ -134,7 +134,9 @@ module peripheral_uart_rx (
         parity_bit_next = 1'b0;
         baudgen_en      = 1'b1;
         start_bit       = 1'b1;
-        if (bit_done) NS = DATA;
+        if (bit_done) begin
+          NS = DATA;
+        end
       end
       DATA: begin
         baudgen_en      = 1'b1;
@@ -158,14 +160,20 @@ module peripheral_uart_rx (
       SAVE_DATA: begin
         baudgen_en = 1'b1;
         rx_valid_o = 1'b1;
-        if (rx_ready_i)
-          if (cfg_parity_en_i) NS = PARITY;
-          else NS = STOP_BIT;
+        if (rx_ready_i) begin
+          if (cfg_parity_en_i) begin
+            NS = PARITY;
+          end else begin
+            NS = STOP_BIT;
+          end
+        end
       end
       PARITY: begin
         baudgen_en = 1'b1;
         if (bit_done) begin
-          if (parity_bit != reg_rx_sync[2]) set_error = 1'b1;
+          if (parity_bit != reg_rx_sync[2]) begin
+            set_error = 1'b1;
+          end
           NS = STOP_BIT;
         end
       end
@@ -203,10 +211,14 @@ module peripheral_uart_rx (
   assign s_rx_fall = ~reg_rx_sync[1] & reg_rx_sync[2];
 
   always @(posedge clk_i or negedge rstn_i) begin
-    if (rstn_i == 1'b0) reg_rx_sync <= 3'b111;
-    else begin
-      if (cfg_en_i) reg_rx_sync <= {reg_rx_sync[1:0], rx_i};
-      else reg_rx_sync <= 3'b111;
+    if (rstn_i == 1'b0) begin
+      reg_rx_sync <= 3'b111;
+    end else begin
+      if (cfg_en_i) begin
+        reg_rx_sync <= {reg_rx_sync[1:0], rx_i};
+      end else begin
+        reg_rx_sync <= 3'b111;
+      end
     end
   end
 
@@ -240,7 +252,9 @@ module peripheral_uart_rx (
       if (err_clr_i) begin
         err_o <= 1'b0;
       end else begin
-        if (set_error) err_o <= 1'b1;
+        if (set_error) begin
+          err_o <= 1'b1;
+        end
       end
     end
   end

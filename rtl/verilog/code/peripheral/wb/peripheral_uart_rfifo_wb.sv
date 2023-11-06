@@ -183,9 +183,13 @@ module peripheral_uart_rfifo_wb #(
   end  // always
 
   always @(posedge clk or posedge wb_rst_i) begin  // synchronous FIFO
-    if (wb_rst_i) overrun <= 1'b0;
-    else if (fifo_reset | reset_status) overrun <= 1'b0;
-    else if (push & ~pop & (count == FIFO_DEPTH)) overrun <= 1'b1;
+    if (wb_rst_i) begin
+      overrun <= 1'b0;
+    end else if (fifo_reset | reset_status) begin
+      overrun <= 1'b0;
+    end else if (push & ~pop & (count == FIFO_DEPTH)) begin
+      overrun <= 1'b1;
+    end
   end  // always
 
   // please note though that data_out is only valid one clock after pop signal
