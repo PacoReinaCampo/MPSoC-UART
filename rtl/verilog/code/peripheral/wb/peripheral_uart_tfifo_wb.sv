@@ -119,7 +119,8 @@ module peripheral_uart_tfifo_wb #(
           bottom <= bottom + 4'd1;
           top    <= top_plus_1;
         end
-        default: ;
+        default: begin
+        end
       endcase
     end
   end  // always

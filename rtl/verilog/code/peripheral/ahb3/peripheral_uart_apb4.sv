@@ -248,7 +248,8 @@ module peripheral_uart_apb4 #(
           tx_fifo_clr_n   = PWDATA[2];
           trigger_level_n = PWDATA[7:6];
         end
-        default: ;
+        default: begin
+        end
       endcase
     end
   end
@@ -288,7 +289,8 @@ module peripheral_uart_apb4 #(
           PRDATA  = {24'b0, 1'b1, 1'b1, 2'b0, IIR_o};
           clr_int = 4'b0100;  // clear Transmitter Holding Register Empty
         end
-        default: ;
+        default: begin
+        end
       endcase
     end
   end

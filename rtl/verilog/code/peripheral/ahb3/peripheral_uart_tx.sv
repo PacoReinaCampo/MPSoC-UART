@@ -170,7 +170,9 @@ module peripheral_uart_tx (
           NS = IDLE;
         end
       end
-      default: NS = IDLE;
+      default: begin
+        NS = IDLE;
+      end
     endcase
   end
 

@@ -183,7 +183,9 @@ module peripheral_uart_rx (
           NS = IDLE;
         end
       end
-      default: NS = IDLE;
+      default: begin
+        NS = IDLE;
+      end
     endcase
   end
 

@@ -177,7 +177,8 @@ module peripheral_uart_rfifo_wb #(
           top       <= top_plus_1;
           fifo[top] <= data_in[2:0];
         end
-        default: ;
+        default: begin
+        end
       endcase
     end
   end  // always

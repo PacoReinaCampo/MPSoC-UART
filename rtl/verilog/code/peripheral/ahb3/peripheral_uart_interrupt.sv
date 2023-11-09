@@ -78,23 +78,28 @@ module peripheral_uart_interrupt #(
   always @(*) begin
     trigger_level_reached = 1'b0;
     case (trigger_level_i)
-      2'b00:
-      if ($unsigned(rx_elements_i) == 1) begin
-        trigger_level_reached = 1'b1;
+      2'b00: begin
+        if ($unsigned(rx_elements_i) == 1) begin
+          trigger_level_reached = 1'b1;
+        end
       end
-      2'b01:
-      if ($unsigned(rx_elements_i) == 4) begin
-        trigger_level_reached = 1'b1;
+      2'b01: begin
+        if ($unsigned(rx_elements_i) == 4) begin
+          trigger_level_reached = 1'b1;
+        end
       end
-      2'b10:
-      if ($unsigned(rx_elements_i) == 8) begin
-        trigger_level_reached = 1'b1;
+      2'b10: begin
+        if ($unsigned(rx_elements_i) == 8) begin
+          trigger_level_reached = 1'b1;
+        end
       end
-      2'b11:
-      if ($unsigned(rx_elements_i) == 14) begin
-        trigger_level_reached = 1'b1;
+      2'b11: begin
+        if ($unsigned(rx_elements_i) == 14) begin
+          trigger_level_reached = 1'b1;
+        end
       end
-      default: ;
+      default: begin
+      end
     endcase
   end
 
