@@ -14,32 +14,30 @@
 //              Wishbone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-
-/* Copyright (c) 2018-2019 by the author(s)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * =============================================================================
- * Author(s):
- *   Jacob Gorban <gorban@opencores.org>
- *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
- */
+// Copyright (c) 2018-2019 by the author(s)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+////////////////////////////////////////////////////////////////////////////////
+// Author(s):
+//   Jacob Gorban <gorban@opencores.org>
+//   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 
 import peripheral_uart_pkg::*;
 import peripheral_wb_pkg::*;
@@ -380,7 +378,7 @@ module peripheral_uart_regs_wb #(
   assign lsr3 = rf_data_out[0];  // framing error bit
   assign lsr4 = rf_data_out[2];  // break error in the character
   assign lsr5 = (tf_count == 5'b0 && thre_set_en);  // transmitter fifo is empty
-  assign lsr6 = (tf_count == 5'b0 && thre_set_en && (tstate ==  /*S_IDLE */ 0));  // transmitter empty
+  assign lsr6 = (tf_count == 5'b0 && thre_set_en && (tstate == 0));  // transmitter empty S_IDLE
   assign lsr7 = rf_error_bit | rf_overrun;
 
   // lsr bit0 (receiver data available)

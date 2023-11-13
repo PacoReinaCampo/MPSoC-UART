@@ -14,33 +14,31 @@
 //              WishBone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-
-/* Copyright (c) 2018-2019 by the author(s)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * =============================================================================
- * Author(s):
- *   Jacob Gorban <gorban@opencores.org>
- *   Igor Mohor <igorm@opencores.org>
- *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
- */
+// Copyright (c) 2018-2019 by the author(s)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+////////////////////////////////////////////////////////////////////////////////
+// Author(s):
+//   Jacob Gorban <gorban@opencores.org>
+//   Igor Mohor <igorm@opencores.org>
+//   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 
 import peripheral_uart_pkg::*;
 import peripheral_wb_pkg::*;
@@ -174,7 +172,7 @@ module peripheral_uart_receiver_wb (
           rcounter16 <= rcounter16_minus_1;
         end
         sr_rec_prepare: begin
-          case (lcr[  /*UART_LC_BITS*/ 1:0])  // number of bits in a word
+          case (lcr[1:0])  // number of bits in a word UART_LC_BITS
             2'b00: rbit_counter <= 3'b100;
             2'b01: rbit_counter <= 3'b101;
             2'b10: rbit_counter <= 3'b110;
@@ -194,7 +192,7 @@ module peripheral_uart_receiver_wb (
             rstate <= sr_end_bit;
           end
           if (rcounter16_eq_7)  // read the bit
-            case (lcr[  /*UART_LC_BITS*/ 1:0])  // number of bits in a word
+            case (lcr[1:0])  // number of bits in a word UART_LC_BITS
               2'b00: rshift[4:0] <= {srx_pad_i, rshift[4:1]};
               2'b01: rshift[5:0] <= {srx_pad_i, rshift[5:1]};
               2'b10: rshift[6:0] <= {srx_pad_i, rshift[6:1]};
