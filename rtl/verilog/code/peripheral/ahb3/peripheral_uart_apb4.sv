@@ -240,7 +240,9 @@ module peripheral_uart_apb4 #(
             regs_n[IER] = PWDATA[7:0];
           end
         end
-        LCR: regs_n[LCR] = PWDATA[7:0];
+        LCR: begin
+          regs_n[LCR] = PWDATA[7:0];
+        end
         FCR: begin  // write only register, fifo control register
           rx_fifo_clr_n   = PWDATA[1];
           tx_fifo_clr_n   = PWDATA[2];
