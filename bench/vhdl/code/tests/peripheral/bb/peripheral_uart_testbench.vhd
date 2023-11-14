@@ -1,6 +1,3 @@
--- Converted from peripheral_uart_synthesis.sv
--- by verilog2vhdl - QueenField
-
 --------------------------------------------------------------------------------
 --                                            __ _      _     _               --
 --                                           / _(_)    | |   | |              --
@@ -109,7 +106,7 @@ begin
   -- Module Body
   ------------------------------------------------------------------------------
 
-  --DUT BB
+  -- DUT BB
   uart_bb : peripheral_uart_bb
     port map (
       mclk    => mclk,

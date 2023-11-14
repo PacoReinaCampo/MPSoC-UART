@@ -1,6 +1,3 @@
--- Converted from peripheral_uart_regs_wb.v
--- by verilog2vhdl - QueenField
-
 --------------------------------------------------------------------------------
 --                                            __ _      _     _               --
 --                                           / _(_)    | |   | |              --
@@ -93,7 +90,7 @@ architecture rtl of peripheral_uart_regs_wb is
       wb_dat_i  : in  std_logic_vector(7 downto 0);
       enable    : in  std_logic;
       tx_reset  : in  std_logic;
-      lsr_mask  : in  std_logic;        --reset of fifo
+      lsr_mask  : in  std_logic;        -- reset of fifo
       stx_pad_o : out std_logic;
       tstate    : out std_logic_vector(2 downto 0);
       tf_count  : out std_logic_vector(UART_FIFO_COUNTER_W-1 downto 0)

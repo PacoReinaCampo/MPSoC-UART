@@ -1,6 +1,3 @@
--- Converted from peripheral_wb_uart_sync_flops.v
--- by verilog2vhdl - QueenField
-
 --------------------------------------------------------------------------------
 --                                            __ _      _     _               --
 --                                           / _(_)    | |   | |              --

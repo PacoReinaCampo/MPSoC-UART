@@ -1,6 +1,3 @@
--- Converted from peripheral_wb_uart.v
--- by verilog2vhdl - QueenField
-
 --------------------------------------------------------------------------------
 --                                            __ _      _     _               --
 --                                           / _(_)    | |   | |              --
@@ -101,9 +98,9 @@ architecture rtl of peripheral_uart_wb is
       wb_stb_i : in std_logic;
       wb_cyc_i : in std_logic;
       wb_sel_i : in std_logic_vector(3 downto 0);
-      wb_adr_i : in std_logic_vector(2 downto 0);  --WISHBONE address line
+      wb_adr_i : in std_logic_vector(2 downto 0);  -- WISHBONE address line
 
-      wb_dat_i   : in  std_logic_vector(7 downto 0);  --input WISHBONE bus 
+      wb_dat_i   : in  std_logic_vector(7 downto 0);  -- input WISHBONE bus 
       wb_dat_o   : out std_logic_vector(7 downto 0);
       wb_adr_int : out std_logic_vector(2 downto 0);  -- internal signal for address bus
       wb_dat8_o  : in  std_logic_vector(7 downto 0);  -- internal 8 bit output to be put into wb_dat_o

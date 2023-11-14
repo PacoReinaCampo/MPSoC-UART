@@ -1,6 +1,3 @@
--- Converted from bench/verilog/regression/peripheral_uart_testbench.sv
--- by verilog2vhdl - QueenField
-
 --------------------------------------------------------------------------------
 --                                            __ _      _     _               --
 --                                           / _(_)    | |   | |              --
@@ -64,7 +61,7 @@ architecture rtl of peripheral_uart_testbench is
       SYNC_DEPTH : integer := 3
       );
     port (
-      --AHB Slave Interface
+      -- AHB Slave Interface
       HRESETn   : in  std_logic;
       HCLK      : in  std_logic;
       HSEL      : in  std_logic;
@@ -81,7 +78,7 @@ architecture rtl of peripheral_uart_testbench is
       HREADY    : in  std_logic;
       HRESP     : out std_logic;
 
-      --APB Master Interface
+      -- APB Master Interface
       PRESETn : in  std_logic;
       PCLK    : in  std_logic;
       PSEL    : out std_logic;
@@ -99,8 +96,8 @@ architecture rtl of peripheral_uart_testbench is
 
   component peripheral_uart_apb4
     generic (
-      APB_ADDR_WIDTH : integer := 12;   --APB slaves are 4KB by default
-      APB_DATA_WIDTH : integer := 32    --APB slaves are 4KB by default
+      APB_ADDR_WIDTH : integer := 12;   -- APB slaves are 4KB by default
+      APB_DATA_WIDTH : integer := 32    -- APB slaves are 4KB by default
       );
     port (
       CLK     : in  std_logic;
@@ -134,11 +131,11 @@ architecture rtl of peripheral_uart_testbench is
   -- Variables
   ------------------------------------------------------------------------------
 
-  --Common signals
+  -- Common signals
   signal HRESETn : std_logic;
   signal HCLK    : std_logic;
 
-  --UART AHB3
+  -- UART AHB3
   signal mst_uart_HSEL      : std_logic;
   signal mst_uart_HADDR     : std_logic_vector(HADDR_SIZE-1 downto 0);
   signal mst_uart_HWDATA    : std_logic_vector(HDATA_SIZE-1 downto 0);
@@ -172,7 +169,7 @@ begin
   -- Module Body
   ------------------------------------------------------------------------------
 
-  --DUT AHB3
+  -- DUT AHB3
   apb2ahb : peripheral_apb2ahb
     generic map (
       HADDR_SIZE => HADDR_SIZE,
@@ -182,7 +179,7 @@ begin
       SYNC_DEPTH => SYNC_DEPTH
       )
     port map (
-      --AHB Slave Interface
+      -- AHB Slave Interface
       HRESETn => HRESETn,
       HCLK    => HCLK,
 
@@ -200,7 +197,7 @@ begin
       HREADY    => mst_uart_HREADY,
       HRESP     => mst_uart_HRESP,
 
-      --APB Master Interface
+      -- APB Master Interface
       PRESETn => HRESETn,
       PCLK    => HCLK,
 

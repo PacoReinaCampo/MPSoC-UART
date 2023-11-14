@@ -1,6 +1,3 @@
--- Converted from peripheral_uart_apb4.sv
--- by verilog2vhdl - QueenField
-
 --------------------------------------------------------------------------------
 --                                            __ _      _     _               --
 --                                           / _(_)    | |   | |              --
@@ -52,8 +49,8 @@ use work.peripheral_ahb3_pkg.all;
 
 entity peripheral_uart_apb4 is
   generic (
-    APB_ADDR_WIDTH : integer := 12;     --APB slaves are 4KB by default
-    APB_DATA_WIDTH : integer := 32      --APB slaves are 4KB by default
+    APB_ADDR_WIDTH : integer := 12;     -- APB slaves are 4KB by default
+    APB_DATA_WIDTH : integer := 32      -- APB slaves are 4KB by default
     );
   port (
     CLK     : in  std_logic;

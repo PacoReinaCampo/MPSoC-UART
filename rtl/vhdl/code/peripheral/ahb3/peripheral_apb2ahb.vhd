@@ -1,6 +1,3 @@
--- Converted from verilog/peripheral_gpio/peripheral_apb2ahb.sv
--- by verilog2vhdl - QueenField
-
 --------------------------------------------------------------------------------
 --                                            __ _      _     _               --
 --                                           / _(_)    | |   | |              --
@@ -59,7 +56,7 @@ entity peripheral_apb2ahb is
     SYNC_DEPTH : integer := 3
     );
   port (
-    --AHB Slave Interface
+    -- AHB Slave Interface
     HRESETn   : in  std_logic;
     HCLK      : in  std_logic;
     HSEL      : in  std_logic;
@@ -76,7 +73,7 @@ entity peripheral_apb2ahb is
     HREADY    : in  std_logic;
     HRESP     : out std_logic;
 
-    --APB Master Interface
+    -- APB Master Interface
     PRESETn : in  std_logic;
     PCLK    : in  std_logic;
     PSEL    : out std_logic;
@@ -104,7 +101,7 @@ architecture rtl of peripheral_apb2ahb is
   constant ST_APB_SETUP    : std_logic_vector(1 downto 0) := "01";
   constant ST_APB_TRANSFER : std_logic_vector(1 downto 0) := "10";
 
-  --PPROT
+  -- PPROT
   constant PPROT_NORMAL      : std_logic_vector(2 downto 0) := "000";
   constant PPROT_PRIVILEGED  : std_logic_vector(2 downto 0) := "001";
   constant PPROT_SECURE      : std_logic_vector(2 downto 0) := "000";
@@ -112,7 +109,7 @@ architecture rtl of peripheral_apb2ahb is
   constant PPROT_DATA        : std_logic_vector(2 downto 0) := "000";
   constant PPROT_INSTRUCTION : std_logic_vector(2 downto 0) := "100";
 
-  --SYNC_DEPTH
+  -- SYNC_DEPTH
   constant SYNC_DEPTH_MIN : integer := 3;
   constant SYNC_DEPTH_CHK : integer := SYNC_DEPTH;
 
@@ -120,17 +117,17 @@ architecture rtl of peripheral_apb2ahb is
   -- Variables
   ------------------------------------------------------------------------------
 
-  signal ahb_treq      : std_logic;  --transfer request from AHB Statemachine
-  signal treq_toggle   : std_logic;     --toggle-signal-version
-  signal treq_sync     : std_logic_vector(SYNC_DEPTH_CHK-1 downto 0);  --synchronized transfer request
-  signal apb_treq_strb : std_logic;  --transfer request strobe to APB Statemachine
+  signal ahb_treq      : std_logic;  -- transfer request from AHB Statemachine
+  signal treq_toggle   : std_logic;     -- toggle-signal-version
+  signal treq_sync     : std_logic_vector(SYNC_DEPTH_CHK-1 downto 0);  -- synchronized transfer request
+  signal apb_treq_strb : std_logic;  -- transfer request strobe to APB Statemachine
 
-  signal apb_tack      : std_logic;  --transfer acknowledge from APB Statemachine
-  signal tack_toggle   : std_logic;     --toggle-signal-version
-  signal tack_sync     : std_logic_vector(SYNC_DEPTH_CHK-1 downto 0);  --synchronized transfer acknowledge
-  signal ahb_tack_strb : std_logic;  --transfer acknowledge strobe to AHB Statemachine
+  signal apb_tack      : std_logic;  -- transfer acknowledge from APB Statemachine
+  signal tack_toggle   : std_logic;     -- toggle-signal-version
+  signal tack_sync     : std_logic_vector(SYNC_DEPTH_CHK-1 downto 0);  -- synchronized transfer acknowledge
+  signal ahb_tack_strb : std_logic;  -- transfer acknowledge strobe to AHB Statemachine
 
-  --store AHB data locally (pipelined bus)
+  -- store AHB data locally (pipelined bus)
   signal ahb_haddr  : std_logic_vector(HADDR_SIZE-1 downto 0);
   signal ahb_hwdata : std_logic_vector(HDATA_SIZE-1 downto 0);
   signal ahb_hwrite : std_logic;
@@ -139,18 +136,18 @@ architecture rtl of peripheral_apb2ahb is
 
   signal latch_ahb_hwdata : std_logic;
 
-  --store APB data locally
+  -- store APB data locally
   signal apb_prdata  : std_logic_vector(HDATA_SIZE-1 downto 0);
   signal apb_pslverr : std_logic;
 
-  --State machines
+  -- State machines
   signal ahb_fsm : std_logic_vector(1 downto 0);
   signal apb_fsm : std_logic_vector(1 downto 0);
 
-  --number of transfer cycles (AMBA-beats) on APB interface
+  -- number of transfer cycles (AMBA-beats) on APB interface
   signal apb_beat_cnt : std_logic_vector(6 downto 0);
 
-  --running offset in HWDATA
+  -- running offset in HWDATA
   signal apb_beat_data_offset : std_logic_vector(9 downto 0);
 
   signal SPADDR : std_logic_vector(PADDR_SIZE-1 downto 0);
@@ -186,14 +183,14 @@ architecture rtl of peripheral_apb2ahb is
         apb_beats_return := std_logic_vector(to_unsigned(0007/PDATA_SIZE, 7));
     end case;
     return apb_beats_return;
-  end apb_beats;  --apb_beats
+  end apb_beats;  -- apb_beats
 
   function address_mask (
     data_size : integer
     ) return std_logic_vector is
     variable address_mask_return : std_logic_vector (6 downto 0);
   begin
-    --Which bits in HADDR should be taken into account?
+    -- Which bits in HADDR should be taken into account?
     case ((data_size)) is
       when 1024 =>
         address_mask_return := "1111111";
@@ -213,7 +210,7 @@ architecture rtl of peripheral_apb2ahb is
         address_mask_return := "0000000";
     end case;
     return address_mask_return;
-  end address_mask;  --address_mask
+  end address_mask;  -- address_mask
 
   function data_offset (
     haddr_s : std_logic_vector(HADDR_SIZE-1 downto 0)
@@ -221,13 +218,13 @@ architecture rtl of peripheral_apb2ahb is
     variable haddr_masked       : std_logic_vector(6 downto 0);
     variable data_offset_return : std_logic_vector (9 downto 0);
   begin
-    --Generate masked address
+    -- Generate masked address
     haddr_masked := haddr_s(6 downto 0) and address_mask(HDATA_SIZE);
 
-    --calculate bit-offset
+    -- calculate bit-offset
     data_offset_return := std_logic_vector(to_unsigned(8, 3)*unsigned(haddr_masked));
     return data_offset_return;
-  end data_offset;  --data_offset
+  end data_offset;  -- data_offset
 
   function pstrbf (
     hsize_s : std_logic_vector(2 downto 0);
@@ -237,7 +234,7 @@ architecture rtl of peripheral_apb2ahb is
     variable paddr_masked : std_logic_vector(6 downto 0);
     variable pstrb_return : std_logic_vector (PDATA_SIZE/8-1 downto 0);
   begin
-    --get number of active lanes for a 1024bit databus (max width) for this HSIZE
+    -- get number of active lanes for a 1024bit databus (max width) for this HSIZE
     case (hsize_s) is
       when HSIZE_B1024 =>
         full_pstrb := X"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
@@ -256,20 +253,20 @@ architecture rtl of peripheral_apb2ahb is
       when others =>
         full_pstrb := X"00000000000000000000000000000001";
     end case;
-    --generate masked address
+    -- generate masked address
     paddr_masked := paddr_s(6 downto 0) and address_mask(PDATA_SIZE);
 
-    --create PSTRB
+    -- create PSTRB
     pstrb_return := std_logic_vector(unsigned(full_pstrb(PDATA_SIZE/8-1 downto 0)) sll to_integer(unsigned(paddr_masked)));
     return pstrb_return(0);
-  end pstrbf;  --pstrbf
+  end pstrbf;  -- pstrbf
 
 begin
   ------------------------------------------------------------------------------
   -- Module Body
   ------------------------------------------------------------------------------
 
-  --AHB Statemachine
+  -- AHB Statemachine
   processing_0 : process (HCLK, HRESETn)
   begin
     if (HRESETn = '0') then
@@ -284,18 +281,18 @@ begin
       ahb_hprot  <= (others => '0');
       ahb_hsize  <= (others => '0');
     elsif (rising_edge(HCLK)) then
-      ahb_treq <= '0';                  --1 cycle strobe signal
+      ahb_treq <= '0';                  -- 1 cycle strobe signal
 
       case (ahb_fsm) is
         when ST_AHB_IDLE =>
-          --store basic parameters
+          -- store basic parameters
           ahb_haddr  <= HADDR;
           ahb_hwrite <= HWRITE;
           ahb_hprot  <= HPROT;
           ahb_hsize  <= HSIZE;
 
           if (HSEL = '1' and HREADY = '1') then
-            --This (slave) is selected ... what kind of transfer is this?
+            -- This (slave) is selected ... what kind of transfer is this?
             case (HTRANS) is
               when HTRANS_IDLE =>
                 ahb_fsm   <= ST_AHB_IDLE;
@@ -307,17 +304,17 @@ begin
                 HRESP     <= HRESP_OKAY;
               when HTRANS_NONSEQ =>
                 ahb_fsm   <= ST_AHB_TRANSFER;
-                HREADYOUT <= '0';       --hold off master
+                HREADYOUT <= '0';       -- hold off master
                 HRESP     <= HRESP_OKAY;
-                ahb_treq  <= '1';       --request data transfer
+                ahb_treq  <= '1';       -- request data transfer
               when HTRANS_SEQ =>
                 ahb_fsm   <= ST_AHB_TRANSFER;
-                HREADYOUT <= '0';       --hold off master
+                HREADYOUT <= '0';       -- hold off master
                 HRESP     <= HRESP_OKAY;
-                ahb_treq  <= '1';       --request data transfer
+                ahb_treq  <= '1';       -- request data transfer
               when others =>
                 null;
-            end case;  --HTRANS
+            end case;  -- HTRANS
           else
             ahb_fsm   <= ST_AHB_IDLE;
             HREADYOUT <= '1';
@@ -328,11 +325,11 @@ begin
             --  * APB acknowledged transfer. Current transfer done
             --  * Check AHB bus to determine if another transfer is pending
 
-            --assign read data
+            -- assign read data
             HRDATA <= apb_prdata;
 
-            --indicate transfer done. Normally HREADYOUT = '1', HRESP=OKAY
-            --HRESP=ERROR requires 2 cycles
+            -- indicate transfer done. Normally HREADYOUT = '1', HRESP=OKAY
+            -- HRESP=ERROR requires 2 cycles
             if (apb_pslverr = '1') then
               HREADYOUT <= '0';
               HRESP     <= HRESP_ERROR;
@@ -343,15 +340,15 @@ begin
               ahb_fsm   <= ST_AHB_IDLE;
             end if;
           else
-            HREADYOUT <= '0';           --transfer still in progress
+            HREADYOUT <= '0';           -- transfer still in progress
           end if;
         when ST_AHB_ERROR =>
-          --2nd cycle of error response
+          -- 2nd cycle of error response
           ahb_fsm   <= ST_AHB_IDLE;
           HREADYOUT <= '1';
         when others =>
           null;
-      end case;  --ahb_fsm
+      end case;  -- ahb_fsm
     end if;
   end process;
 
@@ -371,9 +368,9 @@ begin
     end if;
   end process;
 
-  --Clock domain crossing ...
+  -- Clock domain crossing ...
 
-  --AHB -> APB
+  -- AHB -> APB
   processing_3 : process (HCLK, HRESETn)
   begin
     if (HRESETn = '0') then
@@ -396,7 +393,7 @@ begin
 
   apb_treq_strb <= treq_sync(SYNC_DEPTH-1) xor treq_sync(SYNC_DEPTH-2);
 
-  --APB -> AHB
+  -- APB -> AHB
   processing_5 : process (PCLK, PRESETn)
   begin
     if (PRESETn = '0') then
@@ -419,7 +416,7 @@ begin
 
   ahb_tack_strb <= tack_sync(SYNC_DEPTH-1) xor tack_sync(SYNC_DEPTH-2);
 
-  --APB Statemachine
+  -- APB Statemachine
   processing_7 : process (PCLK, PRESETn)
   begin
     if (PRESETn = '0') then
@@ -453,14 +450,14 @@ begin
             PADDR  <= ahb_haddr(PADDR_SIZE-1 downto 0);
             PWRITE <= ahb_hwrite;
             PWDATA <= std_logic_vector(unsigned(ahb_hwdata) srl to_integer(unsigned(data_offset(ahb_haddr))));
-            PSTRB  <= ahb_hwrite and pstrbf(ahb_hsize, ahb_haddr(PADDR_SIZE-1 downto 0));  --TODO: check/sim
+            PSTRB  <= ahb_hwrite and pstrbf(ahb_hsize, ahb_haddr(PADDR_SIZE-1 downto 0));  -- TODO: check/sim
 
-            apb_prdata           <= (others => '0');  --clear prdata
+            apb_prdata           <= (others => '0');  -- clear prdata
             apb_beat_cnt         <= apb_beats(ahb_hsize);
-            apb_beat_data_offset <= std_logic_vector(unsigned(data_offset(ahb_haddr))+to_unsigned(PDATA_SIZE, HADDR_SIZE));  --for the NEXT transfer
+            apb_beat_data_offset <= std_logic_vector(unsigned(data_offset(ahb_haddr))+to_unsigned(PDATA_SIZE, HADDR_SIZE));  -- for the NEXT transfer
           end if;
         when ST_APB_SETUP =>
-          --retain all signals and assert PENABLE
+          -- retain all signals and assert PENABLE
           apb_fsm <= ST_APB_TRANSFER;
           PENABLE <= '1';
         when ST_APB_TRANSFER =>
@@ -469,7 +466,7 @@ begin
             apb_beat_data_offset <= std_logic_vector(unsigned(apb_beat_data_offset)+to_unsigned(PDATA_SIZE, HADDR_SIZE));
 
             apb_prdata <= std_logic_vector(unsigned(apb_prdata) sll PDATA_SIZE) or
-                          std_logic_vector(unsigned(PRDATA) sll to_integer(unsigned(data_offset(ahb_haddr))));  --TODO: check/sim
+                          std_logic_vector(unsigned(PRDATA) sll to_integer(unsigned(data_offset(ahb_haddr))));  -- TODO: check/sim
             apb_pslverr <= PSLVERR;
 
             PENABLE <= '0';
