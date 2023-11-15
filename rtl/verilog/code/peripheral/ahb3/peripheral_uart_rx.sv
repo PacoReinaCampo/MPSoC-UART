@@ -76,7 +76,6 @@ module peripheral_uart_rx (
 
   logic [ 2:0] reg_rx_sync;
 
-
   logic [ 2:0] reg_bit_count;
   logic [ 2:0] reg_bit_count_next;
 
