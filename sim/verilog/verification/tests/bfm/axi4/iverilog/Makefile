@@ -51,4 +51,4 @@ simulate:
 	vvp system.vvp
 
 clean:
-	rm -rf system.vvp *.vcd
+	rm -rf *.vvp *.vcd
