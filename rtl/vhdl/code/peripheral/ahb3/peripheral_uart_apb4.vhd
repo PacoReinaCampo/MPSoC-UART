@@ -245,7 +245,7 @@ begin
   -- Module Body
   ------------------------------------------------------------------------------
 
-  -- TODO: check that stop bits are really not necessary here
+  -- TO-DO: check that stop bits are really not necessary here
   peripheral_uart_rx_i : peripheral_uart_rx
     port map (
       clk_i           => CLK,

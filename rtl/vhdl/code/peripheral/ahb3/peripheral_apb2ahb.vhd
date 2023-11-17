@@ -450,7 +450,7 @@ begin
             PADDR  <= ahb_haddr(PADDR_SIZE-1 downto 0);
             PWRITE <= ahb_hwrite;
             PWDATA <= std_logic_vector(unsigned(ahb_hwdata) srl to_integer(unsigned(data_offset(ahb_haddr))));
-            PSTRB  <= ahb_hwrite and pstrbf(ahb_hsize, ahb_haddr(PADDR_SIZE-1 downto 0));  -- TODO: check/sim
+            PSTRB  <= ahb_hwrite and pstrbf(ahb_hsize, ahb_haddr(PADDR_SIZE-1 downto 0));  -- TO-DO: check/sim
 
             apb_prdata           <= (others => '0');  -- clear prdata
             apb_beat_cnt         <= apb_beats(ahb_hsize);
@@ -466,7 +466,7 @@ begin
             apb_beat_data_offset <= std_logic_vector(unsigned(apb_beat_data_offset)+to_unsigned(PDATA_SIZE, HADDR_SIZE));
 
             apb_prdata <= std_logic_vector(unsigned(apb_prdata) sll PDATA_SIZE) or
-                          std_logic_vector(unsigned(PRDATA) sll to_integer(unsigned(data_offset(ahb_haddr))));  -- TODO: check/sim
+                          std_logic_vector(unsigned(PRDATA) sll to_integer(unsigned(data_offset(ahb_haddr))));  -- TO-DO: check/sim
             apb_pslverr <= PSLVERR;
 
             PENABLE <= '0';
