@@ -65,7 +65,7 @@ module peripheral_testbench_utils;
       $finish;
     end
 
-  // FIXME: Add more options for VCD logging
+  // FIX-ME: Add more options for VCD logging
 
   initial begin
     if ($test$plusargs("vcd")) begin
