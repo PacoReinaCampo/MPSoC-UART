@@ -82,6 +82,7 @@ module peripheral_apb2ahb #(
   //////////////////////////////////////////////////////////////////////////////
   // Constants
   //////////////////////////////////////////////////////////////////////////////
+
   localparam ST_AHB_IDLE = 2'b00, ST_AHB_TRANSFER = 2'b01, ST_AHB_ERROR = 2'b10;
 
   localparam ST_APB_IDLE = 2'b00, ST_APB_SETUP = 2'b01, ST_APB_TRANSFER = 2'b10;
