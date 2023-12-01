@@ -129,7 +129,7 @@ module peripheral_uart_regs_wb #(
   reg  [                    7:0] block_value;  // One character length minus stop bit
 
   //////////////////////////////////////////////////////////////////////////////
-  // Module Body
+  // Body
   //////////////////////////////////////////////////////////////////////////////
 
   assign baud_o                                      = enable;  // baud_o is actually the enable signal
