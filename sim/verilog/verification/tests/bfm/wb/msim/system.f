@@ -45,7 +45,7 @@
 ../../../../../../../rtl/verilog/code/pkg/peripheral/wb/peripheral_wb_pkg.sv
 
 ../../../../../../../bench/verilog/code/tests/peripheral/wb/main/peripheral_tap_generator.sv
-../../../../../../../bench/verilog/code/tests/peripheral/wb/main/peripheral_testbench_utils.sv
+../../../../../../../bench/verilog/code/tests/peripheral/wb/main/peripheral_utils_testbench.sv
 
 ../../../../../../../bench/verilog/code/tests/bfm/wb/peripheral_bfm_master_wb.sv
 ../../../../../../../bench/verilog/code/tests/bfm/wb/peripheral_bfm_memory_wb.sv
