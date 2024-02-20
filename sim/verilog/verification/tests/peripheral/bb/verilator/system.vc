@@ -45,4 +45,4 @@
 ../../../../../../../rtl/verilog/code/peripheral/bb/fuse/peripheral_sync_cell.sv
 ../../../../../../../rtl/verilog/code/peripheral/bb/main/peripheral_uart_bb.sv
 
-../../../../../../../bench/verilog/code/tests/peripheral/bb/peripheral_uart_testbench.sv
+../../../../../../../verification/tasks/library/peripheral/bb/peripheral_uart_testbench.sv

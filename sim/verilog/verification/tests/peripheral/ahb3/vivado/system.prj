@@ -51,6 +51,6 @@ sv work ../../../../../../../rtl/verilog/code/peripheral/ahb3/peripheral_uart_in
 sv work ../../../../../../../rtl/verilog/code/peripheral/ahb3/peripheral_uart_rx.sv
 sv work ../../../../../../../rtl/verilog/code/peripheral/ahb3/peripheral_uart_tx.sv
 
-sv work ../../../../../../../bench/verilog/code/tests/peripheral/ahb3/peripheral_bfm_ahb3.sv
-sv work ../../../../../../../bench/verilog/code/tests/peripheral/ahb3/peripheral_bfm_master_ahb3.sv
-sv work ../../../../../../../bench/verilog/code/tests/peripheral/ahb3/peripheral_uart_testbench.sv
+sv work ../../../../../../../verification/tasks/library/peripheral/ahb3/peripheral_bfm_ahb3.sv
+sv work ../../../../../../../verification/tasks/library/peripheral/ahb3/peripheral_bfm_master_ahb3.sv
+sv work ../../../../../../../verification/tasks/library/peripheral/ahb3/peripheral_uart_testbench.sv
