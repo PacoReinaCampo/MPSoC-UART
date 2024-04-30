@@ -46,7 +46,7 @@ read_verilog -sv ../../../../rtl/verilog/code/pkg/core/peripheral_uart_pkg.sv
 read_verilog -sv ../../../../rtl/verilog/code/pkg/peripheral/ahb3/peripheral_ahb3_pkg.sv
 
 read_verilog -sv ../../../../rtl/verilog/code/peripheral/ahb3/peripheral_apb2ahb.sv
-read_verilog -sv ../../../../rtl/verilog/code/peripheral/ahb3/peripheral_uart_apb4.sv
+read_verilog -sv ../../../../rtl/verilog/code/peripheral/ahb3/peripheral_uart_ahb3.sv
 read_verilog -sv ../../../../rtl/verilog/code/peripheral/ahb3/peripheral_uart_fifo.sv
 read_verilog -sv ../../../../rtl/verilog/code/peripheral/ahb3/peripheral_uart_interrupt.sv
 read_verilog -sv ../../../../rtl/verilog/code/peripheral/ahb3/peripheral_uart_rx.sv

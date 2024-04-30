@@ -47,7 +47,7 @@ read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/pkg/core/vhdl_pkg.vhd
 read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/pkg/peripheral/ahb3/peripheral_ahb3_pkg.vhd
 
 read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/ahb3/peripheral_apb2ahb.vhd
-read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/ahb3/peripheral_uart_apb4.vhd
+read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/ahb3/peripheral_uart_ahb3.vhd
 read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/ahb3/peripheral_uart_fifo.vhd
 read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/ahb3/peripheral_uart_interrupt.vhd
 read_vhdl -vhdl2008 ../../../../rtl/vhdl/code/peripheral/ahb3/peripheral_uart_rx.vhd

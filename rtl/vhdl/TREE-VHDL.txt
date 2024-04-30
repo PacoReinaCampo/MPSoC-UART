@@ -7,11 +7,32 @@ code
 │   │   ├── peripheral_uart_interrupt.vhd
 │   │   ├── peripheral_uart_rx.vhd
 │   │   └── peripheral_uart_tx.vhd
+│   ├── apb4
+│   │   ├── peripheral_apb2ahb.vhd
+│   │   ├── peripheral_uart_apb4.vhd
+│   │   ├── peripheral_uart_fifo.vhd
+│   │   ├── peripheral_uart_interrupt.vhd
+│   │   ├── peripheral_uart_rx.vhd
+│   │   └── peripheral_uart_tx.vhd
+│   ├── axi4
+│   │   ├── peripheral_apb2ahb.vhd
+│   │   ├── peripheral_uart_apb4.vhd
+│   │   ├── peripheral_uart_fifo.vhd
+│   │   ├── peripheral_uart_interrupt.vhd
+│   │   ├── peripheral_uart_rx.vhd
+│   │   └── peripheral_uart_tx.vhd
 │   ├── bb
 │   │   ├── fuse
 │   │   │   └── peripheral_sync_cell.vhd
 │   │   └── main
 │   │       └── peripheral_uart_bb.vhd
+│   ├── biu
+│   │   ├── peripheral_apb2ahb.vhd
+│   │   ├── peripheral_uart_apb4.vhd
+│   │   ├── peripheral_uart_fifo.vhd
+│   │   ├── peripheral_uart_interrupt.vhd
+│   │   ├── peripheral_uart_rx.vhd
+│   │   └── peripheral_uart_tx.vhd
 │   └── wb
 │       ├── peripheral_raminfr_wb.vhd
 │       ├── peripheral_uart_peripheral_bridge_wb.vhd
@@ -29,9 +50,15 @@ code
     └── peripheral
         ├── ahb3
         │   └── peripheral_ahb3_pkg.vhd
+        ├── apb4
+        │   └── peripheral_ahb3_pkg.vhd
         ├── axi4
         │   └── peripheral_axi4_pkg.vhd
+        ├── bb
+        │   └── peripheral_ahb3_pkg.vhd
+        ├── biu
+        │   └── peripheral_ahb3_pkg.vhd
         └── wb
             └── peripheral_wb_pkg.vhd
 
-12 directories, 22 files
+18 directories, 43 files
