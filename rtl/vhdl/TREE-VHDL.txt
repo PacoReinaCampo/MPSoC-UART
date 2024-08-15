@@ -2,7 +2,7 @@ code
 ├── peripheral
 │   ├── ahb3
 │   │   ├── peripheral_apb2ahb.vhd
-│   │   ├── peripheral_uart_apb4.vhd
+│   │   ├── peripheral_uart_ahb3.vhd
 │   │   ├── peripheral_uart_fifo.vhd
 │   │   ├── peripheral_uart_interrupt.vhd
 │   │   ├── peripheral_uart_rx.vhd
@@ -16,7 +16,7 @@ code
 │   │   └── peripheral_uart_tx.vhd
 │   ├── axi4
 │   │   ├── peripheral_apb2ahb.vhd
-│   │   ├── peripheral_uart_apb4.vhd
+│   │   ├── peripheral_uart_axi4.vhd
 │   │   ├── peripheral_uart_fifo.vhd
 │   │   ├── peripheral_uart_interrupt.vhd
 │   │   ├── peripheral_uart_rx.vhd
@@ -28,7 +28,7 @@ code
 │   │       └── peripheral_uart_bb.vhd
 │   ├── biu
 │   │   ├── peripheral_apb2ahb.vhd
-│   │   ├── peripheral_uart_apb4.vhd
+│   │   ├── peripheral_uart_biu.vhd
 │   │   ├── peripheral_uart_fifo.vhd
 │   │   ├── peripheral_uart_interrupt.vhd
 │   │   ├── peripheral_uart_rx.vhd
@@ -51,13 +51,13 @@ code
         ├── ahb3
         │   └── peripheral_ahb3_pkg.vhd
         ├── apb4
-        │   └── peripheral_ahb3_pkg.vhd
+        │   └── peripheral_apb4_pkg.vhd
         ├── axi4
         │   └── peripheral_axi4_pkg.vhd
         ├── bb
-        │   └── peripheral_ahb3_pkg.vhd
+        │   └── peripheral_bb_pkg.vhd
         ├── biu
-        │   └── peripheral_ahb3_pkg.vhd
+        │   └── peripheral_biu_pkg.vhd
         └── wb
             └── peripheral_wb_pkg.vhd
 
