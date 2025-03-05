@@ -38,8 +38,6 @@
 // Author(s):
 //   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 
-import peripheral_wb_pkg::*;
-
 module peripheral_uart_bridge_wb (
   input clk,
 

@@ -40,23 +40,22 @@
 //   Igor Mohor <igorm@opencores.org>
 //   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 
-import peripheral_uart_pkg::*;
-import peripheral_wb_pkg::*;
+`include "peripheral_uart_pkg.sv"
 
 module peripheral_uart_transmitter_wb #(
   parameter SIM = 0
 ) (
-  input                                clk,
-  input                                wb_rst_i,
-  input      [                    7:0] lcr,
-  input                                tf_push,
-  input      [                    7:0] wb_dat_i,
-  input                                enable,
-  input                                tx_reset,
-  input                                lsr_mask,   // reset of fifo
-  output                               stx_pad_o,
-  output reg [                    2:0] tstate,
-  output     [UART_FIFO_COUNTER_W-1:0] tf_count
+  input                                 clk,
+  input                                 wb_rst_i,
+  input      [                     7:0] lcr,
+  input                                 tf_push,
+  input      [                     7:0] wb_dat_i,
+  input                                 enable,
+  input                                 tx_reset,
+  input                                 lsr_mask,   // reset of fifo
+  output                                stx_pad_o,
+  output reg [                     2:0] tstate,
+  output     [`UART_FIFO_COUNTER_W-1:0] tf_count
 );
 
   //////////////////////////////////////////////////////////////////////////////
@@ -75,20 +74,20 @@ module peripheral_uart_transmitter_wb #(
   // Variables
   //////////////////////////////////////////////////////////////////////////////
 
-  reg  [                4:0] counter;
-  reg  [                2:0] bit_counter;  // counts the bits to be sent
-  reg  [                6:0] shift_out;  // output shift register
-  reg                        stx_o_tmp;
-  reg                        parity_xor;  // parity of the word
-  reg                        tf_pop;
-  reg                        bit_out;
+  reg  [                 4:0] counter;
+  reg  [                 2:0] bit_counter;  // counts the bits to be sent
+  reg  [                 6:0] shift_out;  // output shift register
+  reg                         stx_o_tmp;
+  reg                         parity_xor;  // parity of the word
+  reg                         tf_pop;
+  reg                         bit_out;
 
   // TX FIFO instance
 
   // Transmitter FIFO signals
-  wire [UART_FIFO_WIDTH-1:0] tf_data_in;
-  wire [UART_FIFO_WIDTH-1:0] tf_data_out;
-  wire                       tf_overrun;
+  wire [`UART_FIFO_WIDTH-1:0] tf_data_in;
+  wire [`UART_FIFO_WIDTH-1:0] tf_data_out;
+  wire                        tf_overrun;
 
   //////////////////////////////////////////////////////////////////////////////
   // Body
@@ -181,11 +180,11 @@ module peripheral_uart_transmitter_wb #(
               bit_counter               <= bit_counter - 3'd1;
               {shift_out[5:0], bit_out} <= {shift_out[6:1], shift_out[0]};
               tstate                    <= s_send_byte;
-            end else if (~lcr[UART_LC_PE]) begin  // end of byte
+            end else if (~lcr[`UART_LC_PE]) begin  // end of byte
               tstate <= s_send_stop;
             end else begin
               case ({
-                lcr[UART_LC_EP], lcr[UART_LC_SP]
+                lcr[`UART_LC_EP], lcr[`UART_LC_SP]
               })
                 2'b00: bit_out <= ~parity_xor;
                 2'b01: bit_out <= 1'b1;
@@ -214,7 +213,7 @@ module peripheral_uart_transmitter_wb #(
         s_send_stop: begin
           if (~|counter) begin
             casez ({
-              lcr[UART_LC_SB], lcr[1:0]
+              lcr[`UART_LC_SB], lcr[1:0]
             })
               3'b0??:  counter <= 5'b01101;  // 1 stop bit ok igor
               3'b100:  counter <= 5'b10101;  // 1.5 stop bit
@@ -238,5 +237,5 @@ module peripheral_uart_transmitter_wb #(
     end
   end  // transmitter logic
 
-  assign stx_pad_o = lcr[UART_LC_BC] ? 1'b0 : stx_o_tmp;  // Break condition
+  assign stx_pad_o = lcr[`UART_LC_BC] ? 1'b0 : stx_o_tmp;  // Break condition
 endmodule

@@ -42,8 +42,7 @@
 //                                                                               //
 ///////////////////////////////////////////////////////////////////////////////////
 
-sv work ../../../../../../../rtl/verilog/code/pkg/core/peripheral_uart_pkg.sv
-sv work ../../../../../../../rtl/verilog/code/pkg/peripheral/wb/peripheral_wb_pkg.sv
++incdir+../../../../../../../rtl/verilog/code/pkg/core
 
 sv work ../../../../../../../rtl/verilog/code/peripheral/wb/peripheral_raminfr_wb.sv
 sv work ../../../../../../../rtl/verilog/code/peripheral/wb/peripheral_uart_wb.sv

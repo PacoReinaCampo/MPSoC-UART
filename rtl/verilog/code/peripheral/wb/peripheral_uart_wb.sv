@@ -40,8 +40,6 @@
 //   Igor Mohor <igorm@opencores.org>
 //   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 
-import peripheral_wb_pkg::*;
-
 module peripheral_uart_wb #(
   parameter SIM   = 0,
   parameter DEBUG = 0

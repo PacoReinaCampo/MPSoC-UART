@@ -40,8 +40,7 @@
 //   Igor Mohor <igorm@opencores.org>
 //   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 
-import peripheral_uart_pkg::*;
-import peripheral_wb_pkg::*;
+`include "peripheral_uart_pkg.sv"
 
 module peripheral_uart_receiver_wb (
   input       clk,
@@ -53,13 +52,13 @@ module peripheral_uart_receiver_wb (
   input       rx_reset,
   input       lsr_mask,
 
-  output reg [                    9:0] counter_t,
-  output     [UART_FIFO_COUNTER_W-1:0] rf_count,
-  output     [UART_FIFO_REC_WIDTH-1:0] rf_data_out,
-  output                               rf_overrun,
-  output                               rf_error_bit,
-  output reg [                    3:0] rstate,
-  output                               rf_push_pulse
+  output reg [                     9:0] counter_t,
+  output     [`UART_FIFO_COUNTER_W-1:0] rf_count,
+  output     [`UART_FIFO_REC_WIDTH-1:0] rf_data_out,
+  output                                rf_overrun,
+  output                                rf_error_bit,
+  output reg [                     3:0] rstate,
+  output                                rf_push_pulse
 );
 
   //////////////////////////////////////////////////////////////////////////////
@@ -82,32 +81,32 @@ module peripheral_uart_receiver_wb (
   // Variables
   //////////////////////////////////////////////////////////////////////////////
 
-  reg  [                    3:0] rcounter16;
-  reg  [                    2:0] rbit_counter;
-  reg  [                    7:0] rshift;  // receiver shift register
-  reg                            rparity;  // received parity
-  reg                            rparity_error;
-  reg                            rframing_error;  // framing error flag
-  reg                            rparity_xor;
-  reg  [                    7:0] counter_b;  // counts the 0 (low) signals
-  reg                            rf_push_q;
+  reg  [                     3:0] rcounter16;
+  reg  [                     2:0] rbit_counter;
+  reg  [                     7:0] rshift;  // receiver shift register
+  reg                             rparity;  // received parity
+  reg                             rparity_error;
+  reg                             rframing_error;  // framing error flag
+  reg                             rparity_xor;
+  reg  [                     7:0] counter_b;  // counts the 0 (low) signals
+  reg                             rf_push_q;
 
   // RX FIFO signals
-  reg  [UART_FIFO_REC_WIDTH-1:0] rf_data_in;
-  reg                            rf_push;
+  reg  [`UART_FIFO_REC_WIDTH-1:0] rf_data_in;
+  reg                             rf_push;
 
-  wire                           break_error;
+  wire                            break_error;
 
-  wire                           rcounter16_eq_7;
-  wire                           rcounter16_eq_0;
+  wire                            rcounter16_eq_7;
+  wire                            rcounter16_eq_0;
 
-  wire [                    3:0] rcounter16_minus_1;
+  wire [                     3:0] rcounter16_minus_1;
 
   // value to be set to timeout counter
-  reg  [                    9:0] toc_value;
+  reg  [                     9:0] toc_value;
 
   // value to be set to break counter
-  wire [                    7:0] brc_value;
+  wire [                     7:0] brc_value;
 
   //////////////////////////////////////////////////////////////////////////////
   // Body
@@ -122,7 +121,7 @@ module peripheral_uart_receiver_wb (
 
   // RX FIFO instance
   peripheral_uart_rfifo_wb #(
-    .FIFO_WIDTH    (UART_FIFO_REC_WIDTH),
+    .FIFO_WIDTH    (`UART_FIFO_REC_WIDTH),
     .FIFO_DEPTH    (16),
     .FIFO_POINTER_W(4),
     .FIFO_COUNTER_W(5)
@@ -204,7 +203,7 @@ module peripheral_uart_receiver_wb (
         end
         sr_end_bit: begin
           if (rbit_counter == 3'b0) begin  // no more bits in word
-            if (lcr[UART_LC_PE]) begin  // choose state based on parity
+            if (lcr[`UART_LC_PE]) begin  // choose state based on parity
               rstate <= sr_rec_parity;
             end else begin
               rstate        <= sr_rec_stop;
@@ -230,7 +229,7 @@ module peripheral_uart_receiver_wb (
         end
         sr_check_parity: begin  // rcounter equals 5
           case ({
-            lcr[UART_LC_EP], lcr[UART_LC_SP]
+            lcr[`UART_LC_EP], lcr[`UART_LC_SP]
           })
             2'b00: rparity_error <= rparity_xor == 0;  // no error if parity 1
             2'b01: rparity_error <= ~rparity;  // parity should sticked to 1

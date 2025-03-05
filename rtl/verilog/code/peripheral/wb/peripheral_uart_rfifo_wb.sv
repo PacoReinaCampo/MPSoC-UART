@@ -40,8 +40,6 @@
 //   Igor Mohor <igorm@opencores.org>
 //   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 
-import peripheral_wb_pkg::*;
-
 module peripheral_uart_rfifo_wb #(
   parameter FIFO_WIDTH     = 8,
   parameter FIFO_DEPTH     = 16,
