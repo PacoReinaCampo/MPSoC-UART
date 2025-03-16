@@ -70,7 +70,7 @@ module peripheral_uart_testbench;
   // Body
   //////////////////////////////////////////////////////////////////////////////
 
-  peripheral_testbench_utils peripheral_testbench_utils0 ();
+  peripheral_utils_testbench peripheral_testbench_utils0 ();
 
   initial #1800 wbm_rst <= 1'b0;
 
