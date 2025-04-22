@@ -43,7 +43,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 
 vhdl2008 work ../../../../../../../rtl/vhdl/code/pkg/core/vhdl_pkg.vhd
-vhdl2008 work ../../../../../../../rtl/vhdl/code/pkg/core/peripheral_uart_pkg.vhd
+vhdl2008 work ../../../../../../../rtl/vhdl/code/pkg/peripheral/peripheral_uart_pkg.vhd
 vhdl2008 work ../../../../../../../rtl/vhdl/code/pkg/peripheral/wb/peripheral_wb_pkg.vhd
 
 vhdl2008 work ../../../../../../../rtl/vhdl/code/peripheral/wb/peripheral_raminfr_wb.vhd
