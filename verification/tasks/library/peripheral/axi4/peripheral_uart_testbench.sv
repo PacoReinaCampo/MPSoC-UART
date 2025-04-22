@@ -58,7 +58,7 @@ module peripheral_uart_testbench;
   wire                        HRESETn;
   wire                        HCLK;
 
-  // UART AHB3
+  // UART AHB4
   wire                        mst_uart_HSEL;
   wire  [HADDR_SIZE     -1:0] mst_uart_HADDR;
   wire  [HDATA_SIZE     -1:0] mst_uart_HWDATA;
@@ -91,7 +91,7 @@ module peripheral_uart_testbench;
   // Body
   //////////////////////////////////////////////////////////////////////////////
 
-  // DUT AHB3
+  // DUT AHB4
   peripheral_apb2ahb #(
     .HADDR_SIZE(HADDR_SIZE),
     .HDATA_SIZE(HDATA_SIZE),

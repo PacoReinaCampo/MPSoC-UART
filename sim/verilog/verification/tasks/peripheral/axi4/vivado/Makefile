@@ -89,7 +89,7 @@
 all: build simulate
 
 build:
-	xvlog -i ../../../../../../../rtl/verilog/code/pkg/peripheral/ahb3 -prj system.prj
+	xvlog -i ../../../../../../../rtl/verilog/code/pkg/peripheral/ahb4 -prj system.prj
 
 simulate:
 	xelab peripheral_uart_testbench

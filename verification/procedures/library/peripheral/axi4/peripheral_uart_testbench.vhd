@@ -135,7 +135,7 @@ architecture rtl of peripheral_uart_testbench is
   signal HRESETn : std_logic;
   signal HCLK    : std_logic;
 
-  -- UART AHB3
+  -- UART AHB4
   signal mst_uart_HSEL      : std_logic;
   signal mst_uart_HADDR     : std_logic_vector(HADDR_SIZE-1 downto 0);
   signal mst_uart_HWDATA    : std_logic_vector(HDATA_SIZE-1 downto 0);
@@ -169,7 +169,7 @@ begin
   -- Module Body
   ------------------------------------------------------------------------------
 
-  -- DUT AHB3
+  -- DUT AHB4
   apb2ahb : peripheral_apb2ahb
     generic map (
       HADDR_SIZE => HADDR_SIZE,

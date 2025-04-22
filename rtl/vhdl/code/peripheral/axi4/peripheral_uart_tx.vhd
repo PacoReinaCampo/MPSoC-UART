@@ -44,7 +44,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 use work.vhdl_pkg.all;
-use work.peripheral_ahb3_pkg.all;
+use work.peripheral_ahb4_pkg.all;
 
 entity peripheral_uart_tx is
   port (

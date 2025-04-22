@@ -1,8 +1,8 @@
 code
 ├── peripheral
-│   ├── ahb3
+│   ├── ahb4
 │   │   ├── peripheral_apb2ahb.vhd
-│   │   ├── peripheral_uart_ahb3.vhd
+│   │   ├── peripheral_uart_ahb4.vhd
 │   │   ├── peripheral_uart_fifo.vhd
 │   │   ├── peripheral_uart_interrupt.vhd
 │   │   ├── peripheral_uart_rx.vhd
@@ -48,8 +48,8 @@ code
     │   ├── peripheral_uart_pkg.vhd
     │   └── vhdl_pkg.vhd
     └── peripheral
-        ├── ahb3
-        │   └── peripheral_ahb3_pkg.vhd
+        ├── ahb4
+        │   └── peripheral_ahb4_pkg.vhd
         ├── apb4
         │   └── peripheral_apb4_pkg.vhd
         ├── axi4

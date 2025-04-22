@@ -56,7 +56,7 @@ entity peripheral_uart_synthesis is
     HRESETn   : in  std_logic;
     HCLK      : in  std_logic;
 
-    -- UART AHB3
+    -- UART AHB4
     uart_HSEL      : in  std_logic;
     uart_HADDR     : in  std_logic_vector(HADDR_SIZE-1 downto 0);
     uart_HWDATA    : in  std_logic_vector(HDATA_SIZE-1 downto 0);
@@ -168,7 +168,7 @@ begin
   -- Module Body
   ------------------------------------------------------------------------------
 
-  -- DUT AHB3
+  -- DUT AHB4
   bridge_apb2ahb : peripheral_apb2ahb
     generic map (
       HADDR_SIZE => HADDR_SIZE,

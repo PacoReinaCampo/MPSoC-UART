@@ -38,7 +38,7 @@
 // Author(s):
 //   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 
-import peripheral_ahb3_pkg::*;
+import peripheral_ahb4_pkg::*;
 
 module peripheral_apb2ahb #(
   parameter HADDR_SIZE = 32,
