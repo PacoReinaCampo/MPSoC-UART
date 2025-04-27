@@ -26,9 +26,9 @@ code
 │   │   │   └── peripheral_sync_cell.vhd
 │   │   └── main
 │   │       └── peripheral_uart_bb.vhd
-│   ├── biu
+│   ├── tl
 │   │   ├── peripheral_apb2ahb.vhd
-│   │   ├── peripheral_uart_biu.vhd
+│   │   ├── peripheral_uart_tl.vhd
 │   │   ├── peripheral_uart_fifo.vhd
 │   │   ├── peripheral_uart_interrupt.vhd
 │   │   ├── peripheral_uart_rx.vhd
@@ -56,7 +56,7 @@ code
         │   └── peripheral_axi4_pkg.vhd
         ├── bb
         │   └── peripheral_bb_pkg.vhd
-        ├── biu
+        ├── tl
         │   └── peripheral_biu_pkg.vhd
         └── wb
             └── peripheral_wb_pkg.vhd
