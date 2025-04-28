@@ -45,7 +45,7 @@ use ieee.numeric_std.all;
 use ieee.math_real.all;
 
 use work.vhdl_pkg.all;
-use work.peripheral_ahb4_pkg.all;
+use work.peripheral_tl_pkg.all;
 
 entity peripheral_uart_fifo is
   generic (
