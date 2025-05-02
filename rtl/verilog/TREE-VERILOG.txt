@@ -47,10 +47,10 @@ code
 │   │       └── peripheral_uart_bb.sv
 │   ├── tl
 │   │   ├── peripheral_apb2ahb.sv
-│   │   ├── peripheral_uart_tl.sv
 │   │   ├── peripheral_uart_fifo.sv
 │   │   ├── peripheral_uart_interrupt.sv
 │   │   ├── peripheral_uart_rx.sv
+│   │   ├── peripheral_uart_tl.sv
 │   │   └── peripheral_uart_tx.sv
 │   └── wb
 │       ├── peripheral_raminfr_wb.sv
@@ -75,7 +75,7 @@ code
         ├── bb
         │   └── peripheral_bb_pkg.sv
         ├── tl
-        │   └── peripheral_biu_pkg.sv
+        │   └── peripheral_tl_pkg.sv
         └── wb
             └── peripheral_wb_pkg.sv
 

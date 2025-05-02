@@ -28,10 +28,10 @@ code
 │   │       └── peripheral_uart_bb.vhd
 │   ├── tl
 │   │   ├── peripheral_apb2ahb.vhd
-│   │   ├── peripheral_uart_tl.vhd
 │   │   ├── peripheral_uart_fifo.vhd
 │   │   ├── peripheral_uart_interrupt.vhd
 │   │   ├── peripheral_uart_rx.vhd
+│   │   ├── peripheral_uart_tl.vhd
 │   │   └── peripheral_uart_tx.vhd
 │   └── wb
 │       ├── peripheral_raminfr_wb.vhd
@@ -57,7 +57,7 @@ code
         ├── bb
         │   └── peripheral_bb_pkg.vhd
         ├── tl
-        │   └── peripheral_biu_pkg.vhd
+        │   └── peripheral_tl_pkg.vhd
         └── wb
             └── peripheral_wb_pkg.vhd
 
