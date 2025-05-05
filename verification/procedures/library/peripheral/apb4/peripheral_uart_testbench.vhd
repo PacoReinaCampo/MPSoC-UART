@@ -11,7 +11,7 @@
 --                                                                            --
 --              Peripheral-UART for MPSoC                                     --
 --              Universal Asynchronous Receiver-Transmitter for MPSoC         --
---              AMBA3 AHB-Lite Bus Interface                                  --
+--              AMBA4 AHB-Lite Bus Interface                                  --
 --                                                                            --
 --------------------------------------------------------------------------------
 
