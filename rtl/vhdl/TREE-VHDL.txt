@@ -22,10 +22,7 @@ code
 │   │   ├── peripheral_uart_rx.vhd
 │   │   └── peripheral_uart_tx.vhd
 │   ├── bb
-│   │   ├── fuse
-│   │   │   └── peripheral_sync_cell.vhd
-│   │   └── main
-│   │       └── peripheral_uart_bb.vhd
+│   │   └── peripheral_uart_bb.vhd
 │   ├── tl
 │   │   ├── peripheral_apb2ahb.vhd
 │   │   ├── peripheral_uart_fifo.vhd
@@ -61,4 +58,4 @@ code
         └── wb
             └── peripheral_wb_pkg.vhd
 
-18 directories, 43 files
+16 directories, 42 files

@@ -41,10 +41,7 @@ code
 │   │   ├── peripheral_uart_rx.sv
 │   │   └── peripheral_uart_tx.sv
 │   ├── bb
-│   │   ├── fuse
-│   │   │   └── peripheral_sync_cell.sv
-│   │   └── main
-│   │       └── peripheral_uart_bb.sv
+│   │   └── peripheral_uart_bb.sv
 │   ├── tl
 │   │   ├── peripheral_apb2ahb.sv
 │   │   ├── peripheral_uart_fifo.sv
@@ -79,4 +76,4 @@ code
         └── wb
             └── peripheral_wb_pkg.sv
 
-25 directories, 54 files
+23 directories, 53 files

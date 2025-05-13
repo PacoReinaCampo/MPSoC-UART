@@ -42,7 +42,6 @@
 //                                                                               //
 ///////////////////////////////////////////////////////////////////////////////////
 
-../../../../../../../rtl/verilog/code/peripheral/tl/fuse/peripheral_sync_cell.sv
 ../../../../../../../rtl/verilog/code/peripheral/tl/main/peripheral_uart_tl.sv
 
 ../../../../../../../verification/tasks/library/peripheral/tl/peripheral_uart_testbench.sv

@@ -44,7 +44,6 @@
 
 ../../../../../../../rtl/vhdl/code/pkg/core/vhdl_pkg.vhd
 
-../../../../../../../rtl/vhdl/code/peripheral/bb/fuse/peripheral_sync_cell.vhd
 ../../../../../../../rtl/vhdl/code/peripheral/bb/main/peripheral_uart_bb.vhd
 
 ../../../../../../../verification/procedures/library/peripheral/bb/peripheral_uart_testbench.vhd

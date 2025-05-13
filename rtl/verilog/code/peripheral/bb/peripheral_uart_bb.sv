@@ -292,16 +292,19 @@ module peripheral_uart_bb (
   //////////////////////////////////////////////////////////////////////////////
 
   // Synchronize RXD input
-  wire uart_rxd_sync_n;
+  reg [1:0] data_sync;
 
-  peripheral_sync_cell sync_cell_uart_rxd (
-    .data_out(uart_rxd_sync_n),
-    .data_in (~uart_rxd),
-    .clk     (mclk),
-    .rst     (puc_rst)
-  );
+  always @(posedge mclk or posedge puc_rst) begin
+    if (puc_rst) begin
+      data_sync <= 2'b00;
+    end else begin
+      data_sync <= {data_sync[0], ~uart_rxd};
+    end
+  end
 
-  wire       uart_rxd_sync = ~uart_rxd_sync_n;
+  wire uart_rxd_sync_n = data_sync[1];
+
+  wire uart_rxd_sync = ~uart_rxd_sync_n;
 
   // RXD input buffer
   reg  [1:0] rxd_buf;

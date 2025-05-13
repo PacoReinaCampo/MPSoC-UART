@@ -44,7 +44,6 @@
 
 vhdl2008 work ../../../../../../../rtl/vhdl/code/pkg/core/vhdl_pkg.vhd
 
-vhdl2008 work ../../../../../../../rtl/vhdl/code/peripheral/tl/fuse/peripheral_sync_cell.vhd
 vhdl2008 work ../../../../../../../rtl/vhdl/code/peripheral/tl/main/peripheral_uart_tl.vhd
 
 vhdl2008 work ../../../../../../../verification/procedures/library/peripheral/tl/peripheral_uart_testbench.vhd

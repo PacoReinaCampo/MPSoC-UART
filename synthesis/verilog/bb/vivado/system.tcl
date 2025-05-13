@@ -42,7 +42,6 @@
 ##                                                                               ##
 ###################################################################################
 
-read_verilog -sv ../../../../rtl/verilog/code/peripheral/bb/fuse/peripheral_sync_cell.sv
 read_verilog -sv ../../../../rtl/verilog/code/peripheral/bb/main/peripheral_uart_bb.sv
 
 read_verilog -sv peripheral_uart_synthesis.sv

@@ -195,6 +195,7 @@ architecture rtl of peripheral_uart_bb is
 
   -- 5.  LINE_SYNCHRONIZTION_FILTERING
   -- 5.1.        Synchronize RXD input
+  signal data_sync       : std_logic_vector (1 downto 0);
   signal uart_rxd_sync_n : std_logic;
   signal not_uart_rxd    : std_logic;
   signal uart_rxd_sync   : std_logic;
@@ -461,12 +462,16 @@ begin
   LINE_SYNCHRONIZTION_FILTERING : block
   begin
     -- 5.1.      Synchronize RXD input
-    sync_cell_uart_rxd : peripheral_sync_cell
-      port map (
-        data_out => uart_rxd_sync_n,
-        data_in  => not_uart_rxd,
-        clk      => mclk,
-        rst      => puc_rst);
+    process (mclk, puc_rst)
+    begin
+      if (puc_rst = '1') then
+        data_sync <= (others => '0');
+      elsif (rising_edge(mclk)) then
+        data_sync <= data_sync(0) & not_uart_rxd;
+      end if;
+    end process;
+
+    uart_rxd_sync_n <= data_sync(1);
 
     not_uart_rxd  <= not uart_rxd;
     uart_rxd_sync <= not uart_rxd_sync_n;
