@@ -2,20 +2,19 @@ code
 ├── peripheral
 │   ├── ahb4
 │   │   ├── peripheral_apb2ahb.vhd
-│   │   ├── peripheral_uart_ahb4.vhd
+│   │   ├── peripheral_uart_apb4.vhd
 │   │   ├── peripheral_uart_fifo.vhd
 │   │   ├── peripheral_uart_interrupt.vhd
 │   │   ├── peripheral_uart_rx.vhd
 │   │   └── peripheral_uart_tx.vhd
 │   ├── apb4
-│   │   ├── peripheral_apb2ahb.vhd
 │   │   ├── peripheral_uart_apb4.vhd
 │   │   ├── peripheral_uart_fifo.vhd
 │   │   ├── peripheral_uart_interrupt.vhd
 │   │   ├── peripheral_uart_rx.vhd
 │   │   └── peripheral_uart_tx.vhd
 │   ├── axi4
-│   │   ├── peripheral_apb2ahb.vhd
+│   │   ├── peripheral_apb2axi.vhd
 │   │   ├── peripheral_uart_axi4.vhd
 │   │   ├── peripheral_uart_fifo.vhd
 │   │   ├── peripheral_uart_interrupt.vhd
@@ -58,4 +57,4 @@ code
         └── wb
             └── peripheral_wb_pkg.vhd
 
-16 directories, 42 files
+16 directories, 41 files

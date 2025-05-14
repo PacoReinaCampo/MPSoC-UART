@@ -11,7 +11,7 @@
 --                                                                            --
 --              Peripheral-UART for MPSoC                                     --
 --              Universal Asynchronous Receiver-Transmitter for MPSoC         --
---              AMBA4 AHB-Lite Bus Interface                                  --
+--              WishBone Bus Interface                                        --
 --                                                                            --
 --------------------------------------------------------------------------------
 
@@ -52,187 +52,118 @@ architecture rtl of peripheral_uart_testbench is
   -- Components
   ------------------------------------------------------------------------------
 
-  component peripheral_apb2ahb
+  component peripheral_uart_wb
     generic (
-      HADDR_SIZE : integer := 32;
-      HDATA_SIZE : integer := 32;
-      PADDR_SIZE : integer := 10;
-      PDATA_SIZE : integer := 8;
-      SYNC_DEPTH : integer := 3
+      SIM   : integer := 0;
+      DEBUG : integer := 0
       );
     port (
-      -- AHB Slave Interface
-      HRESETn   : in  std_logic;
-      HCLK      : in  std_logic;
-      HSEL      : in  std_logic;
-      HADDR     : in  std_logic_vector(HADDR_SIZE-1 downto 0);
-      HWDATA    : in  std_logic_vector(HDATA_SIZE-1 downto 0);
-      HRDATA    : out std_logic_vector(HDATA_SIZE-1 downto 0);
-      HWRITE    : in  std_logic;
-      HSIZE     : in  std_logic_vector(2 downto 0);
-      HBURST    : in  std_logic_vector(2 downto 0);
-      HPROT     : in  std_logic_vector(3 downto 0);
-      HTRANS    : in  std_logic_vector(1 downto 0);
-      HMASTLOCK : in  std_logic;
-      HREADYOUT : out std_logic;
-      HREADY    : in  std_logic;
-      HRESP     : out std_logic;
+      wb_clk_i : in std_logic;
+      wb_rst_i : in std_logic;
 
-      -- APB Master Interface
-      PRESETn : in  std_logic;
-      PCLK    : in  std_logic;
-      PSEL    : out std_logic;
-      PENABLE : out std_logic;
-      PPROT   : out std_logic_vector(2 downto 0);
-      PWRITE  : out std_logic;
-      PSTRB   : out std_logic;
-      PADDR   : out std_logic_vector(PADDR_SIZE-1 downto 0);
-      PWDATA  : out std_logic_vector(PDATA_SIZE-1 downto 0);
-      PRDATA  : in  std_logic_vector(PDATA_SIZE-1 downto 0);
-      PREADY  : in  std_logic;
-      PSLVERR : in  std_logic
-      );
-  end component;
+      -- WISHBONE interface
+      wb_adr_i : in  std_logic_vector(2 downto 0);
+      wb_dat_i : in  std_logic_vector(7 downto 0);
+      wb_dat_o : out std_logic_vector(7 downto 0);
+      wb_we_i  : in  std_logic;
+      wb_stb_i : in  std_logic;
+      wb_cyc_i : in  std_logic;
+      wb_sel_i : in  std_logic_vector(3 downto 0);
+      wb_ack_o : out std_logic;
+      int_o    : out std_logic;
 
-  component peripheral_uart_apb4
-    generic (
-      APB_ADDR_WIDTH : integer := 12;   -- APB slaves are 4KB by default
-      APB_DATA_WIDTH : integer := 32    -- APB slaves are 4KB by default
-      );
-    port (
-      CLK     : in  std_logic;
-      RSTN    : in  std_logic;
-      PADDR   : in  std_logic_vector(APB_ADDR_WIDTH-1 downto 0);
-      PWDATA  : in  std_logic_vector(APB_DATA_WIDTH-1 downto 0);
-      PWRITE  : in  std_logic;
-      PSEL    : in  std_logic;
-      PENABLE : in  std_logic;
-      PRDATA  : out std_logic_vector(APB_DATA_WIDTH-1 downto 0);
-      PREADY  : out std_logic;
-      PSLVERR : out std_logic;
+      -- UART  signals
+      srx_pad_i : in  std_logic;
+      stx_pad_o : out std_logic;
+      rts_pad_o : out std_logic;
+      cts_pad_i : in  std_logic;
+      dtr_pad_o : out std_logic;
+      dsr_pad_i : in  std_logic;
+      ri_pad_i  : in  std_logic;
+      dcd_pad_i : in  std_logic;
 
-      rx_i : in  std_logic;             -- Receiver input
-      tx_o : out std_logic;             -- Transmitter output
-
-      event_o : out std_logic           -- interrupt/event output
+      -- optional baudrate output
+      baud_o : out std_logic
       );
   end component;
 
   ------------------------------------------------------------------------------
   --  Constants
   ------------------------------------------------------------------------------
-  constant HADDR_SIZE     : integer := 32;
-  constant HDATA_SIZE     : integer := 32;
-  constant APB_ADDR_WIDTH : integer := 10;
-  constant APB_DATA_WIDTH : integer := 8;
-  constant SYNC_DEPTH     : integer := 3;
+  constant SIM   : integer := 0;
+  constant DEBUG : integer := 0;
 
   ------------------------------------------------------------------------------
   -- Variables
   ------------------------------------------------------------------------------
 
   -- Common signals
-  signal HRESETn : std_logic;
-  signal HCLK    : std_logic;
+  signal clk : std_logic;
+  signal rst : std_logic;
 
-  -- UART AHB4
-  signal mst_uart_HSEL      : std_logic;
-  signal mst_uart_HADDR     : std_logic_vector(HADDR_SIZE-1 downto 0);
-  signal mst_uart_HWDATA    : std_logic_vector(HDATA_SIZE-1 downto 0);
-  signal mst_uart_HRDATA    : std_logic_vector(HDATA_SIZE-1 downto 0);
-  signal mst_uart_HWRITE    : std_logic;
-  signal mst_uart_HSIZE     : std_logic_vector(2 downto 0);
-  signal mst_uart_HBURST    : std_logic_vector(2 downto 0);
-  signal mst_uart_HPROT     : std_logic_vector(3 downto 0);
-  signal mst_uart_HTRANS    : std_logic_vector(1 downto 0);
-  signal mst_uart_HMASTLOCK : std_logic;
-  signal mst_uart_HREADY    : std_logic;
-  signal mst_uart_HREADYOUT : std_logic;
-  signal mst_uart_HRESP     : std_logic;
+  -- UART WB
 
-  signal uart_PADDR   : std_logic_vector(APB_ADDR_WIDTH-1 downto 0);
-  signal uart_PWDATA  : std_logic_vector(APB_DATA_WIDTH-1 downto 0);
-  signal uart_PWRITE  : std_logic;
-  signal uart_PSEL    : std_logic;
-  signal uart_PENABLE : std_logic;
-  signal uart_PRDATA  : std_logic_vector(APB_DATA_WIDTH-1 downto 0);
-  signal uart_PREADY  : std_logic;
-  signal uart_PSLVERR : std_logic;
+  -- WISHBONE interface
+  signal wb_adr_i : std_logic_vector(2 downto 0);
+  signal wb_dat_i : std_logic_vector(7 downto 0);
+  signal wb_dat_o : std_logic_vector(7 downto 0);
+  signal wb_we_i  : std_logic;
+  signal wb_stb_i : std_logic;
+  signal wb_cyc_i : std_logic;
+  signal wb_sel_i : std_logic_vector(3 downto 0);
+  signal wb_ack_o : std_logic;
+  signal int_o    : std_logic;
 
-  signal uart_rx_i : std_logic;         -- Receiver input
-  signal uart_tx_o : std_logic;         -- Transmitter output
+  -- UART  signals
+  signal srx_pad_i : std_logic;
+  signal stx_pad_o : std_logic;
+  signal rts_pad_o : std_logic;
+  signal cts_pad_i : std_logic;
+  signal dtr_pad_o : std_logic;
+  signal dsr_pad_i : std_logic;
+  signal ri_pad_i  : std_logic;
+  signal dcd_pad_i : std_logic;
 
-  signal uart_event_o : std_logic;
+  -- optional baudrate output
+  signal baud_o : std_logic;
 
 begin
   ------------------------------------------------------------------------------
   -- Module Body
   ------------------------------------------------------------------------------
 
-  -- DUT AHB4
-  apb2ahb : peripheral_apb2ahb
+  -- DUT WB
+  uart_wb : peripheral_uart_wb
     generic map (
-      HADDR_SIZE => HADDR_SIZE,
-      HDATA_SIZE => HDATA_SIZE,
-      PADDR_SIZE => APB_ADDR_WIDTH,
-      PDATA_SIZE => APB_DATA_WIDTH,
-      SYNC_DEPTH => SYNC_DEPTH
+      SIM   => SIM,
+      DEBUG => DEBUG
       )
     port map (
-      -- AHB Slave Interface
-      HRESETn => HRESETn,
-      HCLK    => HCLK,
+      wb_clk_i => clk,
+      wb_rst_i => rst,
 
-      HSEL      => mst_uart_HSEL,
-      HADDR     => mst_uart_HADDR,
-      HWDATA    => mst_uart_HWDATA,
-      HRDATA    => mst_uart_HRDATA,
-      HWRITE    => mst_uart_HWRITE,
-      HSIZE     => mst_uart_HSIZE,
-      HBURST    => mst_uart_HBURST,
-      HPROT     => mst_uart_HPROT,
-      HTRANS    => mst_uart_HTRANS,
-      HMASTLOCK => mst_uart_HMASTLOCK,
-      HREADYOUT => mst_uart_HREADYOUT,
-      HREADY    => mst_uart_HREADY,
-      HRESP     => mst_uart_HRESP,
+      -- WISHBONE interface
+      wb_adr_i => wb_adr_i,
+      wb_dat_i => wb_dat_i,
+      wb_dat_o => wb_dat_o,
+      wb_we_i  => wb_we_i,
+      wb_stb_i => wb_stb_i,
+      wb_cyc_i => wb_cyc_i,
+      wb_sel_i => wb_sel_i,
+      wb_ack_o => wb_ack_o,
+      int_o    => int_o,
 
-      -- APB Master Interface
-      PRESETn => HRESETn,
-      PCLK    => HCLK,
+      -- UART  signals
+      srx_pad_i => srx_pad_i,
+      stx_pad_o => stx_pad_o,
+      rts_pad_o => rts_pad_o,
+      cts_pad_i => cts_pad_i,
+      dtr_pad_o => dtr_pad_o,
+      dsr_pad_i => dsr_pad_i,
+      ri_pad_i  => ri_pad_i,
+      dcd_pad_i => dcd_pad_i,
 
-      PSEL    => uart_PSEL,
-      PENABLE => uart_PENABLE,
-      PPROT   => open,
-      PWRITE  => uart_PWRITE,
-      PSTRB   => open,
-      PADDR   => uart_PADDR,
-      PWDATA  => uart_PWDATA,
-      PRDATA  => uart_PRDATA,
-      PREADY  => uart_PREADY,
-      PSLVERR => uart_PSLVERR
-      );
-
-  apb4_uart : peripheral_uart_apb4
-    generic map (
-      APB_ADDR_WIDTH => APB_ADDR_WIDTH,
-      APB_DATA_WIDTH => APB_DATA_WIDTH
-      )
-    port map (
-      CLK     => HCLK,
-      RSTN    => HRESETn,
-      PADDR   => uart_PADDR,
-      PWDATA  => uart_PWDATA,
-      PWRITE  => uart_PWRITE,
-      PSEL    => uart_PSEL,
-      PENABLE => uart_PENABLE,
-      PRDATA  => uart_PRDATA,
-      PREADY  => uart_PREADY,
-      PSLVERR => uart_PSLVERR,
-
-      rx_i => uart_rx_i,
-      tx_o => uart_tx_o,
-
-      event_o => uart_event_o
+      -- optional baudrate output
+      baud_o => baud_o
       );
 end rtl;

@@ -21,20 +21,19 @@ code
 ├── peripheral
 │   ├── ahb4
 │   │   ├── peripheral_apb2ahb.sv
-│   │   ├── peripheral_uart_ahb4.sv
+│   │   ├── peripheral_uart_apb4.sv
 │   │   ├── peripheral_uart_fifo.sv
 │   │   ├── peripheral_uart_interrupt.sv
 │   │   ├── peripheral_uart_rx.sv
 │   │   └── peripheral_uart_tx.sv
 │   ├── apb4
-│   │   ├── peripheral_apb2ahb.sv
 │   │   ├── peripheral_uart_apb4.sv
 │   │   ├── peripheral_uart_fifo.sv
 │   │   ├── peripheral_uart_interrupt.sv
 │   │   ├── peripheral_uart_rx.sv
 │   │   └── peripheral_uart_tx.sv
 │   ├── axi4
-│   │   ├── peripheral_apb2ahb.sv
+│   │   ├── peripheral_apb2axi.sv
 │   │   ├── peripheral_uart_axi4.sv
 │   │   ├── peripheral_uart_fifo.sv
 │   │   ├── peripheral_uart_interrupt.sv
@@ -43,12 +42,16 @@ code
 │   ├── bb
 │   │   └── peripheral_uart_bb.sv
 │   ├── tl
-│   │   ├── peripheral_apb2ahb.sv
-│   │   ├── peripheral_uart_fifo.sv
-│   │   ├── peripheral_uart_interrupt.sv
-│   │   ├── peripheral_uart_rx.sv
-│   │   ├── peripheral_uart_tl.sv
-│   │   └── peripheral_uart_tx.sv
+│   │   ├── peripheral_raminfr_wb.sv
+│   │   ├── peripheral_uart_bridge_wb.sv
+│   │   ├── peripheral_uart_receiver_wb.sv
+│   │   ├── peripheral_uart_regs_wb.sv
+│   │   ├── peripheral_uart_rfifo_wb.sv
+│   │   ├── peripheral_uart_sync_flops_wb.sv
+│   │   ├── peripheral_uart_tfifo_wb.sv
+│   │   ├── peripheral_uart_transmitter_wb.sv
+│   │   ├── peripheral_uart_wb.sv
+│   │   └── peripheral_wb2tl.sv
 │   └── wb
 │       ├── peripheral_raminfr_wb.sv
 │       ├── peripheral_uart_bridge_wb.sv
@@ -76,4 +79,4 @@ code
         └── wb
             └── peripheral_wb_pkg.sv
 
-23 directories, 53 files
+23 directories, 56 files

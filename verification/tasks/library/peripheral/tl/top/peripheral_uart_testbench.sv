@@ -11,7 +11,7 @@
 //                                                                            //
 //              Peripheral-UART for MPSoC                                     //
 //              Universal Asynchronous Receiver-Transmitter for MPSoC         //
-//              AMBA4 AHB-Lite Bus Interface                                  //
+//              WishBone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2018-2019 by the author(s)
@@ -44,114 +44,77 @@ module peripheral_uart_testbench;
   // Constants
   //////////////////////////////////////////////////////////////////////////////
 
-  parameter HADDR_SIZE = 32;
-  parameter HDATA_SIZE = 32;
-  parameter APB_ADDR_WIDTH = 10;
-  parameter APB_DATA_WIDTH = 8;
-  parameter SYNC_DEPTH = 3;
+  parameter SIM = 0;
+  parameter DEBUG = 0;
 
   //////////////////////////////////////////////////////////////////////////////
   // Variables
   //////////////////////////////////////////////////////////////////////////////
 
   // Common signals
-  wire                        HRESETn;
-  wire                        HCLK;
+  wire        rst;
+  wire        clk;
 
-  // UART AHB4
-  wire                        mst_uart_HSEL;
-  wire  [HADDR_SIZE     -1:0] mst_uart_HADDR;
-  wire  [HDATA_SIZE     -1:0] mst_uart_HWDATA;
-  wire  [HDATA_SIZE     -1:0] mst_uart_HRDATA;
-  wire                        mst_uart_HWRITE;
-  wire  [                2:0] mst_uart_HSIZE;
-  wire  [                2:0] mst_uart_HBURST;
-  wire  [                3:0] mst_uart_HPROT;
-  wire  [                1:0] mst_uart_HTRANS;
-  wire                        mst_uart_HMASTLOCK;
-  wire                        mst_uart_HREADY;
-  wire                        mst_uart_HREADYOUT;
-  wire                        mst_uart_HRESP;
+  // UART WB
 
-  logic [APB_ADDR_WIDTH -1:0] uart_PADDR;
-  logic [APB_DATA_WIDTH -1:0] uart_PWDATA;
-  logic                       uart_PWRITE;
-  logic                       uart_PSEL;
-  logic                       uart_PENABLE;
-  logic [APB_DATA_WIDTH -1:0] uart_PRDATA;
-  logic                       uart_PREADY;
-  logic                       uart_PSLVERR;
+  // WISHBONE interface
+  logic [2:0] wb_adr_i;
+  logic [7:0] wb_dat_i;
+  logic [7:0] wb_dat_o;
+  logic       wb_we_i;
+  logic       wb_stb_i;
+  logic       wb_cyc_i;
+  logic [3:0] wb_sel_i;
+  logic       wb_ack_o;
+  logic       int_o;
 
-  logic                       uart_rx_i;  // Receiver input
-  logic                       uart_tx_o;  // Transmitter output
+  // UART  signals
+  logic       srx_pad_i;
+  logic       stx_pad_o;
+  logic       rts_pad_o;
+  logic       cts_pad_i;
+  logic       dtr_pad_o;
+  logic       dsr_pad_i;
+  logic       ri_pad_i;
+  logic       dcd_pad_i;
 
-  logic                       uart_event_o;
+  // optional baudrate output
+  logic       baud_o;
 
   //////////////////////////////////////////////////////////////////////////////
   // Body
   //////////////////////////////////////////////////////////////////////////////
 
-  // DUT AHB4
-  peripheral_apb2ahb #(
-    .HADDR_SIZE(HADDR_SIZE),
-    .HDATA_SIZE(HDATA_SIZE),
-    .PADDR_SIZE(APB_ADDR_WIDTH),
-    .PDATA_SIZE(APB_DATA_WIDTH),
-    .SYNC_DEPTH(SYNC_DEPTH)
-  ) apb2ahb (
-    // AHB Slave Interface
-    .HRESETn(HRESETn),
-    .HCLK   (HCLK),
+  // DUT WB
+  peripheral_uart_wb #(
+    .SIM  (SIM),
+    .DEBUG(DEBUG)
+  ) uart_wb (
+    .wb_clk_i(clk),
+    .wb_rst_i(rst),
 
-    .HSEL     (mst_uart_HSEL),
-    .HADDR    (mst_uart_HADDR),
-    .HWDATA   (mst_uart_HWDATA),
-    .HRDATA   (mst_uart_HRDATA),
-    .HWRITE   (mst_uart_HWRITE),
-    .HSIZE    (mst_uart_HSIZE),
-    .HBURST   (mst_uart_HBURST),
-    .HPROT    (mst_uart_HPROT),
-    .HTRANS   (mst_uart_HTRANS),
-    .HMASTLOCK(mst_uart_HMASTLOCK),
-    .HREADYOUT(mst_uart_HREADYOUT),
-    .HREADY   (mst_uart_HREADY),
-    .HRESP    (mst_uart_HRESP),
+    // WISHBONE interface
+    .wb_adr_i(wb_adr_i),
+    .wb_dat_i(wb_dat_i),
+    .wb_dat_o(wb_dat_o),
+    .wb_we_i (wb_we_i),
+    .wb_stb_i(wb_stb_i),
+    .wb_cyc_i(wb_cyc_i),
+    .wb_sel_i(wb_sel_i),
+    .wb_ack_o(wb_ack_o),
+    .int_o   (int_o),
 
-    // APB Master Interface
-    .PRESETn(HRESETn),
-    .PCLK   (HCLK),
+    // UART  signals
+    .srx_pad_i(srx_pad_i),
+    .stx_pad_o(stx_pad_o),
+    .rts_pad_o(rts_pad_o),
+    .cts_pad_i(cts_pad_i),
+    .dtr_pad_o(dtr_pad_o),
+    .dsr_pad_i(dsr_pad_i),
+    .ri_pad_i (ri_pad_i),
+    .dcd_pad_i(dcd_pad_i),
 
-    .PSEL   (uart_PSEL),
-    .PENABLE(uart_PENABLE),
-    .PPROT  (),
-    .PWRITE (uart_PWRITE),
-    .PSTRB  (),
-    .PADDR  (uart_PADDR),
-    .PWDATA (uart_PWDATA),
-    .PRDATA (uart_PRDATA),
-    .PREADY (uart_PREADY),
-    .PSLVERR(uart_PSLVERR)
-  );
-
-  peripheral_uart_apb4 #(
-    .APB_ADDR_WIDTH(APB_ADDR_WIDTH),
-    .APB_DATA_WIDTH(APB_DATA_WIDTH)
-  ) uart_apb4 (
-    .RSTN(HRESETn),
-    .CLK (HCLK),
-
-    .PADDR  (uart_PADDR),
-    .PWDATA (uart_PWDATA),
-    .PWRITE (uart_PWRITE),
-    .PSEL   (uart_PSEL),
-    .PENABLE(uart_PENABLE),
-    .PRDATA (uart_PRDATA),
-    .PREADY (uart_PREADY),
-    .PSLVERR(uart_PSLVERR),
-
-    .rx_i(uart_rx_i),
-    .tx_o(uart_tx_o),
-
-    .event_o(uart_event_o)
+    // optional baudrate output
+    .baud_o(baud_o)
   );
 endmodule

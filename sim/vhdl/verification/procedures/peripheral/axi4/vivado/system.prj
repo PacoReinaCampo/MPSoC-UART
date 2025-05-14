@@ -45,8 +45,8 @@
 vhdl2008 work ../../../../../../../rtl/vhdl/code/pkg/core/vhdl_pkg.vhd
 vhdl2008 work ../../../../../../../rtl/vhdl/code/pkg/peripheral/axi4/peripheral_axi4_pkg.vhd
 
-vhdl2008 work ../../../../../../../rtl/vhdl/code/peripheral/axi4/peripheral_apb2ahb.vhd
-vhdl2008 work ../../../../../../../rtl/vhdl/code/peripheral/axi4/peripheral_uart_axi4.vhd
+vhdl2008 work ../../../../../../../rtl/vhdl/code/peripheral/axi4/peripheral_apb2axi.vhd
+vhdl2008 work ../../../../../../../rtl/vhdl/code/peripheral/axi4/peripheral_uart_apb4.vhd
 vhdl2008 work ../../../../../../../rtl/vhdl/code/peripheral/axi4/peripheral_uart_fifo.vhd
 vhdl2008 work ../../../../../../../rtl/vhdl/code/peripheral/axi4/peripheral_uart_interrupt.vhd
 vhdl2008 work ../../../../../../../rtl/vhdl/code/peripheral/axi4/peripheral_uart_rx.vhd

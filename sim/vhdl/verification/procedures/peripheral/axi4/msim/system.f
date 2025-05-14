@@ -45,8 +45,8 @@
 ../../../../../../../rtl/vhdl/code/pkg/core/vhdl_pkg.vhd
 ../../../../../../../rtl/vhdl/code/pkg/peripheral/axi4/peripheral_axi4_pkg.vhd
 
-../../../../../../../rtl/vhdl/code/peripheral/axi4/peripheral_apb2ahb.vhd
-../../../../../../../rtl/vhdl/code/peripheral/axi4/peripheral_uart_axi4.vhd
+../../../../../../../rtl/vhdl/code/peripheral/axi4/peripheral_apb2axi.vhd
+../../../../../../../rtl/vhdl/code/peripheral/axi4/peripheral_uart_apb4.vhd
 ../../../../../../../rtl/vhdl/code/peripheral/axi4/peripheral_uart_fifo.vhd
 ../../../../../../../rtl/vhdl/code/peripheral/axi4/peripheral_uart_interrupt.vhd
 ../../../../../../../rtl/vhdl/code/peripheral/axi4/peripheral_uart_rx.vhd

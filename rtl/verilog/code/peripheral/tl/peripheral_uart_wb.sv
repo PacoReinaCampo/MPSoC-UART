@@ -11,7 +11,7 @@
 //                                                                            //
 //              Peripheral-UART for MPSoC                                     //
 //              Universal Asynchronous Receiver-Transmitter for MPSoC         //
-//              AMBA4 APB-Lite Bus Interface                                  //
+//              WishBone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2018-2019 by the author(s)
@@ -36,100 +36,104 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 // Author(s):
+//   Jacob Gorban <gorban@opencores.org>
+//   Igor Mohor <igorm@opencores.org>
 //   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 
-module peripheral_uart_interrupt #(
-  parameter TX_FIFO_DEPTH = 32,
-  parameter RX_FIFO_DEPTH = 32
+module peripheral_uart_wb #(
+  parameter SIM   = 0,
+  parameter DEBUG = 0
 ) (
-  input logic clk_i,
-  input logic rstn_i,
+  input wb_clk_i,
+  input wb_rst_i,
 
-  // registers
-  input logic [2:0] IER_i,  // interrupt enable register
-  input logic       RDA_i,  // receiver data available
-  input logic       CTI_i,  // character timeout indication
+  // WISHBONE interface
+  input  [2:0] wb_adr_i,
+  input  [7:0] wb_dat_i,
+  output [7:0] wb_dat_o,
+  input        wb_we_i,
+  input        wb_stb_i,
+  input        wb_cyc_i,
+  input  [3:0] wb_sel_i,
+  output       wb_ack_o,
+  output       int_o,
 
-  // control logic
-  input logic                           error_i,
-  input logic [$clog2(RX_FIFO_DEPTH):0] rx_elements_i,
-  input logic [$clog2(TX_FIFO_DEPTH):0] tx_elements_i,
-  input logic [                    1:0] trigger_level_i,
+  // UART signals
+  input  srx_pad_i,
+  output stx_pad_o,
+  output rts_pad_o,
+  input  cts_pad_i,
+  output dtr_pad_o,
+  input  dsr_pad_i,
+  input  ri_pad_i,
+  input  dcd_pad_i,
 
-  input logic [3:0] clr_int_i,  // one hot
-
-  output logic       interrupt_o,
-  output logic [3:0] IIR_o
+  // optional baudrate output
+  output baud_o
 );
 
   //////////////////////////////////////////////////////////////////////////////
   // Variables
   //////////////////////////////////////////////////////////////////////////////
 
-  logic [3:0] iir_n, iir_q;
-  logic trigger_level_reached;
+  wire [ 7:0] wb_dat8_i;  // 8-bit internal data input
+  wire [ 7:0] wb_dat8_o;  // 8-bit internal data output
+  wire [31:0] wb_dat32_o;  // debug interface 32-bit output
+  wire [ 2:0] wb_adr_int;
+  wire        we_o;  // Write enable for registers
+  wire        re_o;  // Read enable for registers
 
   //////////////////////////////////////////////////////////////////////////////
   // Body
   //////////////////////////////////////////////////////////////////////////////
 
-  always @(*) begin
-    trigger_level_reached = 1'b0;
-    case (trigger_level_i)
-      2'b00: begin
-        if ($unsigned(rx_elements_i) == 1) begin
-          trigger_level_reached = 1'b1;
-        end
-      end
-      2'b01: begin
-        if ($unsigned(rx_elements_i) == 4) begin
-          trigger_level_reached = 1'b1;
-        end
-      end
-      2'b10: begin
-        if ($unsigned(rx_elements_i) == 8) begin
-          trigger_level_reached = 1'b1;
-        end
-      end
-      2'b11: begin
-        if ($unsigned(rx_elements_i) == 14) begin
-          trigger_level_reached = 1'b1;
-        end
-      end
-      default: begin
-      end
-    endcase
-  end
+  ////  WISHBONE interface module
+  peripheral_uart_bridge_wb uart_bridge_wb (
+    .clk       (wb_clk_i),
+    .wb_rst_i  (wb_rst_i),
+    .wb_dat_i  (wb_dat_i),
+    .wb_dat_o  (wb_dat_o),
+    .wb_dat8_i (wb_dat8_i),
+    .wb_dat8_o (wb_dat8_o),
+    .wb_dat32_o(32'b0),
+    .wb_sel_i  (4'b0),
+    .wb_we_i   (wb_we_i),
+    .wb_stb_i  (wb_stb_i),
+    .wb_cyc_i  (wb_cyc_i),
+    .wb_ack_o  (wb_ack_o),
+    .wb_adr_i  (wb_adr_i),
+    .wb_adr_int(wb_adr_int),
+    .we_o      (we_o),
+    .re_o      (re_o)
+  );
 
-  always @(*) begin
-    if (clr_int_i == 4'b0) begin
-      iir_n = iir_q;
-    end else begin
-      iir_n = iir_q & ~(clr_int_i);
-    end
-    // Receiver line status interrupt on: Overrun error, parity error, framing error or break interrupt
-    if (IER_i[2] & error_i) begin
-      iir_n = 4'b1100;
-    end  // Received data available or trigger level reached in FIFO mode
-    else if (IER_i[0] & (trigger_level_reached | RDA_i)) begin
-      iir_n = 4'b1000;
-    end  // Character timeout indication
-    else if (IER_i[0] & CTI_i) begin
-      iir_n = 4'b1000;
-    end  // Transmitter holding register empty
-    else if (IER_i[1] & tx_elements_i == 0) begin
-      iir_n = 4'b0100;
-    end
-  end
+  // Registers
+  peripheral_uart_regs_wb #(
+    .SIM(SIM)
+  ) uart_regs_wb (
+    .clk         (wb_clk_i),
+    .wb_rst_i    (wb_rst_i),
+    .wb_addr_i   (wb_adr_int),
+    .wb_dat_i    (wb_dat8_i),
+    .wb_dat_o    (wb_dat8_o),
+    .wb_we_i     (we_o),
+    .wb_re_i     (re_o),
+    .modem_inputs({cts_pad_i, dsr_pad_i, ri_pad_i, dcd_pad_i}),
+    .stx_pad_o   (stx_pad_o),
+    .srx_pad_i   (srx_pad_i),
+    .rts_pad_o   (rts_pad_o),
+    .dtr_pad_o   (dtr_pad_o),
+    .int_o       (int_o),
+    .baud_o      (baud_o)
+  );
 
-  always @(posedge clk_i, negedge rstn_i) begin
-    if (~rstn_i) begin
-      iir_q <= 4'b0001;
-    end else begin
-      iir_q <= iir_n;
+  initial begin
+    if (DEBUG) begin
+`ifdef UART_HAS_BAUDRATE_OUTPUT
+      $display("(%m) UART INFO: Has baudrate output\n");
+`else
+      $display("(%m) UART INFO: Doesn't have baudrate output\n");
+`endif
     end
   end
-
-  assign IIR_o       = iir_q;
-  assign interrupt_o = ~iir_q[0];
 endmodule

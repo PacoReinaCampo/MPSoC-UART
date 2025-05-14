@@ -45,9 +45,9 @@ use ieee.numeric_std.all;
 use ieee.math_real.all;
 
 use work.vhdl_pkg.all;
-use work.peripheral_ahb4_pkg.all;
+use work.peripheral_apb4_pkg.all;
 
-entity peripheral_uart_ahb4 is
+entity peripheral_uart_apb4 is
   generic (
     APB_ADDR_WIDTH : integer := 12;     -- APB slaves are 4KB by default
     APB_DATA_WIDTH : integer := 32      -- APB slaves are 4KB by default
@@ -69,9 +69,9 @@ entity peripheral_uart_ahb4 is
 
     event_o : out std_logic             -- interrupt/event output
     );
-end peripheral_uart_ahb4;
+end peripheral_uart_apb4;
 
-architecture rtl of peripheral_uart_ahb4 is
+architecture rtl of peripheral_uart_apb4 is
 
   ------------------------------------------------------------------------------
   -- Components

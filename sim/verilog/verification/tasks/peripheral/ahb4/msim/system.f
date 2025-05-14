@@ -45,7 +45,7 @@
 ../../../../../../../rtl/verilog/code/pkg/peripheral/ahb4/peripheral_ahb4_pkg.sv
 
 ../../../../../../../rtl/verilog/code/peripheral/ahb4/peripheral_apb2ahb.sv
-../../../../../../../rtl/verilog/code/peripheral/ahb4/peripheral_uart_ahb4.sv
+../../../../../../../rtl/verilog/code/peripheral/ahb4/peripheral_uart_apb4.sv
 ../../../../../../../rtl/verilog/code/peripheral/ahb4/peripheral_uart_fifo.sv
 ../../../../../../../rtl/verilog/code/peripheral/ahb4/peripheral_uart_interrupt.sv
 ../../../../../../../rtl/verilog/code/peripheral/ahb4/peripheral_uart_rx.sv

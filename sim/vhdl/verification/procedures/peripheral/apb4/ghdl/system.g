@@ -1,6 +1,5 @@
 ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/pkg/core/vhdl_pkg.vhd
 ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/pkg/peripheral/apb4/peripheral_apb4_pkg.vhd
-ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/peripheral/apb4/peripheral_apb2ahb.vhd
 ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/peripheral/apb4/peripheral_uart_apb4.vhd
 ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/peripheral/apb4/peripheral_uart_fifo.vhd
 ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/peripheral/apb4/peripheral_uart_interrupt.vhd

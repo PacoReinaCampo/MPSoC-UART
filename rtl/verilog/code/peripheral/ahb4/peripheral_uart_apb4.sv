@@ -38,7 +38,7 @@
 // Author(s):
 //   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 
-module peripheral_uart_ahb4 #(
+module peripheral_uart_apb4 #(
   parameter APB_ADDR_WIDTH = 12,  // APB slaves are 4KB by default
   parameter APB_DATA_WIDTH = 32   // APB slaves are 4KB by default
 ) (

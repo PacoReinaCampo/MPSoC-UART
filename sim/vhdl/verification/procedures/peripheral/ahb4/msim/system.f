@@ -46,7 +46,7 @@
 ../../../../../../../rtl/vhdl/code/pkg/peripheral/ahb4/peripheral_ahb4_pkg.vhd
 
 ../../../../../../../rtl/vhdl/code/peripheral/ahb4/peripheral_apb2ahb.vhd
-../../../../../../../rtl/vhdl/code/peripheral/ahb4/peripheral_uart_ahb4.vhd
+../../../../../../../rtl/vhdl/code/peripheral/ahb4/peripheral_uart_apb4.vhd
 ../../../../../../../rtl/vhdl/code/peripheral/ahb4/peripheral_uart_fifo.vhd
 ../../../../../../../rtl/vhdl/code/peripheral/ahb4/peripheral_uart_interrupt.vhd
 ../../../../../../../rtl/vhdl/code/peripheral/ahb4/peripheral_uart_rx.vhd
