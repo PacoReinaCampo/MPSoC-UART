@@ -11,7 +11,7 @@
 //                                                                            //
 //              Peripheral-UART for MPSoC                                     //
 //              Universal Asynchronous Receiver-Transmitter for MPSoC         //
-//              BlackBone Bus Interface                                       //
+//              BackBone Bus Interface                                       //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2015-2016 by the author(s)
